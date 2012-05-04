@@ -234,23 +234,17 @@ class GFEwayPayment {
 		$xml->writeElement('ewayTrxnNumber', $this->transactionNumber);
 		$xml->writeElement('ewayCustomerInvoiceRef', $this->invoiceReference);
 
+		// optional data
 		$xml->writeElement('ewayCustomerFirstName', $this->firstName);
 		$xml->writeElement('ewayCustomerLastName', $this->lastName);
+		$xml->writeElement('ewayCustomerEmail', $this->emailAddress);
+		$xml->writeElement('ewayCustomerAddress', $this->address);
+		$xml->writeElement('ewayCustomerPostcode', $this->postcode);
+		$xml->writeElement('ewayCustomerInvoiceDescription', $this->invoiceDescription);
+		$xml->writeElement('ewayCVN', $this->cardVerificationNumber);
 		$xml->writeElement('ewayOption1', $this->option1);
 		$xml->writeElement('ewayOption2', $this->option2);
 		$xml->writeElement('ewayOption3', $this->option3);
-
-		// optional data
-		if (strlen($this->emailAddress) > 0)
-			$xml->writeElement('ewayCustomerEmail', $this->emailAddress);
-		if (strlen($this->address) > 0)
-			$xml->writeElement('ewayCustomerAddress', $this->address);
-		if (strlen($this->postcode) > 0)
-			$xml->writeElement('ewayCustomerPostcode', $this->postcode);
-		if (strlen($this->invoiceDescription) > 0)
-			$xml->writeElement('ewayCustomerInvoiceDescription', $this->invoiceDescription);
-		if (strlen($this->cardVerificationNumber) > 0)
-			$xml->writeElement('ewayCVN', $this->cardVerificationNumber);
 
 		$xml->endElement();		// ewaygateway
 

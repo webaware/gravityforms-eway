@@ -106,9 +106,6 @@ class GFEwayPlugin {
 			if ($formData->isLastPage() && is_array($formData->ccField) && $formData->total > 0) {
 				// check for required fields
 				$required = array(
-					'email' => 'A valid email address is required for credit card processing.',
-					'address' => 'Address is required for credit card processing.',
-					'postcode' => 'Postcode is required for credit card processing.',
 					'ccName' => 'Card holder name is required for credit card processing.',
 					'ccNumber' => 'Card number is required for credit card processing.',
 				);
