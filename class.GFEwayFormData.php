@@ -18,6 +18,7 @@ class GFEwayFormData {
 	public $ccField = FALSE;					// handle to meta-"field" for credit card in form
 
 	private $isLastPageFlag = FALSE;
+	private $isCcHiddenFlag = FALSE;
 
 	/**
 	* initialise instance
@@ -65,9 +66,10 @@ class GFEwayFormData {
 					break;
 
 				case 'creditcard':
+					$this->isCcHiddenFlag = RGFormsModel::is_field_hidden($form, $field, RGForms::post('gform_field_values'));
 					$this->ccField =& $field;
 					$this->ccName = rgpost("input_{$id}_5");
-					$this->ccNumber = rgpost("input_{$id}_1");
+					$this->ccNumber = self::cleanCcNumber(rgpost("input_{$id}_1"));
 					$ccExp = rgpost("input_{$id}_2");
 					if (is_array($ccExp))
 						list($this->ccExpMonth, $this->ccExpYear) = $ccExp;
@@ -112,6 +114,7 @@ class GFEwayFormData {
 			switch ($field["inputType"]) {
 				case 'singleproduct':
 					$price = GFCommon::to_number(rgpost("input_{$id}_2"));
+					$qty = GFCommon::to_number(rgpost("input_{$id}_3"));
 					$isProduct = true;
 					break;
 
@@ -164,10 +167,27 @@ class GFEwayFormData {
 	}
 
 	/**
+	* clean up credit card number, removing spaces and dashes, so that it should only be digits if correctly submitted
+	* @param string $ccNumber
+	* @return string
+	*/
+	private static function cleanCcNumber($ccNumber) {
+		return strtr($ccNumber, array(' ' => '', '-' => ''));
+	}
+
+	/**
 	* check whether we're on the last page of the form
 	* @return boolean
 	*/
 	public function isLastPage() {
 		return $this->isLastPageFlag;
+	}
+
+	/**
+	* check whether CC field is hidden (which indicates that payment is being made another way)
+	* @return boolean
+	*/
+	public function isCcHidden() {
+		return $this->isCcHiddenFlag;
 	}
 }

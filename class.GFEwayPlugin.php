@@ -103,7 +103,8 @@ class GFEwayPlugin {
 			$formData = new GFEwayFormData($data['form']);
 
 			// make that this is the last page of the form and that we have a credit card field and something to bill
-			if ($formData->isLastPage() && is_array($formData->ccField) && $formData->total > 0) {
+			// and that credit card field is not hidden (which indicates that payment is being made another way)
+			if (!$formData->isCcHidden() && $formData->isLastPage() && is_array($formData->ccField) && $formData->total > 0) {
 				// check for required fields
 				$required = array(
 					'ccName' => 'Card holder name is required for credit card processing.',
@@ -126,7 +127,8 @@ class GFEwayPlugin {
 					try {
 						$eway = new GFEwayPayment($this->options['customerID'], $isLiveSite);
 						$eway->invoiceDescription = get_bloginfo('name') . " -- {$data['form']['title']}";
-						$eway->transactionNumber = rgpost('gform_unique_id');
+						$eway->invoiceReference = $data['form']['id'];
+						$eway->lastName = $formData->ccName;
 						$eway->cardHoldersName = $formData->ccName;
 						$eway->cardNumber = $formData->ccNumber;
 						$eway->cardExpiryMonth = $formData->ccExpMonth;

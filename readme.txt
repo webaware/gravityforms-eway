@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: gravityforms, gravity forms, eway
 Requires at least: 3.0.1
 Tested up to: 3.3.2
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 
 Add a credit card payment gateway for eWAY to the GravityForms plugin
 
@@ -41,6 +41,13 @@ The plugin will run in shared hosting environments, but requires PHP 5 with the 
 * SimpleXML
 
 == Changelog ==
+
+= 1.0.2 [2012-05-13] =
+* fixed: correctly handle quantity for singleproduct fields
+* fixed: don't validate or process credit card if credit card field is hidden (e.g. other payment option selected)
+* fixed: form ID recorded in eWAY invoice reference field
+* added: cardholder's name recorded in eWAY last name field (for reference on eWAY email notification)
+* added: remove spaces/dashes from credit card numbers so that "valid" numbers can be passed to eWAY with spaces removed
 
 = 1.0.1 [2012-05-05] =
 * fixed: optional fields for address, email are no longer required for eway payment
