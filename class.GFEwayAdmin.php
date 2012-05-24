@@ -19,6 +19,9 @@ class GFEwayAdmin {
 		add_filter("gform_addon_navigation", array($this, 'gformAddonNavigation'));
 		add_filter('gform_currency_setting_message', array($this, 'gformCurrencySettingMessage'));
 
+		// hook for showing admin messages
+		add_action('admin_notices', array($this, 'actionAdminNotices'));
+
 		// add action hook for adding plugin action links
 		add_action('plugin_action_links_' . GFEWAY_PLUGIN_NAME, array($this, 'addPluginActionLinks'));
 
@@ -30,22 +33,40 @@ class GFEwayAdmin {
 	}
 
 	/**
+	* test whether GravityForms plugin is installed and active
+	* @return boolean
+	*/
+	public static function isGfActive() {
+		return class_exists('RGForms');
+	}
+
+	/**
 	* only output our stylesheet if this is our admin page
 	*/
 	public function printStyles() {
-		$page = stripslashes($_GET['page']);
+		$page = stripslashes(@$_GET['page']);
 
 		if (stripos($page, self::MENU_PAGE) === 0)
 			wp_enqueue_style('gfeway-admin', "{$this->plugin->urlBase}style-admin.css", FALSE, '1');
 	}
 
 	/**
+	* show admin messages
+	*/
+	public function actionAdminNotices() {
+		if (!self::isGfActive())
+			$this->plugin->showError('GravityForms eWAY plugin requires <a href="http://www.gravityforms.com/">GravityForms</a> plugin to be installed and activated.');
+	}
+
+	/**
 	* action hook for adding plugin action links
 	*/
 	public function addPluginActionLinks($links) {
-		// add settings link
-		$settings_link = '<a href="admin.php?page=' . self::MENU_PAGE . '-options">' . __('Settings') . '</a>';
-		array_unshift($links, $settings_link);
+		// add settings link, but only if GravityForms plugin is active
+		if (self::isGfActive()) {
+			$settings_link = '<a href="admin.php?page=' . self::MENU_PAGE . '-options">' . __('Settings') . '</a>';
+			array_unshift($links, $settings_link);
+		}
 
 		return $links;
 	}
@@ -54,7 +75,7 @@ class GFEwayAdmin {
 	* action hook for adding plugin details links
 	*/
 	public static function addPluginDetailsLinks($links, $file) {
-		// add settings link
+		// add Donate link
 		if ($file == GFEWAY_PLUGIN_NAME) {
 			$links[] = '<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8V9YCKATQHKEN" title="Please consider making a donation to help support maintenance and further development of this plugin.">'
 				. __('Donate') . '</a>';

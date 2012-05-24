@@ -52,20 +52,6 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* activate the plug-in (called by activate event): add custom capabilities, etc.
-	*/
-	public function activate() {
-		// NOP
-	}
-
-	/**
-	* deactivate the plug-in (called by deactivate event): remove custom capabilities, etc.
-	*/
-	public function deactivate() {
-		// NOP
-	}
-
-	/**
 	* initialise plug-in options, handling undefined options by setting defaults
 	*/
 	private function initOptions() {
@@ -228,7 +214,7 @@ class GFEwayPlugin {
 	* @param string $msg HTML-encoded message to display inside a paragraph
 	*/
 	public static function showMessage($msg) {
-		echo "<div id='message' class='updated fade'><p><strong>$msg</strong></p></div>\n";
+		echo "<div class='updated fade'><p><strong>$msg</strong></p></div>\n";
 	}
 
 	/**
@@ -236,6 +222,6 @@ class GFEwayPlugin {
 	* @param string $msg HTML-encoded message to display inside a paragraph
 	*/
 	public static function showError($msg) {
-		echo "<div id='message' class='error fade'><p><strong>$msg</strong></p></div>\n";
+		echo "<div class='error'><p><strong>$msg</strong></p></div>\n";
 	}
 }

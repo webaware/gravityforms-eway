@@ -7,7 +7,9 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: gravityforms, gravity forms, eway
 Requires at least: 3.0.1
 Tested up to: 3.3.2
-Stable tag: 1.0.2
+Stable tag: 1.0.3
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Add a credit card payment gateway for eWAY to the GravityForms plugin
 
@@ -19,11 +21,14 @@ GravityForms eWAY adds a credit card payment gateway for [eWAY in Australia](htt
 * build online booking forms
 * build simple Buy Now forms
 
+NB: you need to install GravityForms too!
+
 == Installation ==
 
-1. Upload this plugin to your /wp-content/plugins/ directory.
-2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Edit the eWAY payment gateway settings to set your eWAY Customer ID and options
+1. Install and activate the [GravityForms](http://www.gravityforms.com/) plugin
+2. Upload the GravityForms eWAY plugin to your /wp-content/plugins/ directory.
+3. Activate the GravityForms eWAY plugin through the 'Plugins' menu in WordPress.
+4. Edit the eWAY payment gateway settings to set your eWAY Customer ID and options
 
 NB: you should always test your gateway first by using eWAY's test server. To do this, set your eWAY Customer ID to the special test ID 87654321 and select Use Test Environment. When you go to pay, the only card number that will be accepted by the test server is 4444333322221111. This allows you to make as many test payments as you like, without billing a real credit card.
 
@@ -40,7 +45,15 @@ The plugin will run in shared hosting environments, but requires PHP 5 with the 
 * XMLWriter
 * SimpleXML
 
+= Will this plugin work without installing GravityForms? =
+
+No. This plugin adds an eWAY payment gateway to GravityForms so that you can add online payments to your forms. It does not replace GravityForms.
+
 == Changelog ==
+
+= 1.0.3 [2012-05-24] =
+* fixed: don't show settings link if GravityForms is not installed and activated
+* added: readme file makes it clear that this plugin requires GravityForms to be installed and activated
 
 = 1.0.2 [2012-05-13] =
 * fixed: correctly handle quantity for singleproduct fields
