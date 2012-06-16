@@ -44,8 +44,7 @@ class GFEwayAdmin {
 	* only output our stylesheet if this is our admin page
 	*/
 	public function printStyles() {
-		$page = stripslashes(@$_GET['page']);
-
+		$page = isset($_GET['page']) ? stripslashes($_GET['page']) : '';
 		if (stripos($page, self::MENU_PAGE) === 0)
 			wp_enqueue_style('gfeway-admin', "{$this->plugin->urlBase}style-admin.css", FALSE, '1');
 	}

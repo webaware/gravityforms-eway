@@ -58,21 +58,14 @@ class GFEwayPlugin {
 		static $defaults = array (
 			'customerID' => '87654321',
 			'useTest' => TRUE,
+			'roundTestAmounts' => TRUE,
+			'forceTestAccount' => TRUE,
 		);
 
-		$this->options = get_option(GFEWAY_PLUGIN_OPTIONS);
-		if (!is_array($this->options)) {
-			$this->options = array();
-		}
+		$this->options = (array) get_option(GFEWAY_PLUGIN_OPTIONS);
 
-		$optsUpdate = FALSE;
-		foreach ($defaults as $option => $value) {
-			if (!isset($this->options[$option])) {
-				$this->options[$option] = $value;
-				$optsUpdate = TRUE;
-			}
-		}
-		if ($optsUpdate) {
+		if (count(array_diff_assoc($defaults, $this->options)) > 0) {
+			$this->options = array_merge($defaults, $this->options);
 			update_option(GFEWAY_PLUGIN_OPTIONS, $this->options);
 		}
 	}
@@ -108,10 +101,17 @@ class GFEwayPlugin {
 
 				// if no errors, try to bill it
 				if ($data['is_valid']) {
-					$isLiveSite = ($this->options['useTest'] != 'Y');
+					if ($this->options['useTest'] == 'Y') {
+						$isLiveSite = false;
+						$customerID = ($this->options['forceTestAccount'] == 'Y') ? '87654321' : $this->options['customerID'];
+					}
+					else {
+						$isLiveSite = true;
+						$customerID = $this->options['customerID'];
+					}
 
 					try {
-						$eway = new GFEwayPayment($this->options['customerID'], $isLiveSite);
+						$eway = new GFEwayPayment($customerID, $isLiveSite);
 						$eway->invoiceDescription = get_bloginfo('name') . " -- {$data['form']['title']}";
 						$eway->invoiceReference = $data['form']['id'];
 						$eway->lastName = $formData->ccName;
@@ -125,7 +125,10 @@ class GFEwayPlugin {
 						$eway->cardVerificationNumber = $formData->ccCVN;
 
 						// if live, pass through amount exactly, but if using test site, round up to whole dollars or eWAY will fail
-						$eway->amount = $isLiveSite ? $formData->total : ceil($formData->total);
+						if ($isLiveSite || $this->options['roundTestAmounts'] != 'Y')
+							$eway->amount = $formData->total;
+						else
+							$eway->amount = ceil($formData->total);
 
 						$response = $eway->processPayment();
 						if ($response->status) {

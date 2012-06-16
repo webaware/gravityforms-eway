@@ -7,14 +7,18 @@ class GFEwayOptionsForm {
 
 	public $customerID;
 	public $useTest;
+	public $roundTestAmounts;
+	public $forceTestAccount;
 
 	/**
 	* initialise from form post, if posted
 	*/
 	public function __construct() {
 		if ($this->isFormPost()) {
-			$this->customerID = @stripslashes(trim($_POST['customerID']));
-			$this->useTest = @stripslashes(trim($_POST['useTest']));
+			$this->customerID = isset($_POST['customerID']) ? stripslashes(trim($_POST['customerID'])) : '';
+			$this->useTest = isset($_POST['useTest']) ? stripslashes(trim($_POST['useTest'])) : '';
+			$this->roundTestAmounts = isset($_POST['roundTestAmounts']) ? stripslashes(trim($_POST['roundTestAmounts'])) : '';
+			$this->forceTestAccount = isset($_POST['forceTestAccount']) ? stripslashes(trim($_POST['forceTestAccount'])) : '';
 		}
 	}
 
@@ -84,6 +88,8 @@ class GFEwayOptionsAdmin {
 			if (empty($errmsg)) {
 				$this->plugin->options['customerID'] = $this->frm->customerID;
 				$this->plugin->options['useTest'] = ($this->frm->useTest == 'Y');
+				$this->plugin->options['roundTestAmounts'] = ($this->frm->roundTestAmounts == 'Y');
+				$this->plugin->options['forceTestAccount'] = ($this->frm->forceTestAccount == 'Y');
 
 				update_option(GFEWAY_PLUGIN_OPTIONS, $this->plugin->options);
 				$this->plugin->showMessage(__('Options saved.'));
@@ -96,6 +102,8 @@ class GFEwayOptionsAdmin {
 			// initialise form from stored options
 			$this->frm->customerID = $this->plugin->options['customerID'];
 			$this->frm->useTest = $this->plugin->options['useTest'] ? 'Y' : 'N';
+			$this->frm->roundTestAmounts = $this->plugin->options['roundTestAmounts'] ? 'Y' : 'N';
+			$this->frm->forceTestAccount = $this->plugin->options['forceTestAccount'] ? 'Y' : 'N';
 		}
 
 		echo <<<HTML
@@ -110,10 +118,26 @@ class GFEwayOptionsAdmin {
 		</tr>
 
 		<tr valign='top'>
-			<th>Use Testing enviroment</th>
+			<th>Use Sandbox (testing enviroment)</th>
 			<td>
 				<label><input type="radio" name="useTest" value="Y" {$this->fieldValueChecked('useTest', 'Y')} />&nbsp;yes</label>
 				&nbsp;&nbsp;<label><input type="radio" name="useTest" value="N" {$this->fieldValueChecked('useTest', 'N')} />&nbsp;no</label>
+			</td>
+		</tr>
+
+		<tr valign='top'>
+			<th>Round Amounts for Sandbox</th>
+			<td>
+				<label><input type="radio" name="roundTestAmounts" value="Y" {$this->fieldValueChecked('roundTestAmounts', 'Y')} />&nbsp;yes</label>
+				&nbsp;&nbsp;<label><input type="radio" name="roundTestAmounts" value="N" {$this->fieldValueChecked('roundTestAmounts', 'N')} />&nbsp;no</label>
+			</td>
+		</tr>
+
+		<tr valign='top'>
+			<th>Force Test Customer ID in Sandbox</th>
+			<td>
+				<label><input type="radio" name="forceTestAccount" value="Y" {$this->fieldValueChecked('forceTestAccount', 'Y')} />&nbsp;yes</label>
+				&nbsp;&nbsp;<label><input type="radio" name="forceTestAccount" value="N" {$this->fieldValueChecked('forceTestAccount', 'N')} />&nbsp;no</label>
 			</td>
 		</tr>
 
