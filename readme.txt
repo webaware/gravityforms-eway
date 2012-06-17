@@ -41,7 +41,7 @@ Gravity Forms will now display the Credit Card field under Pricing Fields when y
 = Building a Form with Credit Card Payments =
 
 * add one or more product fields or a total field, so that there is something to be charged by credit card
-* add an email field and and address field if you want to see them on your eWAY transation; the first email field and first address field on the form will be sent to eWAY
+* add an email field and and address field if you want to see them on your eWAY transaction; the first email field and first address field on the form will be sent to eWAY
 * add a credit card field; if you have a multi-page form, this must be the on the last page so that all other form validations occur first
 * add a confirmation message to the form indicating that payment was successful; the form will not complete if payment was not successful, and will display an error message in the credit card field
 
