@@ -29,7 +29,7 @@ class GFEwayAdmin {
 		add_filter('plugin_row_meta', array($this, 'addPluginDetailsLinks'), 10, 2);
 
 		// hook for enqueuing admin styles
-		add_filter('admin_print_styles', array($this, 'printStyles'));
+		add_filter('admin_enqueue_scripts', array($this, 'enqueueScripts'));
 	}
 
 	/**
@@ -43,18 +43,17 @@ class GFEwayAdmin {
 	/**
 	* only output our stylesheet if this is our admin page
 	*/
-	public function printStyles() {
-		$page = isset($_GET['page']) ? stripslashes($_GET['page']) : '';
-		if (stripos($page, self::MENU_PAGE) === 0)
-			wp_enqueue_style('gfeway-admin', "{$this->plugin->urlBase}style-admin.css", FALSE, '1');
+	public function enqueueScripts() {
+		wp_enqueue_style('gfeway-admin', "{$this->plugin->urlBase}style-admin.css", FALSE, GFEWAY_PLUGIN_VERSION);
 	}
 
 	/**
 	* show admin messages
 	*/
 	public function actionAdminNotices() {
-		if (!self::isGfActive())
+		if (!self::isGfActive()) {
 			$this->plugin->showError('GravityForms eWAY plugin requires <a href="http://www.gravityforms.com/">GravityForms</a> plugin to be installed and activated.');
+		}
 	}
 
 	/**
@@ -76,15 +75,16 @@ class GFEwayAdmin {
 	public static function addPluginDetailsLinks($links, $file) {
 		// add Donate link
 		if ($file == GFEWAY_PLUGIN_NAME) {
-			$links[] = '<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8V9YCKATQHKEN" title="Please consider making a donation to help support maintenance and further development of this plugin.">'
-				. __('Donate') . '</a>';
+			$links[] = '<a href="http://wordpress.org/support/plugin/gravityforms-eway">' . __('Support') . '</a>';
+			$links[] = '<a href="http://wordpress.org/extend/plugins/gravityforms-eway/">' . __('Rating') . '</a>';
+			$links[] = '<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=8V9YCKATQHKEN">' . __('Donate') . '</a>';
 		}
 
 		return $links;
 	}
 
 	/**
-	* action hook for building GravityForms navigation
+	* filter hook for building GravityForms navigation
 	* @param array $menus
 	* @return array
 	*/
@@ -96,7 +96,7 @@ class GFEwayAdmin {
 	}
 
 	/**
-	* action hook for building GravityForms navigation
+	* action hook for showing currency setting message
 	* @param array $menus
 	* @return array
 	*/

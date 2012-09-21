@@ -12,13 +12,23 @@ class GFEwayFormData {
 	public $ccExpMonth = '';
 	public $ccExpYear = '';
 	public $ccCVN = '';
+	public $namePrefix = '';
+	public $firstName = '';
+	public $lastName = '';
 	public $email = '';
-	public $address = '';
-	public $postcode = '';
+	public $address = '';						// simple address, for regular payments
+	public $address_street = '';				// street address, for recurring payments
+	public $address_suburb = '';				// suburb, for recurring payments
+	public $address_state = '';					// state, for recurring payments
+	public $address_country = '';				// country, for recurring payments
+	public $postcode = '';						// postcode, for both regular and recurring payments
+	public $phone = '';							// phone number, for recurring payments
+	public $recurring = FALSE;					// false, or an array of inputs from complex field
 	public $ccField = FALSE;					// handle to meta-"field" for credit card in form
 
 	private $isLastPageFlag = FALSE;
 	private $isCcHiddenFlag = FALSE;
+	private $hasPurchaseFieldsFlag = FALSE;
 
 	/**
 	* initialise instance
@@ -44,24 +54,38 @@ class GFEwayFormData {
 			$id = $field['id'];
 
 			switch(RGFormsModel::get_input_type($field)){
+				case 'name':
+					// only pick up the first name (assume later ones are additional info)
+					if (empty($this->firstName) && empty($this->lastName)) {
+						$this->namePrefix = rgpost("input_{$id}_2");
+						$this->firstName = rgpost("input_{$id}_3");
+						$this->lastName = rgpost("input_{$id}_6");
+					}
+					break;
+
 				case 'email':
 					// only pick up the first email address (assume later ones are additional info)
 					if (empty($this->email))
 						$this->email = rgpost("input_{$id}");
 					break;
 
+				case 'phone':
+					// only pick up the first phone number (assume later ones are additional info)
+					if (empty($this->phone))
+						$this->phone = rgpost("input_{$id}");
+					break;
+
 				case 'address':
 					// only pick up the first address (assume later ones are additional info, e.g. shipping)
-					if (empty($this->address) || empty($this->postcode)) {
-						// street, city, state, country
-						$parts = array();
-						foreach (array(1, 3, 4, 6) as $subID) {
-							$value = rgpost("input_{$id}_$subID");
-							if (!empty($value))
-								$parts[] = $value;
-						}
-						$this->address = implode(', ', $parts);
+					if (empty($this->address) && empty($this->postcode)) {
 						$this->postcode = rgpost("input_{$id}_5");
+						$this->address_street = rgpost("input_{$id}_1");
+						$this->address_suburb = rgpost("input_{$id}_3");
+						$this->address_state = rgpost("input_{$id}_4");
+						$this->address_country = rgpost("input_{$id}_6");
+
+						// aggregate street, city, state, country into a single string (for regular one-off payments)
+						$this->address = array_reduce(array($this->address_street, $this->address_suburb, $this->address_state, $this->address_country), array(__CLASS__, 'reduceAddress'), '');
 					}
 					break;
 
@@ -78,12 +102,21 @@ class GFEwayFormData {
 
 				case 'total':
 					$this->total = GFCommon::to_number(rgpost("input_{$id}"));
+					$this->hasPurchaseFieldsFlag = true;
+					break;
+
+				case 'gfewayrecurring':
+					// only pick it up if it isn't hidden
+					if (!RGFormsModel::is_field_hidden($form, $field, RGForms::post('gform_field_values'))) {
+						$this->recurring = GFEwayRecurringField::getPost($id);
+					}
 					break;
 
 				default:
 					// check for product field
-					if ($field['type'] == 'product') {
+					if (GFCommon::is_product_field($field['type']) || $field['type'] == 'donation') {
 						$this->amount += self::getProductPrice($form, $field);
+						$this->hasPurchaseFieldsFlag = true;
 					}
 					break;
 			}
@@ -123,6 +156,7 @@ class GFEwayFormData {
 					$isProduct = true;
 					break;
 
+				case 'donation':
 				case 'price':
 					$price = GFCommon::to_number($lead_value);
 					$isProduct = true;
@@ -176,6 +210,21 @@ class GFEwayFormData {
 	}
 
 	/**
+	* reduce array of address fields to a single string
+	* @param mixed $result
+	* @param mixed $item
+	*/
+	public static function reduceAddress(&$result, $item) {
+		if (!empty($item)) {
+			if ($result !== '')
+				$result .= ', ';
+			$result .= $item;
+		}
+
+		return $result;
+	}
+
+	/**
 	* check whether we're on the last page of the form
 	* @return boolean
 	*/
@@ -189,5 +238,21 @@ class GFEwayFormData {
 	*/
 	public function isCcHidden() {
 		return $this->isCcHiddenFlag;
+	}
+
+	/**
+	* check whether form has any product fields or a recurring payment field (because CC needs something to bill against)
+	* @return boolean
+	*/
+	public function hasPurchaseFields() {
+		return $this->hasPurchaseFieldsFlag || !!$this->recurring;
+	}
+
+	/**
+	* check whether form a recurring payment field
+	* @return boolean
+	*/
+	public function hasRecurringPayments() {
+		return !!$this->recurring;
 	}
 }

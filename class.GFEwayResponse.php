@@ -65,9 +65,12 @@ class GFEwayResponse {
 	*/
 	public function loadResponseXML($response) {
 		try {
+			// prevent XML injection attacks
+			$oldDisableEntityLoader = libxml_disable_entity_loader(TRUE);
+
 			$xml = new SimpleXMLElement($response);
 
-			$this->status = (strcasecmp($xml->ewayTrxnStatus, 'true') === 0);
+			$this->status = (strcasecmp((string) $xml->ewayTrxnStatus, 'true') === 0);
 			$this->transactionNumber = (string) $xml->ewayTrxnNumber;
 			$this->transactionReference = (string) $xml->ewayTrxnReference;
 			$this->option1 = (string) $xml->ewayTrxnOption1;
@@ -81,8 +84,14 @@ class GFEwayResponse {
 				$this->amount = floatval($xml->ewayReturnAmount) / 100.0;
 			else
 				$this->amount = NULL;
+
+			// restore default XML inclusion and expansion
+			libxml_disable_entity_loader($oldDisableEntityLoader);
 		}
 		catch (Exception $e) {
+			// restore default XML inclusion and expansion
+			libxml_disable_entity_loader($oldDisableEntityLoader);
+
 			throw new Exception('Error parsing eWAY response: ' . $e->getMessage());
 		}
 	}

@@ -9,6 +9,7 @@ class GFEwayOptionsForm {
 	public $useTest;
 	public $roundTestAmounts;
 	public $forceTestAccount;
+	public $sslVerifyPeer;
 
 	/**
 	* initialise from form post, if posted
@@ -19,6 +20,7 @@ class GFEwayOptionsForm {
 			$this->useTest = isset($_POST['useTest']) ? stripslashes(trim($_POST['useTest'])) : '';
 			$this->roundTestAmounts = isset($_POST['roundTestAmounts']) ? stripslashes(trim($_POST['roundTestAmounts'])) : '';
 			$this->forceTestAccount = isset($_POST['forceTestAccount']) ? stripslashes(trim($_POST['forceTestAccount'])) : '';
+			$this->sslVerifyPeer = isset($_POST['sslVerifyPeer']) ? stripslashes(trim($_POST['sslVerifyPeer'])) : '';
 		}
 	}
 
@@ -90,6 +92,7 @@ class GFEwayOptionsAdmin {
 				$this->plugin->options['useTest'] = ($this->frm->useTest == 'Y');
 				$this->plugin->options['roundTestAmounts'] = ($this->frm->roundTestAmounts == 'Y');
 				$this->plugin->options['forceTestAccount'] = ($this->frm->forceTestAccount == 'Y');
+				$this->plugin->options['sslVerifyPeer'] = ($this->frm->sslVerifyPeer == 'Y');
 
 				update_option(GFEWAY_PLUGIN_OPTIONS, $this->plugin->options);
 				$this->plugin->showMessage(__('Options saved.'));
@@ -104,6 +107,7 @@ class GFEwayOptionsAdmin {
 			$this->frm->useTest = $this->plugin->options['useTest'] ? 'Y' : 'N';
 			$this->frm->roundTestAmounts = $this->plugin->options['roundTestAmounts'] ? 'Y' : 'N';
 			$this->frm->forceTestAccount = $this->plugin->options['forceTestAccount'] ? 'Y' : 'N';
+			$this->frm->sslVerifyPeer = $this->plugin->options['sslVerifyPeer'] ? 'Y' : 'N';
 		}
 
 		echo <<<HTML
@@ -138,6 +142,15 @@ class GFEwayOptionsAdmin {
 			<td>
 				<label><input type="radio" name="forceTestAccount" value="Y" {$this->fieldValueChecked('forceTestAccount', 'Y')} />&nbsp;yes</label>
 				&nbsp;&nbsp;<label><input type="radio" name="forceTestAccount" value="N" {$this->fieldValueChecked('forceTestAccount', 'N')} />&nbsp;no</label>
+			</td>
+		</tr>
+
+		<tr valign='top'>
+			<th>Verify remote SSL certificate<br />
+				(<i>only disable if your website can't be correctly configured!</i>)</th>
+			<td>
+				<label><input type="radio" name="sslVerifyPeer" value="Y" {$this->fieldValueChecked('sslVerifyPeer', 'Y')} />&nbsp;yes</label>
+				&nbsp;&nbsp;<label><input type="radio" name="sslVerifyPeer" value="N" {$this->fieldValueChecked('sslVerifyPeer', 'N')} />&nbsp;no</label>
 			</td>
 		</tr>
 

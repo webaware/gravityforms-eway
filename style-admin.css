@@ -2,3 +2,7 @@
 .forms_page_gfeway-options #icon-gf_edit_forms {
 	background: transparent url(images/eway.png) no-repeat;
 }
+
+.gfeway_recurring_complex .gf_hidden {
+	display: none;
+}
