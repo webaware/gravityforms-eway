@@ -25,7 +25,7 @@ Gravity Forms eWAY adds a credit card payment gateway for [eWAY in Australia](ht
 
 = Recurring payments =
 
-Thanks to the generous sponsorship of [Castle Design](http://castledesign.com.au/), recurring payments are supported. This means that you can build subscription and donation forms with weekly, monthly or yearly billing. Examples will be presented on [the plugin's homepage](http://snippets.webaware.com.au/wordpress-plugins/gravityforms-eway/) as time permits.
+Thanks to the generous sponsorship of [Castle Design](http://castledesign.com.au/), you can build subscription and donation forms with weekly, fortnightly, monthly or yearly billing. Examples will be presented on [the plugin's homepage](http://snippets.webaware.com.au/wordpress-plugins/gravityforms-eway/) as time permits.
 
 = Requirements: =
 * you need to install the [Gravity Forms](http://www.gravityforms.com/) plugin
@@ -39,10 +39,10 @@ Developers can use these filter hooks to modify some eWAY invoice properties. Ea
 
 * `gfeway_invoice_desc` for modifying the invoice description
 * `gfeway_invoice_ref` for modifying the invoice reference
-* `gfeway_invoice_option1` for modifying the invoice option1 field (one-off payments)
-* `gfeway_invoice_option2` for modifying the invoice option2 field (one-off payments)
-* `gfeway_invoice_option3` for modifying the invoice option3 field (one-off payments)
-* `gfeway_invoice_cust_comments` for modifying the invoice customer comments field (recurring payments)
+* `gfeway_invoice_option1` for setting the invoice option1 field (one-off payments)
+* `gfeway_invoice_option2` for setting the invoice option2 field (one-off payments)
+* `gfeway_invoice_option3` for setting the invoice option3 field (one-off payments)
+* `gfeway_invoice_cust_comments` for setting the invoice customer comments field (recurring payments)
 
 == Installation ==
 
@@ -106,6 +106,7 @@ The plugin will run in shared hosting environments, but requires PHP 5 with the 
 3. The sample donation form as it appears on a page
 4. How a credit card validation error appears
 5. A successful entry in Gravity Forms admin
+6. Example with recurring payments
 
 == Changelog ==
 
