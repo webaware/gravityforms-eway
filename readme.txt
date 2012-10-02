@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards
 Requires at least: 3.0.1
 Tested up to: 3.4.2
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,12 +20,15 @@ Gravity Forms eWAY adds a credit card payment gateway for [eWAY in Australia](ht
 * build online donation forms
 * build online booking forms
 * build simple Buy Now forms
+* accept recurring payments
 
 > NB: this plugin extends [Gravity Forms](http://www.gravityforms.com/); you still need to install and activate Gravity Forms!
 
-= Recurring payments =
+= Sponsorships =
 
-Thanks to the generous sponsorship of [Castle Design](http://castledesign.com.au/), you can build subscription and donation forms with weekly, fortnightly, monthly or yearly billing. Examples will be presented on [the plugin's homepage](http://snippets.webaware.com.au/wordpress-plugins/gravityforms-eway/) as time permits.
+* recurring payments generously sponsored by [Castle Design](http://castledesign.com.au/)
+
+Thanks for sponsoring new features on Gravity Forms eWAY!
 
 = Requirements: =
 * you need to install the [Gravity Forms](http://www.gravityforms.com/) plugin
@@ -39,10 +42,10 @@ Developers can use these filter hooks to modify some eWAY invoice properties. Ea
 
 * `gfeway_invoice_desc` for modifying the invoice description
 * `gfeway_invoice_ref` for modifying the invoice reference
-* `gfeway_invoice_option1` for setting the invoice option1 field (one-off payments)
-* `gfeway_invoice_option2` for setting the invoice option2 field (one-off payments)
-* `gfeway_invoice_option3` for setting the invoice option3 field (one-off payments)
-* `gfeway_invoice_cust_comments` for setting the invoice customer comments field (recurring payments)
+* `gfeway_invoice_option1` for setting the option1 field (one-off payments)
+* `gfeway_invoice_option2` for setting the option2 field (one-off payments)
+* `gfeway_invoice_option3` for setting the option3 field (one-off payments)
+* `gfeway_invoice_cust_comments` for setting the customer comments field (recurring payments)
 
 == Installation ==
 
@@ -90,7 +93,7 @@ When test mode is enabled, the payment amount is rounded up by default, because 
 
 = Can I do recurring payments? =
 
-Yes, thanks to the generous sponsorship of [Castle Design](http://castledesign.com.au/). If you use [conditional logic](http://www.gravityhelp.com/documentation/page/Enable_Conditional_Logic) to hide/show a product field and a recurring payment field, you can even let customers choose between a one-off payment and a recurring payment.
+Yes, thanks to the generous sponsorship of [Castle Design](http://castledesign.com.au/). If you use [conditional logic](http://www.gravityhelp.com/documentation/page/Enable_Conditional_Logic) to hide/show a product field and a recurring payment field, you can even let customers choose between a one-off payment and a recurring payment. Payments can be scheduled for weekly, fortnightly, monthly or yearly billing. Examples will be presented on [the plugin's homepage](http://snippets.webaware.com.au/wordpress-plugins/gravityforms-eway/) as time permits.
 
 = Can I use this plugin on any shared-hosting environment? =
 
@@ -109,6 +112,10 @@ The plugin will run in shared hosting environments, but requires PHP 5 with the 
 6. Example with recurring payments
 
 == Changelog ==
+
+= 1.2.1 [2012-10-02] =
+* fixed: address on one-off eWAY invoice was getting "0, " prepended when PHP < 5.3
+* fixed: address line 2 combined with line 1 when provided
 
 = 1.2.0 [2012-09-21] =
 * added: option to disable whether remote SSL certificate must be verified (only disable if your website can't be correctly configured!)

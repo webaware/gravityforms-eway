@@ -78,14 +78,16 @@ class GFEwayFormData {
 				case 'address':
 					// only pick up the first address (assume later ones are additional info, e.g. shipping)
 					if (empty($this->address) && empty($this->postcode)) {
-						$this->postcode = rgpost("input_{$id}_5");
-						$this->address_street = rgpost("input_{$id}_1");
-						$this->address_suburb = rgpost("input_{$id}_3");
-						$this->address_state = rgpost("input_{$id}_4");
-						$this->address_country = rgpost("input_{$id}_6");
+						$this->postcode = trim(rgpost("input_{$id}_5"));
+						$parts = array(trim(rgpost("input_{$id}_1")), trim(rgpost("input_{$id}_2")));
+						$this->address_street = implode(', ', array_filter($parts, 'strlen'));
+						$this->address_suburb = trim(rgpost("input_{$id}_3"));
+						$this->address_state = trim(rgpost("input_{$id}_4"));
+						$this->address_country = trim(rgpost("input_{$id}_6"));
 
 						// aggregate street, city, state, country into a single string (for regular one-off payments)
-						$this->address = array_reduce(array($this->address_street, $this->address_suburb, $this->address_state, $this->address_country), array(__CLASS__, 'reduceAddress'), '');
+						$parts = array($this->address_street, $this->address_suburb, $this->address_state, $this->address_country);
+						$this->address = implode(', ', array_filter($parts, 'strlen'));
 					}
 					break;
 
@@ -207,21 +209,6 @@ class GFEwayFormData {
 	*/
 	private static function cleanCcNumber($ccNumber) {
 		return strtr($ccNumber, array(' ' => '', '-' => ''));
-	}
-
-	/**
-	* reduce array of address fields to a single string
-	* @param mixed $result
-	* @param mixed $item
-	*/
-	public static function reduceAddress(&$result, $item) {
-		if (!empty($item)) {
-			if ($result !== '')
-				$result .= ', ';
-			$result .= $item;
-		}
-
-		return $result;
 	}
 
 	/**
