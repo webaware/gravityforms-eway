@@ -38,7 +38,7 @@ if (!defined('GFEWAY_PLUGIN_ROOT')) {
 	define('GFEWAY_PLUGIN_ROOT', dirname(__FILE__) . '/');
 	define('GFEWAY_PLUGIN_NAME', basename(dirname(__FILE__)) . '/' . basename(__FILE__));
 	define('GFEWAY_PLUGIN_OPTIONS', 'gfeway_plugin');
-	define('GFEWAY_PLUGIN_VERSION', '1.2.1');
+	define('GFEWAY_PLUGIN_VERSION', '1.2.2');
 }
 
 /**

@@ -192,7 +192,7 @@ class GFEwayRecurringField {
 	*/
 	public function gformPreSubmit($form) {
 		foreach ($form['fields'] as $field) {
-			if ($field['type'] == 'gfewayrecurring') {
+			if ($field['type'] == 'gfewayrecurring' && !RGFormsModel::is_field_hidden($form, $field, RGForms::post('gform_field_values'))) {
 				$recurring = self::getPost($field['id']);
 				$_POST["input_{$field['id']}"] = '$' . number_format($recurring['amountRecur'], 2)
 					. " {$recurring['intervalTypeDesc']} from {$recurring['dateStart']->format('d M Y')}";
@@ -297,7 +297,7 @@ class GFEwayRecurringField {
 				'isRequired' => false,
 				'size' => 'medium',
 				'label_class' => 'gfeway_initial_amount_label',
-				'hidden' => !$field['gfeway_initial_setting'],
+				'hidden' => (isset($field['gfeway_initial_setting']) ? !$field['gfeway_initial_setting'] : false),
 			);
 			$input .= $this->fieldDonation($sub_field, $initial_amount, $lead_id, $form_id);
 
@@ -315,7 +315,7 @@ class GFEwayRecurringField {
 				'isRequired' => false,
 				'size' => 'medium',
 				'label_class' => 'gfeway_initial_date_label',
-				'hidden' => !$field['gfeway_initial_setting'],
+				'hidden' => (isset($field['gfeway_initial_setting']) ? !$field['gfeway_initial_setting'] : false),
 			);
 			$input .= $this->fieldDate($sub_field, $initial_date, $lead_id, $form_id);
 
@@ -347,7 +347,7 @@ class GFEwayRecurringField {
 				'isRequired' => true,
 				'size' => 'medium',
 				'label_class' => 'gfeway_start_date_label',
-				'hidden' => !$field['gfeway_recurring_date_setting'],
+				'hidden' => (isset($field['gfeway_initial_setting']) ? !$field['gfeway_initial_setting'] : false),
 			);
 			$input .= $this->fieldDate($sub_field, $start_date, $lead_id, $form_id);
 
@@ -365,7 +365,7 @@ class GFEwayRecurringField {
 				'isRequired' => true,
 				'size' => 'medium',
 				'label_class' => 'gfeway_end_date_label',
-				'hidden' => !$field['gfeway_recurring_date_setting'],
+				'hidden' => (isset($field['gfeway_initial_setting']) ? !$field['gfeway_initial_setting'] : false),
 			);
 			$input .= $this->fieldDate($sub_field, $end_date, $lead_id, $form_id);
 
@@ -484,7 +484,7 @@ class GFEwayRecurringField {
 		$label = htmlspecialchars($field['label']);
 
 		$input  = "<span class='gfeway_recurring_left $spanClass'>";
-		$input .= "<input name='gfeway_{$id}[{$sub_id}]' id='$field_id' type='text' value='$value' class='ginput_amount $class' $tabindex $logic_event $disabled_text />";
+		$input .= "<input name='gfeway_{$id}[{$sub_id}]' id='$field_id' type='text' value='$value' class='ginput_amount $class' $tabindex $disabled_text />";
 		$input .= "<label class='{$field['label_class']}' for='$field_id' id='{$field_id}_label'>$label</label>";
 		$input .= "</span>";
 

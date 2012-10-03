@@ -223,10 +223,10 @@ class GFEwayPlugin {
 //~ $formData->ccField['validation_message'] = nl2br("success:\n" . htmlspecialchars($eway->getPaymentXML()));
 
 			// if live, pass through amount exactly, but if using test site, round up to whole dollars or eWAY will fail
-			if ($isLiveSite || $this->options['roundTestAmounts'] != 'Y')
-				$eway->amount = $formData->total;
-			else
+			if ($this->options['useTest'] && $this->options['roundTestAmounts'])
 				$eway->amount = ceil($formData->total);
+			else
+				$eway->amount = $formData->total;
 
 			$response = $eway->processPayment();
 			if ($response->status) {

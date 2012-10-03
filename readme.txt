@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards
 Requires at least: 3.0.1
 Tested up to: 3.4.2
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -112,6 +112,10 @@ The plugin will run in shared hosting environments, but requires PHP 5 with the 
 6. Example with recurring payments
 
 == Changelog ==
+
+= 1.2.2 [2012-10-03] =
+* fixed: error when recurring field is present on form, but hidden (thanks, [Simon Watson](http://moonbuggymedia.com/)!)
+* fixed: some undefined index PHP errors
 
 = 1.2.1 [2012-10-02] =
 * fixed: address on one-off eWAY invoice was getting "0, " prepended when PHP < 5.3
