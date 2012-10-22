@@ -122,21 +122,28 @@ class GFEwayPlugin {
 		if ($data['is_valid']) {
 			$formData = new GFEwayFormData($data['form']);
 
+			// make sure form hasn't already been submitted / processed
+			if ($this->hasFormBeenProcessed($data['form'])) {
+				$data['is_valid'] = false;
+				$formData->ccField['failed_validation'] = true;
+				$formData->ccField['validation_message'] = $this->getErrMsg(GFEWAY_ERROR_ALREADY_SUBMITTED);
+			}
+
 			// make that this is the last page of the form and that we have a credit card field and something to bill
 			// and that credit card field is not hidden (which indicates that payment is being made another way)
-			if (!$formData->isCcHidden() && $formData->isLastPage() && is_array($formData->ccField)) {
+			else if (!$formData->isCcHidden() && $formData->isLastPage() && is_array($formData->ccField)) {
 				if (!$formData->hasPurchaseFields()) {
 					$data['is_valid'] = false;
 					$formData->ccField['failed_validation'] = true;
-					$formData->ccField['validation_message'] = 'This form has credit card fields, but no products or totals';
+					$formData->ccField['validation_message'] = $this->getErrMsg(GFEWAY_ERROR_NO_AMOUNT);
 				}
 				else {
 					// only check credit card details if we've got something to bill
 					if ($formData->total > 0 || $formData->hasRecurringPayments()) {
 						// check for required fields
 						$required = array(
-							'ccName' => 'Card holder name is required for credit card processing.',
-							'ccNumber' => 'Card number is required for credit card processing.',
+							'ccName' => $this->getErrMsg(GFEWAY_ERROR_REQ_CARD_HOLDER),
+							'ccNumber' => $this->getErrMsg(GFEWAY_ERROR_REQ_CARD_NAME),
 						);
 						foreach ($required as $name => $message) {
 							if (empty($formData->$name)) {
@@ -157,18 +164,33 @@ class GFEwayPlugin {
 								$data = $this->processSinglePayment($data, $formData);
 							}
 						}
-
-						// if errors, send back to credit card page
-						if (!$data['is_valid']) {
-							GFFormDisplay::set_current_page($data['form']['id'], $formData->ccField['pageNumber']);
-						}
 					}
 				}
 			}
 
+			// if errors, send back to credit card page
+			if (!$data['is_valid']) {
+				GFFormDisplay::set_current_page($data['form']['id'], $formData->ccField['pageNumber']);
+			}
 		}
 
 		return $data;
+	}
+
+	/**
+	* check whether this form entry's unique ID has already been used; if so, we've already done a payment attempt.
+	* @param array $form
+	* @return boolean
+	*/
+	private function hasFormBeenProcessed($form) {
+		global $wpdb;
+
+		$unique_id = RGFormsModel::get_form_unique_id($form['id']);
+
+		$sql = "select lead_id from {$wpdb->prefix}rg_lead_meta where meta_key='gfeway_unique_id' and meta_value = %s";
+		$lead_id = $wpdb->get_var($wpdb->prepare($sql, $unique_id));
+
+		return !empty($lead_id);
 	}
 
 	/**
@@ -242,7 +264,7 @@ class GFEwayPlugin {
 			else {
 				$data['is_valid'] = false;
 				$formData->ccField['failed_validation'] = true;
-				$formData->ccField['validation_message'] = nl2br("Error processing card transaction:\n{$response->error}");
+				$formData->ccField['validation_message'] = nl2br($this->getErrMsg(GFEWAY_ERROR_EWAY_FAIL) . ":\n{$response->error}");
 				$this->txResult = array (
 					'payment_status' => 'Failed',
 				);
@@ -254,7 +276,7 @@ class GFEwayPlugin {
 				'payment_status' => 'Failed',
 			);
 			$formData->ccField['failed_validation'] = true;
-			$formData->ccField['validation_message'] = nl2br("Error processing card transaction:\n{$e->getMessage()}");
+			$formData->ccField['validation_message'] = nl2br($this->getErrMsg(GFEWAY_ERROR_EWAY_FAIL) . ":\n{$e->getMessage()}");
 		}
 
 		return $data;
@@ -321,7 +343,7 @@ class GFEwayPlugin {
 			else {
 				$data['is_valid'] = false;
 				$formData->ccField['failed_validation'] = true;
-				$formData->ccField['validation_message'] = nl2br("Error processing card transaction:\n{$response->error}");
+				$formData->ccField['validation_message'] = nl2br($this->getErrMsg(GFEWAY_ERROR_EWAY_FAIL) . ":\n{$response->error}");
 				$this->txResult = array (
 					'payment_status' => 'Failed',
 				);
@@ -333,7 +355,7 @@ class GFEwayPlugin {
 				'payment_status' => 'Failed',
 			);
 			$formData->ccField['failed_validation'] = true;
-			$formData->ccField['validation_message'] = nl2br("Error processing card transaction:\n{$e->getMessage()}");
+			$formData->ccField['validation_message'] = nl2br($this->getErrMsg(GFEWAY_ERROR_EWAY_FAIL) . ":\n{$e->getMessage()}");
 		}
 
 		return $data;
@@ -352,6 +374,9 @@ class GFEwayPlugin {
 				$entry[$key] = $value;
 			}
 			RGFormsModel::update_lead($entry);
+
+			// record entry's unique ID in database
+			gform_update_meta($entry['id'], 'gfeway_unique_id', RGFormsModel::get_form_unique_id($form['id']));
 		}
 	}
 
@@ -393,6 +418,32 @@ class GFEwayPlugin {
 			}
 		}
 		return false;
+	}
+
+	/**
+	* get nominated error message, checking for custom error message in WP options
+	* @param string $errName the fixed name for the error message (a constant)
+	* @param boolean $useDefault whether to return the default, or check for a custom message
+	* @return string
+	*/
+	public function getErrMsg($errName, $useDefault = false) {
+		static $messages = array (
+			GFEWAY_ERROR_ALREADY_SUBMITTED		=> 'Payment already submitted and processed - please close your browser window',
+			GFEWAY_ERROR_NO_AMOUNT				=> 'This form has credit card fields, but no products or totals',
+			GFEWAY_ERROR_REQ_CARD_HOLDER		=> 'Card holder name is required for credit card processing',
+			GFEWAY_ERROR_REQ_CARD_NAME			=> 'Card number is required for credit card processing',
+			GFEWAY_ERROR_EWAY_FAIL				=> 'Error processing card transaction',
+		);
+
+		// default
+		$msg = isset($messages[$errName]) ? $messages[$errName] : 'Unknown error';
+
+		// check for custom message
+		if (!$useDefault) {
+			$msg = get_option($errName, $msg);
+		}
+
+		return $msg;
 	}
 
 	/**

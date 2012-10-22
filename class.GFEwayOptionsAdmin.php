@@ -16,11 +16,11 @@ class GFEwayOptionsForm {
 	*/
 	public function __construct() {
 		if ($this->isFormPost()) {
-			$this->customerID = isset($_POST['customerID']) ? stripslashes(trim($_POST['customerID'])) : '';
-			$this->useTest = isset($_POST['useTest']) ? stripslashes(trim($_POST['useTest'])) : '';
-			$this->roundTestAmounts = isset($_POST['roundTestAmounts']) ? stripslashes(trim($_POST['roundTestAmounts'])) : '';
-			$this->forceTestAccount = isset($_POST['forceTestAccount']) ? stripslashes(trim($_POST['forceTestAccount'])) : '';
-			$this->sslVerifyPeer = isset($_POST['sslVerifyPeer']) ? stripslashes(trim($_POST['sslVerifyPeer'])) : '';
+			$this->customerID = self::getPostValue('customerID');
+			$this->useTest = self::getPostValue('useTest');
+			$this->roundTestAmounts = self::getPostValue('roundTestAmounts');
+			$this->forceTestAccount = self::getPostValue('forceTestAccount');
+			$this->sslVerifyPeer = self::getPostValue('sslVerifyPeer');
 		}
 	}
 
@@ -33,6 +33,18 @@ class GFEwayOptionsForm {
 	*/
 	public static function isFormPost() {
 		return ($_SERVER['REQUEST_METHOD'] == 'POST');
+	}
+
+	/**
+	* Read a field from form post input.
+	*
+	* Guaranteed to return a string, trimmed of leading and trailing spaces, sloshes stripped out.
+	*
+	* @return string
+	* @param string $fieldname name of the field in the form post
+	*/
+	public static function getPostValue($fieldname) {
+		return isset($_POST[$fieldname]) ? stripslashes(trim($_POST[$fieldname])) : '';
 	}
 
 	/**
@@ -95,6 +107,7 @@ class GFEwayOptionsAdmin {
 				$this->plugin->options['sslVerifyPeer'] = ($this->frm->sslVerifyPeer == 'Y');
 
 				update_option(GFEWAY_PLUGIN_OPTIONS, $this->plugin->options);
+				$this->saveErrorMessages();
 				$this->plugin->showMessage(__('Options saved.'));
 			}
 			else {
@@ -154,20 +167,61 @@ class GFEwayOptionsAdmin {
 			</td>
 		</tr>
 
+		<tr>
+			<th colspan="2" style="font-weight: bold">You may customise the error messages below.
+				Leave a message blank to use the default error message.</th>
+		</tr>
+
+HTML;
+
+		$errNames = array (
+			GFEWAY_ERROR_ALREADY_SUBMITTED,
+			GFEWAY_ERROR_NO_AMOUNT,
+			GFEWAY_ERROR_REQ_CARD_HOLDER,
+			GFEWAY_ERROR_REQ_CARD_NAME,
+			GFEWAY_ERROR_EWAY_FAIL,
+		);
+		foreach ($errNames as $errName) {
+			$defmsg = htmlspecialchars($this->plugin->getErrMsg($errName, true));
+			$msg = htmlspecialchars(get_option($errName));
+			echo "<tr><th>$defmsg</th><td><input type='text' name='$errName' class='large-text' value=\"$msg\" /></td></tr>\n";
+		}
+
+		echo <<<HTML
 	</table>
 	<p class="submit">
 	<input type="submit" name="Submit" class="button-primary" value="Save Changes" />
 	<input type="hidden" name="action" value="save" />
 
 HTML;
-	wp_nonce_field($this->menuPage);
-	echo <<<HTML
+		wp_nonce_field($this->menuPage);
+		echo <<<HTML
 	</p>
 </form>
 
 </div>
 
 HTML;
+	}
+
+	/**
+	* save error messages
+	*/
+	private function saveErrorMessages() {
+		$errNames = array (
+			GFEWAY_ERROR_ALREADY_SUBMITTED,
+			GFEWAY_ERROR_NO_AMOUNT,
+			GFEWAY_ERROR_REQ_CARD_HOLDER,
+			GFEWAY_ERROR_REQ_CARD_NAME,
+			GFEWAY_ERROR_EWAY_FAIL,
+		);
+		foreach ($errNames as $errName) {
+			$msg = $this->frm->getPostValue($errName);
+			delete_option($errName);
+			if (!empty($msg)) {
+				add_option($errName, $msg, '', 'no');
+			}
+		}
 	}
 
 	/**
