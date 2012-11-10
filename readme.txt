@@ -5,7 +5,7 @@ Plugin URI: http://snippets.webaware.com.au/wordpress-plugins/gravityforms-eway/
 Author URI: http://www.webaware.com.au/
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8V9YCKATQHKEN
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards
-Requires at least: 3.0.1
+Requires at least: 3.2.1
 Tested up to: 3.4.2
 Stable tag: 1.3.0
 License: GPLv2 or later
