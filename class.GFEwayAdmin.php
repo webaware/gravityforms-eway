@@ -73,7 +73,6 @@ class GFEwayAdmin {
 	* action hook for adding plugin details links
 	*/
 	public static function addPluginDetailsLinks($links, $file) {
-		// add Donate link
 		if ($file == GFEWAY_PLUGIN_NAME) {
 			$links[] = '<a href="http://wordpress.org/support/plugin/gravityforms-eway">' . __('Support') . '</a>';
 			$links[] = '<a href="http://wordpress.org/extend/plugins/gravityforms-eway/">' . __('Rating') . '</a>';

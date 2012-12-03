@@ -91,6 +91,10 @@ Successful transaction details including the eWAY transaction number are shown i
 
 When test mode is enabled, the payment amount is rounded up by default, because the [eWAY sandbox server returns different error codes when the amount has cents](http://www.eway.com.au/developers/sandbox/direct-payments.html). This can be a useful feature for testing how your website displays errors, but you normally don't want it when testing a payment form.
 
+= Why do I get an error "This page is unsecured"? =
+
+When your form has a credit card field, it accepts very sensitive details from your customers and these must be encrypted. You must have an SSL certificate installed on your website, and your page must be accessed via SSL (i.e. the page address must start with "https:"). You can force a page with a credit card form to be accessed via SSL by ticking Force SSL on the Credit Card Field advanced settings page; see [screenshots](http://wordpress.org/extend/plugins/gravityforms-eway/screenshots/).
+
 = Can I do recurring payments? =
 
 Yes, thanks to the generous sponsorship of [Castle Design](http://castledesign.com.au/). If you use [conditional logic](http://www.gravityhelp.com/documentation/page/Enable_Conditional_Logic) to hide/show a product field and a recurring payment field, you can even let customers choose between a one-off payment and a recurring payment. Payments can be scheduled for weekly, fortnightly, monthly or yearly billing. Examples will be presented on [the plugin's homepage](http://snippets.webaware.com.au/wordpress-plugins/gravityforms-eway/) as time permits.
@@ -110,6 +114,7 @@ The plugin will run in shared hosting environments, but requires PHP 5 with the 
 4. How a credit card validation error appears
 5. A successful entry in Gravity Forms admin
 6. Example with recurring payments
+7. Forcing SSL on a page with a credit card form
 
 == Changelog ==
 

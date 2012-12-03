@@ -15,7 +15,7 @@ class GFEwayOptionsForm {
 	* initialise from form post, if posted
 	*/
 	public function __construct() {
-		if ($this->isFormPost()) {
+		if (self::isFormPost()) {
 			$this->customerID = self::getPostValue('customerID');
 			$this->useTest = self::getPostValue('useTest');
 			$this->roundTestAmounts = self::getPostValue('roundTestAmounts');
