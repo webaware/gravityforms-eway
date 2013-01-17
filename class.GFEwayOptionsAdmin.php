@@ -142,7 +142,8 @@ class GFEwayOptionsAdmin {
 				<tr valign='top'>
 					<th>Use Stored Payments
 						<span id="gfeway-opt-admin-stored-test">
-							<br />Stored Payments are always sent to the live account, there is no sandbox for Stored Payments!
+							<br />Stored Payments use the Direct Payments sandbox;
+							<br />there is no Stored Payments sandbox.
 						</span>
 					</th>
 					<td>

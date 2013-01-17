@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards, australia
 Requires at least: 3.3
 Tested up to: 3.5
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -133,6 +133,11 @@ The plugin will run in shared hosting environments, but requires PHP 5 with the 
 7. Forcing SSL on a page with a credit card form
 
 == Changelog ==
+
+= 1.4.1 [2013-01-17] =
+* added: when entry is stored as 'Pending' for Stored Payment, can edit and change to 'Approved'
+* added: record payment gateway in lead properties
+* changed: Stored Payments use the Direct Payments sandbox when sandbox is selected
 
 = 1.4.0 [2013-01-17] =
 * added: can now use eWAY Stored Payments, e.g. for merchants who do drop-shipping

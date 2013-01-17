@@ -11,7 +11,7 @@
 class GFEwayStoredPayment {
 	// environment / website specific members
 	/**
-	* NB: this is ignored for Stored Payments!
+	* NB: Stored Payments use the Direct Payments sandbox; there is no Stored Payments sandbox
 	* @var boolean
 	*/
 	public $isLiveSite;
@@ -138,6 +138,8 @@ class GFEwayStoredPayment {
 	*/
 	public $option3;
 
+	/** host for the eWAY Real Time API in the developer sandbox environment */
+	const REALTIME_API_SANDBOX = 'https://www.eway.com.au/gateway/xmltest/testpage.asp';
 	/** host for the eWAY Real Time API in the production environment */
 	const REALTIME_API_LIVE = 'https://www.eway.com.au/gateway/xmlstored.asp';
 
@@ -255,12 +257,12 @@ class GFEwayStoredPayment {
 
 	/**
 	* send the eWAY payment request and retrieve and parse the response
-	*
 	* @return GFEwayStoredResponse
 	* @param string $xml eWAY payment request as an XML document, per eWAY specifications
 	*/
 	private function sendPayment($xml) {
-		$url = self::REALTIME_API_LIVE;
+		// use sandbox if not from live website
+		$url = $this->isLiveSite ? self::REALTIME_API_LIVE : self::REALTIME_API_SANDBOX;
 
 		// execute the cURL request, and retrieve the response
 		try {

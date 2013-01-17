@@ -365,6 +365,9 @@ class GFEwayPlugin {
 
 			// record entry's unique ID in database
 			gform_update_meta($entry['id'], 'gfeway_unique_id', RGFormsModel::get_form_unique_id($form['id']));
+
+			// record payment gateway
+			gform_update_meta($entry['id'], 'payment_gateway', 'gfeway');
 		}
 	}
 
