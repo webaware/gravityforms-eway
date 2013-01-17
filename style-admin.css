@@ -6,3 +6,12 @@
 .gfeway_recurring_complex .gf_hidden {
 	display: none;
 }
+
+.no-js #gfeway-opt-admin-stored-test {
+	display: none;
+}
+
+#gfeway-opt-admin-stored-test {
+	color: #c00;
+	font-weight: bold;
+}

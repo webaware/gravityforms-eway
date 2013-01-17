@@ -44,7 +44,7 @@ class GFEwayAdmin {
 	* only output our stylesheet if this is our admin page
 	*/
 	public function enqueueScripts() {
-		wp_enqueue_style('gfeway-admin', "{$this->plugin->urlBase}style-admin.css", FALSE, GFEWAY_PLUGIN_VERSION);
+		wp_enqueue_style('gfeway-admin', $this->plugin->urlBase . 'style-admin.css', false, GFEWAY_PLUGIN_VERSION);
 	}
 
 	/**
@@ -74,7 +74,7 @@ class GFEwayAdmin {
 	*/
 	public static function addPluginDetailsLinks($links, $file) {
 		if ($file == GFEWAY_PLUGIN_NAME) {
-			$links[] = '<a href="http://wordpress.org/support/plugin/gravityforms-eway">' . __('Support') . '</a>';
+			$links[] = '<a href="http://wordpress.org/support/plugin/gravityforms-eway">' . __('Get help') . '</a>';
 			$links[] = '<a href="http://wordpress.org/extend/plugins/gravityforms-eway/">' . __('Rating') . '</a>';
 			$links[] = '<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=8V9YCKATQHKEN">' . __('Donate') . '</a>';
 		}
