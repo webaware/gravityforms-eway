@@ -1,19 +1,17 @@
 <?php
 /**
-* Classes for dealing with an eWAY payment
+* Classes for dealing with an eWAY stored payment
 *
 * NB: for testing, the only account number recognised is '87654321' and the only card number seen as valid is '4444333322221111'
-*
-* copyright (c) 2008-2012 WebAware Pty Ltd, released under GPL v2.1
 */
 
 /**
-* eWAY payment request
+* eWAY stored payment request
 */
-class GFEwayPayment {
+class GFEwayStoredPayment {
 	// environment / website specific members
 	/**
-	* default FALSE, use eWAY sandbox unless set to TRUE
+	* NB: Stored Payments use the Direct Payments sandbox; there is no Stored Payments sandbox
 	* @var boolean
 	*/
 	public $isLiveSite;
@@ -105,6 +103,7 @@ class GFEwayPayment {
 
 	/**
 	* CVN (Creditcard Verification Number) for verifying physical card is held by buyer
+	* NB: this is ignored for Stored Payments!
 	* @var string max. 3 or 4 characters (depends on type of card)
 	*/
 	public $cardVerificationNumber;
@@ -115,7 +114,7 @@ class GFEwayPayment {
 	* You can pass a unique transaction number from your site. You can update and track the status of a transaction when eWAY
 	* returns to your site.
 	*
-	* NB. This number is returned as 'ewayTrxnReference', member transactionReference of GFEwayResponse.
+	* NB. This number is returned as 'ewayTrxnReference', member transactionReference of GFEwayStoredResponse.
 	*
 	* @var string max. 16 characters
 	*/
@@ -142,11 +141,7 @@ class GFEwayPayment {
 	/** host for the eWAY Real Time API in the developer sandbox environment */
 	const REALTIME_API_SANDBOX = 'https://www.eway.com.au/gateway/xmltest/testpage.asp';
 	/** host for the eWAY Real Time API in the production environment */
-	const REALTIME_API_LIVE = 'https://www.eway.com.au/gateway/xmlpayment.asp';
-	/** host for the eWAY Real Time API with CVN verification in the developer sandbox environment */
-	const REALTIME_CVN_API_SANDBOX = 'https://www.eway.com.au/gateway_cvn/xmltest/testpage.asp';
-	/** host for the eWAY Real Time API with CVN verification in the production environment */
-	const REALTIME_CVN_API_LIVE = 'https://www.eway.com.au/gateway_cvn/xmlpayment.asp';
+	const REALTIME_API_LIVE = 'https://www.eway.com.au/gateway/xmlstored.asp';
 
 	/**
 	* populate members with defaults, and set account and environment information
@@ -156,7 +151,7 @@ class GFEwayPayment {
 	*/
 	public function __construct($accountID, $isLiveSite = FALSE) {
 		$this->sslVerifyPeer = TRUE;
-		$this->isLiveSite = $isLiveSite;
+		$this->isLiveSite = $isLiveSite;		// NB: this is ignored for Stored Payments!
 		$this->accountID = $accountID;
 	}
 
@@ -237,22 +232,20 @@ class GFEwayPayment {
 		$xml->startElement('ewaygateway');
 
 		$xml->writeElement('ewayCustomerID', $this->accountID);
-		$xml->writeElement('ewayCardHoldersName', $this->cardHoldersName);
-		$xml->writeElement('ewayCardNumber', $this->cardNumber);
-		$xml->writeElement('ewayCardExpiryMonth', sprintf('%02d', $this->cardExpiryMonth));
-		$xml->writeElement('ewayCardExpiryYear', sprintf('%02d', $this->cardExpiryYear % 100));
 		$xml->writeElement('ewayTotalAmount', number_format($this->amount * 100, 0, '', ''));
-		$xml->writeElement('ewayTrxnNumber', $this->transactionNumber);
-		$xml->writeElement('ewayCustomerInvoiceRef', $this->invoiceReference);
-
-		// optional data
 		$xml->writeElement('ewayCustomerFirstName', $this->firstName);
 		$xml->writeElement('ewayCustomerLastName', $this->lastName);
 		$xml->writeElement('ewayCustomerEmail', $this->emailAddress);
 		$xml->writeElement('ewayCustomerAddress', $this->address);
 		$xml->writeElement('ewayCustomerPostcode', $this->postcode);
 		$xml->writeElement('ewayCustomerInvoiceDescription', $this->invoiceDescription);
-		$xml->writeElement('ewayCVN', $this->cardVerificationNumber);
+		$xml->writeElement('ewayCustomerInvoiceRef', $this->invoiceReference);
+		$xml->writeElement('ewayCardHoldersName', $this->cardHoldersName);
+		$xml->writeElement('ewayCardNumber', $this->cardNumber);
+		$xml->writeElement('ewayCardExpiryMonth', sprintf('%02d', $this->cardExpiryMonth));
+		$xml->writeElement('ewayCardExpiryYear', sprintf('%02d', $this->cardExpiryYear % 100));
+		$xml->writeElement('ewayTrxnNumber', $this->transactionNumber);
+		//~ $xml->writeElement('ewayCVN', $this->cardVerificationNumber);	// NB: must not be present for Stored Payments!
 		$xml->writeElement('ewayOption1', $this->option1);
 		$xml->writeElement('ewayOption2', $this->option2);
 		$xml->writeElement('ewayOption3', $this->option3);
@@ -264,16 +257,12 @@ class GFEwayPayment {
 
 	/**
 	* send the eWAY payment request and retrieve and parse the response
-	*
-	* @return GFEwayResponse
+	* @return GFEwayStoredResponse
 	* @param string $xml eWAY payment request as an XML document, per eWAY specifications
 	*/
 	private function sendPayment($xml) {
-		// use sandbox if not from live website, and use CVN API if we have a card verification number
-		if (empty($this->cardVerificationNumber))
-			$url = $this->isLiveSite ? self::REALTIME_API_LIVE : self::REALTIME_API_SANDBOX;
-		else
-			$url = $this->isLiveSite ? self::REALTIME_CVN_API_LIVE : self::REALTIME_CVN_API_SANDBOX;
+		// use sandbox if not from live website
+		$url = $this->isLiveSite ? self::REALTIME_API_LIVE : self::REALTIME_API_SANDBOX;
 
 		// execute the cURL request, and retrieve the response
 		try {
@@ -284,16 +273,16 @@ class GFEwayPayment {
 			throw new GFEwayException("Error posting eWAY payment to $url: " . $e->getMessage());
 		}
 
-		$response = new GFEwayResponse();
+		$response = new GFEwayStoredResponse();
 		$response->loadResponseXML($responseXML);
 		return $response;
 	}
 }
 
 /**
-* eWAY payment response
+* eWAY stored payment response
 */
-class GFEwayResponse {
+class GFEwayStoredResponse {
 	/**
 	* For a successful transaction "True" is passed and for a failed transaction "False" is passed.
 	* @var boolean

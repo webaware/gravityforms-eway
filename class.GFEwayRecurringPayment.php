@@ -1,8 +1,12 @@
 <?php
 /**
-* Class for dealing with an eWAY recurring payment
+* Classes for dealing with an eWAY recurring payment
 *
 * NB: for testing, the only account number recognised is '87654321' and the only card number seen as valid is '4444333322221111'
+*/
+
+/**
+* eWAY recurring payment request
 */
 class GFEwayRecurringPayment {
 	// environment / website specific members
@@ -280,7 +284,7 @@ class GFEwayRecurringPayment {
 			$errmsg .= "recurring payment end date must be a date.\n";
 
 		if (strlen($errmsg) > 0) {
-			throw new Exception($errmsg);
+			throw new GFEwayException($errmsg);
 		}
 	}
 
@@ -351,29 +355,67 @@ class GFEwayRecurringPayment {
 		// use sandbox if not from live website
 		$url = $this->isLiveSite ? self::REALTIME_API_LIVE : self::REALTIME_API_SANDBOX;
 
-		// build a cURL request
-		$curl = curl_init($url);
-		curl_setopt($curl, CURLOPT_USERAGENT, 'PHP/' . phpversion());
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-		curl_setopt($curl, CURLOPT_HEADER, FALSE);
-		curl_setopt($curl, CURLOPT_POST, TRUE);
-		curl_setopt($curl, CURLOPT_POSTFIELDS, $xml);
-		curl_setopt($curl, CURLOPT_TIMEOUT, 60);
-		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, $this->sslVerifyPeer);	// whether to validate the certificate
-		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);						// verify that the SSL common name exists and matches hostname
-
 		// execute the cURL request, and retrieve the response
-		$responseXML = curl_exec($curl);
-
-		if (curl_errno($curl)) {
-			$errmsg = "Error posting eWAY recurring payment to $url: " . curl_error($curl);
-			curl_close($curl);
-			throw new Exception($errmsg);
+		try {
+			$plugin = GFEwayPlugin::getInstance();
+			$responseXML = $plugin->curlSendRequest($url, $xml, $this->sslVerifyPeer);
 		}
-		curl_close($curl);
+		catch (GFEwayCurlException $e) {
+			throw new GFEwayException("Error posting eWAY recurring payment to $url: " . $e->getMessage());
+		}
 
 		$response = new GFEwayRecurringResponse();
 		$response->loadResponseXML($responseXML);
 		return $response;
+	}
+}
+
+/**
+* eWAY recurring payment response
+*/
+class GFEwayRecurringResponse {
+	/**
+	* For a successful transaction "True" is passed and for a failed transaction "False" is passed.
+	* @var boolean
+	*/
+	public $status;
+
+	/**
+	* the error severity, either Error or Warning
+	* @var string max. 16 characters
+	*/
+	public $errorType;
+
+	/**
+	* the error response returned by the bank
+	* @var string max. 255 characters
+	*/
+	public $error;
+
+	/**
+	* load eWAY response data as XML string
+	*
+	* @param string $response eWAY response as a string (hopefully of XML data)
+	*/
+	public function loadResponseXML($response) {
+		try {
+			// prevent XML injection attacks
+			$oldDisableEntityLoader = libxml_disable_entity_loader(TRUE);
+
+			$xml = new SimpleXMLElement($response);
+
+			$this->status = (strcasecmp((string) $xml->Result, 'success') === 0);
+			$this->errorType = (string) $xml->ErrorSeverity;
+			$this->error = (string) $xml->ErrorDetails;
+
+			// restore default XML inclusion and expansion
+			libxml_disable_entity_loader($oldDisableEntityLoader);
+		}
+		catch (Exception $e) {
+			// restore default XML inclusion and expansion
+			libxml_disable_entity_loader($oldDisableEntityLoader);
+
+			throw new GFEwayException('Error parsing eWAY recurring payments response: ' . $e->getMessage());
+		}
 	}
 }
