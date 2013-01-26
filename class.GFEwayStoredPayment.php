@@ -1,12 +1,12 @@
 <?php
 /**
-* Classes for dealing with an eWAY stored payment
+* Classes for dealing with eWAY stored payments
 *
 * NB: for testing, the only account number recognised is '87654321' and the only card number seen as valid is '4444333322221111'
 */
 
 /**
-* eWAY stored payment request
+* Class for dealing with an eWAY stored payment request
 */
 class GFEwayStoredPayment {
 	// environment / website specific members
@@ -151,7 +151,7 @@ class GFEwayStoredPayment {
 	*/
 	public function __construct($accountID, $isLiveSite = FALSE) {
 		$this->sslVerifyPeer = TRUE;
-		$this->isLiveSite = $isLiveSite;		// NB: this is ignored for Stored Payments!
+		$this->isLiveSite = $isLiveSite;
 		$this->accountID = $accountID;
 	}
 
@@ -266,8 +266,7 @@ class GFEwayStoredPayment {
 
 		// execute the cURL request, and retrieve the response
 		try {
-			$plugin = GFEwayPlugin::getInstance();
-			$responseXML = $plugin->curlSendRequest($url, $xml, $this->sslVerifyPeer);
+			$responseXML = GFEwayPlugin::curlSendRequest($url, $xml, $this->sslVerifyPeer);
 		}
 		catch (GFEwayCurlException $e) {
 			throw new GFEwayException("Error posting eWAY payment to $url: " . $e->getMessage());
@@ -280,7 +279,7 @@ class GFEwayStoredPayment {
 }
 
 /**
-* eWAY stored payment response
+* Class for dealing with an eWAY stored payment response
 */
 class GFEwayStoredResponse {
 	/**
@@ -344,10 +343,20 @@ class GFEwayStoredResponse {
 	*/
 	public function loadResponseXML($response) {
 		try {
-			// prevent XML injection attacks
+			// prevent XML injection attacks, and handle errors without warnings
 			$oldDisableEntityLoader = libxml_disable_entity_loader(TRUE);
+			$oldUseInternalErrors = libxml_use_internal_errors(TRUE);
 
-			$xml = new SimpleXMLElement($response);
+//~ error_log(__METHOD__ . "\n" . $response);
+
+			$xml = simplexml_load_string($response);
+			if ($xml === false) {
+				$errmsg = '';
+				foreach (libxml_get_errors() as $error) {
+					$errmsg .= $error->message;
+				}
+				throw new Exception($errmsg);
+			}
 
 			$this->status = (strcasecmp((string) $xml->ewayTrxnStatus, 'true') === 0);
 			$this->transactionNumber = (string) $xml->ewayTrxnNumber;
@@ -364,12 +373,14 @@ class GFEwayStoredResponse {
 			else
 				$this->amount = NULL;
 
-			// restore default XML inclusion and expansion
+			// restore old libxml settings
 			libxml_disable_entity_loader($oldDisableEntityLoader);
+			libxml_use_internal_errors($oldUseInternalErrors);
 		}
 		catch (Exception $e) {
-			// restore default XML inclusion and expansion
+			// restore old libxml settings
 			libxml_disable_entity_loader($oldDisableEntityLoader);
+			libxml_use_internal_errors($oldUseInternalErrors);
 
 			throw new GFEwayException('Error parsing eWAY response: ' . $e->getMessage());
 		}

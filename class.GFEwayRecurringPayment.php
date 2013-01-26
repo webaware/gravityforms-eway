@@ -1,12 +1,12 @@
 <?php
 /**
-* Classes for dealing with an eWAY recurring payment
+* Classes for dealing with eWAY recurring payments
 *
 * NB: for testing, the only account number recognised is '87654321' and the only card number seen as valid is '4444333322221111'
 */
 
 /**
-* eWAY recurring payment request
+* Class for dealing with an eWAY recurring payment request
 */
 class GFEwayRecurringPayment {
 	// environment / website specific members
@@ -357,8 +357,7 @@ class GFEwayRecurringPayment {
 
 		// execute the cURL request, and retrieve the response
 		try {
-			$plugin = GFEwayPlugin::getInstance();
-			$responseXML = $plugin->curlSendRequest($url, $xml, $this->sslVerifyPeer);
+			$responseXML = GFEwayPlugin::curlSendRequest($url, $xml, $this->sslVerifyPeer);
 		}
 		catch (GFEwayCurlException $e) {
 			throw new GFEwayException("Error posting eWAY recurring payment to $url: " . $e->getMessage());
@@ -371,7 +370,7 @@ class GFEwayRecurringPayment {
 }
 
 /**
-* eWAY recurring payment response
+* Class for dealing with an eWAY recurring payment response
 */
 class GFEwayRecurringResponse {
 	/**
@@ -399,21 +398,33 @@ class GFEwayRecurringResponse {
 	*/
 	public function loadResponseXML($response) {
 		try {
-			// prevent XML injection attacks
+			// prevent XML injection attacks, and handle errors without warnings
 			$oldDisableEntityLoader = libxml_disable_entity_loader(TRUE);
+			$oldUseInternalErrors = libxml_use_internal_errors(TRUE);
 
-			$xml = new SimpleXMLElement($response);
+//~ error_log(__METHOD__ . "\n" . $response);
+
+			$xml = simplexml_load_string($response);
+			if ($xml === false) {
+				$errmsg = '';
+				foreach (libxml_get_errors() as $error) {
+					$errmsg .= $error->message;
+				}
+				throw new Exception($errmsg);
+			}
 
 			$this->status = (strcasecmp((string) $xml->Result, 'success') === 0);
 			$this->errorType = (string) $xml->ErrorSeverity;
 			$this->error = (string) $xml->ErrorDetails;
 
-			// restore default XML inclusion and expansion
+			// restore old libxml settings
 			libxml_disable_entity_loader($oldDisableEntityLoader);
+			libxml_use_internal_errors($oldUseInternalErrors);
 		}
 		catch (Exception $e) {
-			// restore default XML inclusion and expansion
+			// restore old libxml settings
 			libxml_disable_entity_loader($oldDisableEntityLoader);
+			libxml_use_internal_errors($oldUseInternalErrors);
 
 			throw new GFEwayException('Error parsing eWAY recurring payments response: ' . $e->getMessage());
 		}

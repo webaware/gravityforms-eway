@@ -6,8 +6,8 @@ Author URI: http://www.webaware.com.au/
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8V9YCKATQHKEN
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards, australia
 Requires at least: 3.3
-Tested up to: 3.5
-Stable tag: 1.4.1
+Tested up to: 3.5.1
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -93,11 +93,11 @@ Any Gravity Forms license will do. You can use this plugin with the Personal, Bu
 
 = Where do I find the eWAY transaction number? =
 
-Successful transaction details including the eWAY transaction number are shown in the Info box when you view the details of a form entry in the WordPress admin. Recurring payments don't get a transaction number when the payment is established, however, so only the payment status and date are recorded.
+Successful transaction details including the eWAY transaction number and bank authcode are shown in the Info box when you view the details of a form entry in the WordPress admin. Recurring payments don't get a transaction number when the payment is established, however, so only the payment status and date are recorded.
 
 = How do I add a confirmed payment amount and transaction number to my Gravity Forms notification emails? =
 
-Browse to your Gravity Form, select [Notifications](http://www.gravityhelp.com/documentation/page/Notifications) and use the Insert Merge Tag dropdown (Payment Amount and Transaction Number will appear under Custom at the very bottom of the dropdown list).
+Browse to your Gravity Form, select [Notifications](http://www.gravityhelp.com/documentation/page/Notifications) and use the Insert Merge Tag dropdown (Payment Amount, Transaction Number and Auth Code will appear under Custom at the very bottom of the dropdown list).
 
 = Why is the amount paid bigger than the form total when sandbox is enabled? =
 
@@ -133,6 +133,12 @@ The plugin will run in shared hosting environments, but requires PHP 5 with the 
 7. Forcing SSL on a page with a credit card form
 
 == Changelog ==
+
+= 1.5.0 [2013-01-26] =
+* added: support for [Beagle (free)](http://www.eway.com.au/developers/resources/beagle-(free)-rules) anti-fraud using geo-IP (Direct Payments only)
+* added: record authcode for transactions, and show on entry details screen
+* added: merge tags for authcode and beagle_score, for notification emails
+* changed: use WordPress function wp_remote_post() instead of directly calling curl functions
 
 = 1.4.1 [2013-01-17] =
 * added: when entry is stored as 'Pending' for Stored Payment, can edit and change to 'Approved'

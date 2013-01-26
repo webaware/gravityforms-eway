@@ -11,6 +11,7 @@ class GFEwayCurlException extends Exception {}
 */
 class GFEwayPlugin {
 	public $urlBase;									// string: base URL path to files in plugin
+	public $options;									// array of plugin options
 
 	private $acceptedCards;								// hash map of accepted credit cards
 	private $txResult;									// results from credit card payment transaction
@@ -54,6 +55,7 @@ class GFEwayPlugin {
 			'customerID' => '87654321',
 			'useStored' => false,
 			'useTest' => true,
+			'useBeagle' => false,
 			'roundTestAmounts' => true,
 			'forceTestAccount' => true,
 			'sslVerifyPeer' => true,
@@ -223,6 +225,11 @@ class GFEwayPlugin {
 			$eway->postcode = $formData->postcode;
 			$eway->cardVerificationNumber = $formData->ccCVN;
 
+			// if Beagle is enabled, get the country code
+			if ($this->options['useBeagle']) {
+				$eway->customerCountryCode = GFCommon::get_country_code($formData->address_country);
+			}
+
 			// allow plugins/themes to modify invoice description and reference, and set option fields
 			$eway->invoiceDescription = apply_filters('gfeway_invoice_desc', $eway->invoiceDescription, $data['form']);
 			$eway->invoiceReference = apply_filters('gfeway_invoice_ref', $eway->invoiceReference, $data['form']);
@@ -248,6 +255,8 @@ class GFEwayPlugin {
 					'payment_date' => date('Y-m-d H:i:s'),
 					'payment_amount' => $response->amount,
 					'transaction_type' => 1,
+					'authcode' => $response->authCode,
+					'beagle_score' => $response->beagleScore,
 				);
 			}
 			else {
@@ -359,7 +368,17 @@ class GFEwayPlugin {
 
 		if (!empty($this->txResult)) {
 			foreach ($this->txResult as $key => $value) {
-				$entry[$key] = $value;
+				switch ($key) {
+					case 'authcode':
+					case 'beagle_score':
+						// record bank authorisation code, Beagle score
+						gform_update_meta($entry['id'], $key, $value);
+						break;
+
+					default:
+						$entry[$key] = $value;
+						break;
+				}
 			}
 			RGFormsModel::update_lead($entry);
 
@@ -382,7 +401,9 @@ class GFEwayPlugin {
 	public function gformCustomMergeTags($merge_tags, $form_id, $fields, $element_id) {
 		if ($fields && $this->hasFieldType($fields, 'creditcard')) {
 			$merge_tags[] = array('label' => 'Transaction ID', 'tag' => '{transaction_id}');
+			$merge_tags[] = array('label' => 'Auth Code', 'tag' => '{authcode}');
 			$merge_tags[] = array('label' => 'Payment Amount', 'tag' => '{payment_amount}');
+			$merge_tags[] = array('label' => 'Beagle Score', 'tag' => '{beagle_score}');
 		}
 
 		return $merge_tags;
@@ -400,13 +421,20 @@ class GFEwayPlugin {
 	* @return string
 	*/
 	public function gformReplaceMergeTags($text, $form, $lead, $url_encode, $esc_html, $nl2br, $format) {
+		$authcode = gform_get_meta($lead['id'], 'authcode');
+		$beagle_score = gform_get_meta($lead['id'], 'beagle_score');
+
 		$tags = array (
 			'{transaction_id}',
 			'{payment_amount}',
+			'{authcode}',
+			'{beagle_score}',
 		);
 		$values = array (
 			isset($lead['transaction_id']) ? $lead['transaction_id'] : '',
 			isset($lead['payment_amount']) ? $lead['payment_amount'] : '',
+			!empty($authcode) ? $authcode : '',
+			!empty($beagle_score) ? $beagle_score : '',
 		);
 		return str_replace($tags, $values, $text);
 	}
@@ -485,28 +513,56 @@ class GFEwayPlugin {
 	* @return string $response
 	* @throws GFEwayCurlException
 	*/
-	public function curlSendRequest($url, $data, $sslVerifyPeer = true) {
-		// build a cURL request
-		$curl = curl_init($url);
-		curl_setopt($curl, CURLOPT_USERAGENT, GFEWAY_CURL_USER_AGENT);
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-		curl_setopt($curl, CURLOPT_HEADER, FALSE);
-		curl_setopt($curl, CURLOPT_POST, TRUE);
-		curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-		curl_setopt($curl, CURLOPT_TIMEOUT, 60);
-		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, $sslVerifyPeer);		// whether to validate the certificate
-		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);					// verify that the SSL common name exists and matches hostname
+	public static function curlSendRequest($url, $data, $sslVerifyPeer = true) {
+		// send data via HTTPS and receive response
+		$response = wp_remote_post($url, array(
+			'user-agent' => GFEWAY_CURL_USER_AGENT,
+			'sslverify' => $sslVerifyPeer,
+			'timeout' => 60,
+			'headers' => array('Content-Type' => 'text/xml; charset=utf-8'),
+			'body' => $data,
+		));
 
-		// execute the cURL request, and retrieve the response
-		$response = curl_exec($curl);
-		if (curl_errno($curl)) {
-			$errmsg = curl_error($curl);
-			curl_close($curl);
-			throw new GFEwayCurlException($errmsg);
+//~ error_log(__METHOD__ . "\n" . print_r($response,1));
+
+		if (is_wp_error($response)) {
+			throw new GFEwayCurlException($response->get_error_message());
 		}
-		curl_close($curl);
 
-		return $response;
+		return $response['body'];
+	}
+
+	/**
+	* get the customer's IP address dynamically from server variables
+	* @return string
+	*/
+	public static function getCustomerIP() {
+		// if test mode and running on localhost, then kludge to an Aussie IP address
+		if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] == '127.0.0.1' && get_option('eway_test')) {
+			return '210.1.199.10';
+		}
+
+		// check for remote address, ignore all other headers as they can be spoofed easily
+		if (isset($_SERVER['REMOTE_ADDR']) && self::isIpAddress($_SERVER['REMOTE_ADDR'])) {
+			return $_SERVER['REMOTE_ADDR'];
+		}
+
+		return '';
+	}
+
+	/**
+	* check whether a given string is an IP address
+	* @param string $maybeIP
+	* @return bool
+	*/
+	protected static function isIpAddress($maybeIP) {
+		if (function_exists('inet_pton')) {
+			// check for IPv4 and IPv6 addresses
+			return !!inet_pton($maybeIP);
+		}
+
+		// just check for IPv4 addresses
+		return !!ip2long($maybeIP);
 	}
 
 	/**

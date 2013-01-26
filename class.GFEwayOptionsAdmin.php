@@ -8,6 +8,7 @@ class GFEwayOptionsForm {
 	public $customerID;
 	public $useStored;
 	public $useTest;
+	public $useBeagle;
 	public $roundTestAmounts;
 	public $forceTestAccount;
 	public $sslVerifyPeer;
@@ -20,6 +21,7 @@ class GFEwayOptionsForm {
 			$this->customerID = self::getPostValue('customerID');
 			$this->useStored = self::getPostValue('useStored');
 			$this->useTest = self::getPostValue('useTest');
+			$this->useBeagle = self::getPostValue('useBeagle');
 			$this->roundTestAmounts = self::getPostValue('roundTestAmounts');
 			$this->forceTestAccount = self::getPostValue('forceTestAccount');
 			$this->sslVerifyPeer = self::getPostValue('sslVerifyPeer');
@@ -106,6 +108,7 @@ class GFEwayOptionsAdmin {
 				$this->plugin->options['customerID'] = $this->frm->customerID;
 				$this->plugin->options['useStored'] = ($this->frm->useStored == 'Y');
 				$this->plugin->options['useTest'] = ($this->frm->useTest == 'Y');
+				$this->plugin->options['useBeagle'] = ($this->frm->useBeagle == 'Y');
 				$this->plugin->options['roundTestAmounts'] = ($this->frm->roundTestAmounts == 'Y');
 				$this->plugin->options['forceTestAccount'] = ($this->frm->forceTestAccount == 'Y');
 				$this->plugin->options['sslVerifyPeer'] = ($this->frm->sslVerifyPeer == 'Y');
@@ -123,6 +126,7 @@ class GFEwayOptionsAdmin {
 			$this->frm->customerID = $this->plugin->options['customerID'];
 			$this->frm->useStored = $this->plugin->options['useStored'] ? 'Y' : 'N';
 			$this->frm->useTest = $this->plugin->options['useTest'] ? 'Y' : 'N';
+			$this->frm->useBeagle = $this->plugin->options['useBeagle'] ? 'Y' : 'N';
 			$this->frm->roundTestAmounts = $this->plugin->options['roundTestAmounts'] ? 'Y' : 'N';
 			$this->frm->forceTestAccount = $this->plugin->options['forceTestAccount'] ? 'Y' : 'N';
 			$this->frm->sslVerifyPeer = $this->plugin->options['sslVerifyPeer'] ? 'Y' : 'N';
@@ -173,6 +177,18 @@ class GFEwayOptionsAdmin {
 					<td>
 						<label><input type="radio" name="forceTestAccount" value="Y" <?php echo checked($this->frm->forceTestAccount, 'Y'); ?> />&nbsp;yes</label>
 						&nbsp;&nbsp;<label><input type="radio" name="forceTestAccount" value="N" <?php echo checked($this->frm->forceTestAccount, 'N'); ?> />&nbsp;no</label>
+					</td>
+				</tr>
+
+				<tr valign='top'>
+					<th>Use <a href="http://www.eway.com.au/developers/resources/beagle-(free)-rules" target="_blank">Beagle</a>
+						<span id="gfeway-opt-admin-stored-beagle">
+							<br />Beagle is not available for Stored Payments.
+						</span>
+					</th>
+					<td>
+						<label><input type="radio" name="useBeagle" value="Y" <?php echo checked($this->frm->useBeagle, 'Y'); ?> />&nbsp;yes</label>
+						&nbsp;&nbsp;<label><input type="radio" name="useBeagle" value="N" <?php echo checked($this->frm->useBeagle, 'N'); ?> />&nbsp;no</label>
 					</td>
 				</tr>
 

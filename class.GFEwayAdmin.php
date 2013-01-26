@@ -20,6 +20,7 @@ class GFEwayAdmin {
 		add_filter('gform_currency_setting_message', array($this, 'gformCurrencySettingMessage'));
 		add_action('gform_payment_status', array($this, 'gformPaymentStatus'), 10, 3);
 		add_action('gform_after_update_entry', array($this, 'gformAfterUpdateEntry'), 10, 2);
+		add_action("gform_entry_info", array($this, 'gformEntryInfo'), 10, 2);
 
 		// hook for showing admin messages
 		add_action('admin_notices', array($this, 'actionAdminNotices'));
@@ -103,6 +104,26 @@ class GFEwayAdmin {
 	*/
 	public function gformCurrencySettingMessage() {
 		echo "<div class='gform_currency_message'>eWAY payments only supports Australian Dollars (AUD).</div>\n";
+	}
+
+	/**
+	* action hook for building the entry details view
+	* @param int $form_id
+	* @param array $lead
+	*/
+	public function gformEntryInfo($form_id, $lead) {
+		$payment_gateway = gform_get_meta($lead['id'], 'payment_gateway');
+		if ($payment_gateway == 'gfeway') {
+			$authcode = gform_get_meta($lead['id'], 'authcode');
+			if ($authcode) {
+				echo 'Auth Code: ', htmlspecialchars($authcode), "<br /><br />\n";
+			}
+
+			$beagle_score = gform_get_meta($lead['id'], 'beagle_score');
+			if ($beagle_score) {
+				echo 'Beagle Score: ', htmlspecialchars($beagle_score), "<br /><br />\n";
+			}
+		}
 	}
 
 	/**
