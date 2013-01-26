@@ -79,13 +79,17 @@ No. This plugin adds an eWAY payment gateway to Gravity Forms so that you can ad
 
 Not yet. There are plans to integrate eWAY's Rapid Payments API sometime in 2013, so check back in a while.
 
+= Can I use the eWAY hosted payment form with this plugin? =
+
+No, this plugin only supports the [Direct Payments API](http://www.eway.com.au/developers/api/direct-payments.html).
+
 = What is Stored Payments? =
 
 Like Direct Payments, the purchase information is sent to eWAY for processing, but with [Stored Payments](http://www.eway.com.au/how-it-works/what-products-are-included-#stored-payments) it isn't processed right away. The merchant needs to login to their eWAY Business Centre to complete each transaction. It's useful for shops that do drop-shipping and want to delay billing. Most websites should have this option set to No.
 
-= Can I use the eWAY hosted payment form with this plugin? =
+= What is Beagle? =
 
-No, this plugin only supports the [Direct Payments API](http://www.eway.com.au/developers/api/direct-payments.html).
+[Beagle](http://www.eway.com.au/how-it-works/what-products-are-included-#beagle-(free)) is a service from eWAY that provides a level of fraud protection for your transactions. It uses information about the IP address of the purchaser to suggest whether there is a risk of fraud. You must configure [Beagle rules](http://www.eway.com.au/developers/resources/beagle-(free)-rules) in your MYeWAY console before enabling Beagle in this plugin.
 
 = What Gravity Forms license do I need? =
 
