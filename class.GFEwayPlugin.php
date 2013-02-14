@@ -14,7 +14,7 @@ class GFEwayPlugin {
 	public $options;									// array of plugin options
 
 	private $acceptedCards;								// hash map of accepted credit cards
-	private $txResult;									// results from credit card payment transaction
+	private $txResult = null;							// results from credit card payment transaction
 
 	/**
 	* static method for getting the instance of this singleton object
@@ -73,25 +73,28 @@ class GFEwayPlugin {
 	* handle the plugin's init action
 	*/
 	public function init() {
-		// hook into Gravity Forms to enable credit cards and trap form submissions
-		add_action('gform_enable_credit_card_field', '__return_true');		// just return true to enable CC fields
-		add_filter('gform_creditcard_types', array($this, 'gformCCTypes'));
-		add_filter('gform_currency', array($this, 'gformCurrency'));
-		add_filter('gform_currency_disabled', '__return_true');
-		add_filter('gform_validation', array($this, 'gformValidation'));
-		add_action('gform_after_submission', array($this, 'gformAfterSubmission'), 10, 2);
-		add_filter('gform_custom_merge_tags', array($this, 'gformCustomMergeTags'), 10, 4);
-		add_filter('gform_replace_merge_tags', array($this, 'gformReplaceMergeTags'), 10, 7);
+		// do nothing if Gravity Forms isn't enabled
+		if (class_exists('GFCommon')) {
+			// hook into Gravity Forms to enable credit cards and trap form submissions
+			add_action('gform_enable_credit_card_field', '__return_true');		// just return true to enable CC fields
+			add_filter('gform_creditcard_types', array($this, 'gformCCTypes'));
+			add_filter('gform_currency', array($this, 'gformCurrency'));
+			add_filter('gform_currency_disabled', '__return_true');
+			add_filter('gform_validation', array($this, 'gformValidation'));
+			add_action('gform_after_submission', array($this, 'gformAfterSubmission'), 10, 2);
+			add_filter('gform_custom_merge_tags', array($this, 'gformCustomMergeTags'), 10, 4);
+			add_filter('gform_replace_merge_tags', array($this, 'gformReplaceMergeTags'), 10, 7);
 
-		// hook into Gravity Forms to handle Recurring Payments custom field
-		new GFEwayRecurringField($this);
+			// hook into Gravity Forms to handle Recurring Payments custom field
+			new GFEwayRecurringField($this);
 
-		// recurring payments field has datepickers, register required scripts / stylesheets
-		$gfBaseUrl = GFCommon::get_base_url();
-		wp_register_script('gforms_ui_datepicker', $gfBaseUrl . '/js/jquery-ui/ui.datepicker.js', array('jquery'), GFCommon::$version, true);
-		wp_register_script('gforms_datepicker', $gfBaseUrl . '/js/datepicker.js', array('gforms_ui_datepicker'), GFCommon::$version, true);
-		wp_register_script('gfeway_recurring', $this->urlBase . 'js/recurring.min.js', array('gforms_datepicker'), GFEWAY_PLUGIN_VERSION, true);
-		wp_register_style('gfeway', $this->urlBase . 'style.css', false, GFEWAY_PLUGIN_VERSION);
+			// recurring payments field has datepickers, register required scripts / stylesheets
+			$gfBaseUrl = GFCommon::get_base_url();
+			wp_register_script('gforms_ui_datepicker', $gfBaseUrl . '/js/jquery-ui/ui.datepicker.js', array('jquery'), GFCommon::$version, true);
+			wp_register_script('gforms_datepicker', $gfBaseUrl . '/js/datepicker.js', array('gforms_ui_datepicker'), GFCommon::$version, true);
+			wp_register_script('gfeway_recurring', $this->urlBase . 'js/recurring.min.js', array('gforms_datepicker'), GFEWAY_PLUGIN_VERSION, true);
+			wp_register_style('gfeway', $this->urlBase . 'style.css', false, GFEWAY_PLUGIN_VERSION);
+		}
 
 		if (is_admin()) {
 			// kick off the admin handling
@@ -421,8 +424,20 @@ class GFEwayPlugin {
 	* @return string
 	*/
 	public function gformReplaceMergeTags($text, $form, $lead, $url_encode, $esc_html, $nl2br, $format) {
-		$authcode = gform_get_meta($lead['id'], 'authcode');
-		$beagle_score = gform_get_meta($lead['id'], 'beagle_score');
+		if (is_null($this->txResult)) {
+			// lead loaded from database, get values from lead meta
+			$transaction_id = isset($lead['transaction_id']) ? $lead['transaction_id'] : '';
+			$payment_amount = isset($lead['payment_amount']) ? $lead['payment_amount'] : '';
+			$authcode = (string) gform_get_meta($lead['id'], 'authcode');
+			$beagle_score = (string) gform_get_meta($lead['id'], 'beagle_score');
+		}
+		else {
+			// lead not yet saved, get values from transaction results
+			$transaction_id = isset($this->txResult['transaction_id']) ? $this->txResult['transaction_id'] : '';
+			$payment_amount = isset($this->txResult['payment_amount']) ? $this->txResult['payment_amount'] : '';
+			$authcode = isset($this->txResult['authcode']) ? $this->txResult['authcode'] : '';
+			$beagle_score = isset($this->txResult['beagle_score']) ? $this->txResult['beagle_score'] : '';
+		}
 
 		$tags = array (
 			'{transaction_id}',
@@ -431,10 +446,10 @@ class GFEwayPlugin {
 			'{beagle_score}',
 		);
 		$values = array (
-			isset($lead['transaction_id']) ? $lead['transaction_id'] : '',
-			isset($lead['payment_amount']) ? $lead['payment_amount'] : '',
-			!empty($authcode) ? $authcode : '',
-			!empty($beagle_score) ? $beagle_score : '',
+			$transaction_id,
+			$payment_amount,
+			$authcode,
+			$beagle_score,
 		);
 		return str_replace($tags, $values, $text);
 	}

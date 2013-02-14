@@ -538,20 +538,29 @@ class GFEwayRecurringField {
 
 		$label = htmlspecialchars($field['label']);
 
-		$types = array ('weekly', 'fortnightly', 'monthly', 'yearly');
-
-		$opts = '';
-		foreach ($types as $type) {
-			$opts .= "<option value='$type'";
-			if ($type == $value)
-				$opts .= " selected='selected'";
-			$opts .= ">$type</option>";
+		$periods = apply_filters('gfeway_recurring_periods', array('weekly', 'fortnightly', 'monthly', 'yearly'), $form_id, $field);
+		if (count($periods) == 1) {
+			// build a hidden field and label
+			$input  = "<span class='gfeway_recurring_left $spanClass'>";
+			$input .= "<input type='hidden' name='gfeway_{$id}[{$sub_id}]' value='{$periods[0]}' />";
+			$input .= "<label class='{$field['label_class']}' for='$field_id' id='{$field_id}_label'>$label: {$periods[0]}</label>";
+			$input .= "</span>";
 		}
+		else {
+			// build a drop-down list
+			$opts = '';
+			foreach ($periods as $period) {
+				$opts .= "<option value='$period'";
+				if ($period == $value)
+					$opts .= " selected='selected'";
+				$opts .= ">$period</option>";
+			}
 
-		$input  = "<span class='gfeway_recurring_left $spanClass'>";
-		$input .= "<select size='1' name='gfeway_{$id}[{$sub_id}]' id='$field_id' $tabindex class='gfield_select $class' $disabled_text>$opts</select>";
-		$input .= "<label class='{$field['label_class']}' for='$field_id' id='{$field_id}_label'>$label</label>";
-		$input .= "</span>";
+			$input  = "<span class='gfeway_recurring_left $spanClass'>";
+			$input .= "<select size='1' name='gfeway_{$id}[{$sub_id}]' id='$field_id' $tabindex class='gfield_select $class' $disabled_text>$opts</select>";
+			$input .= "<label class='{$field['label_class']}' for='$field_id' id='{$field_id}_label'>$label</label>";
+			$input .= "</span>";
+		}
 
 		return $input;
 	}
