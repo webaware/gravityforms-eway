@@ -236,6 +236,7 @@ class GFEwayPlugin {
 			// allow plugins/themes to modify invoice description and reference, and set option fields
 			$eway->invoiceDescription = apply_filters('gfeway_invoice_desc', $eway->invoiceDescription, $data['form']);
 			$eway->invoiceReference = apply_filters('gfeway_invoice_ref', $eway->invoiceReference, $data['form']);
+			$eway->transactionNumber = apply_filters('gfeway_invoice_trans_number', $eway->transactionNumber, $data['form']);
 			$eway->option1 = apply_filters('gfeway_invoice_option1', '', $data['form']);
 			$eway->option2 = apply_filters('gfeway_invoice_option2', '', $data['form']);
 			$eway->option3 = apply_filters('gfeway_invoice_option3', '', $data['form']);
@@ -326,6 +327,7 @@ class GFEwayPlugin {
 			// allow plugins/themes to modify invoice description and reference, and set option fields
 			$eway->invoiceDescription = apply_filters('gfeway_invoice_desc', $eway->invoiceDescription, $data['form']);
 			$eway->invoiceReference = apply_filters('gfeway_invoice_ref', $eway->invoiceReference, $data['form']);
+			$eway->transactionNumber = apply_filters('gfeway_invoice_trans_number', $eway->transactionNumber, $data['form']);
 			$eway->customerComments = apply_filters('gfeway_invoice_cust_comments', '', $data['form']);
 
 //~ error_log(__METHOD__ . "\n" . print_r($eway,1));
@@ -386,7 +388,9 @@ class GFEwayPlugin {
 			RGFormsModel::update_lead($entry);
 
 			// record entry's unique ID in database
-			gform_update_meta($entry['id'], 'gfeway_unique_id', RGFormsModel::get_form_unique_id($form['id']));
+			$unique_id = RGFormsModel::get_form_unique_id($form['id']);
+
+			gform_update_meta($entry['id'], 'gfeway_unique_id', $unique_id);
 
 			// record payment gateway
 			gform_update_meta($entry['id'], 'payment_gateway', 'gfeway');

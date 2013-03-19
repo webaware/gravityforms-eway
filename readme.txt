@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards, australia
 Requires at least: 3.3
 Tested up to: 3.5.1
-Stable tag: 1.5.1
+Stable tag: 1.5.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -42,6 +42,7 @@ Developers can use these filter hooks to modify some eWAY invoice properties. Ea
 
 * `gfeway_invoice_desc` for modifying the invoice description
 * `gfeway_invoice_ref` for modifying the invoice reference
+* `gfeway_invoice_trans_number` for modifying the invoice transaction reference
 * `gfeway_invoice_option1` for setting the option1 field (one-off payments)
 * `gfeway_invoice_option2` for setting the option2 field (one-off payments)
 * `gfeway_invoice_option3` for setting the option3 field (one-off payments)
@@ -138,6 +139,9 @@ The plugin will run in shared hosting environments, but requires PHP 5 with the 
 7. Forcing SSL on a page with a credit card form
 
 == Changelog ==
+
+= 1.5.2 [2013-03-19] =
+* added: filter `gfeway_invoice_trans_number` for setting the invoice transaction reference (NB: 16 character limit)
 
 = 1.5.1 [2013-02-14] =
 * fixed: merge tags work on new notification emails, not just on resends!
