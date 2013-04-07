@@ -96,7 +96,13 @@ class GFEwayRecurringPayment {
 	public $customerComments;
 
 	/**
-	* an invoice reference to track by (NB: see transactionNumber which is intended for invoice number or similar)
+	* an customer reference to track by (NB: see also invoiceReference)
+	* @var string max. 20 characters
+	*/
+	public $customerReference;
+
+	/**
+	* an invoice reference to track by
 	* @var string max. 50 characters
 	*/
 	public $invoiceReference;
@@ -303,7 +309,7 @@ class GFEwayRecurringPayment {
 
 		// customer data
 		$xml->startElement('Customer');
-		$xml->writeElement('CustomerRef', '');
+		$xml->writeElement('CustomerRef', $this->customerReference);	// req?
 		$xml->writeElement('CustomerTitle', $this->title);
 		$xml->writeElement('CustomerFirstName', $this->firstName);		// req
 		$xml->writeElement('CustomerLastName', $this->lastName);		// req

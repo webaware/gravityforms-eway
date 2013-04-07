@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards, australia
 Requires at least: 3.3
 Tested up to: 3.5.1
-Stable tag: 1.5.2
+Stable tag: 1.5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,7 +15,7 @@ Add a credit card payment gateway for eWAY to the Gravity Forms plugin
 
 == Description ==
 
-Gravity Forms eWAY adds a credit card payment gateway for [eWAY in Australia](http://www.eway.com.au/) to the [Gravity Forms](http://www.gravityforms.com/) plugin, using eWAY's [Direct Payments API](http://www.eway.com.au/developers/api/direct-payments.html) or [Stored Payments API](http://www.eway.com.au/developers/api/stored-(xml)).
+Gravity Forms eWAY adds a credit card payment gateway for [eWAY in Australia](http://www.eway.com.au/) to the [Gravity Forms](http://www.gravityforms.com/) plugin, using eWAY's [Direct Payments API](http://www.eway.com.au/developers/api/direct-payments.html) or [Stored Payments API](http://www.eway.com.au/developers/api/stored-%28xml%29).
 
 * build online donation forms
 * build online booking forms
@@ -34,7 +34,7 @@ Thanks for sponsoring new features on Gravity Forms eWAY!
 * you need to install the [Gravity Forms](http://www.gravityforms.com/) plugin
 * you need an SSL certificate for your hosting account
 * you need an account with eWAY Australia
-* this plugin uses eWAY's [Direct Payments API](http://www.eway.com.au/developers/api/direct-payments.html) or [Stored Payments API](http://www.eway.com.au/developers/api/stored-(xml)), and does not support eWAY's hosted payment form
+* this plugin uses eWAY's [Direct Payments API](http://www.eway.com.au/developers/api/direct-payments.html) or [Stored Payments API](http://www.eway.com.au/developers/api/stored-%28xml%29), and does not support eWAY's hosted payment form
 
 = Filter hooks =
 
@@ -91,7 +91,7 @@ Like Direct Payments, the purchase information is sent to eWAY for processing, b
 
 = What is Beagle? =
 
-[Beagle](http://www.eway.com.au/how-it-works/what-products-are-included-#beagle-(free)) is a service from eWAY that provides a level of fraud protection for your transactions. It uses information about the IP address of the purchaser to suggest whether there is a risk of fraud. You must configure [Beagle rules](http://www.eway.com.au/developers/resources/beagle-(free)-rules) in your MYeWAY console before enabling Beagle in this plugin.
+[Beagle](http://www.eway.com.au/how-it-works/what-products-are-included-#beagle-%28free%29) is a service from eWAY that provides a level of fraud protection for your transactions. It uses information about the IP address of the purchaser to suggest whether there is a risk of fraud. You must configure [Beagle rules](http://www.eway.com.au/developers/resources/beagle-%28free%29-rules) in your MYeWAY console before enabling Beagle in this plugin.
 
 = What Gravity Forms license do I need? =
 
@@ -117,6 +117,8 @@ When your form has a credit card field, it accepts very sensitive details from y
 
 Yes, thanks to the generous sponsorship of [Castle Design](http://castledesign.com.au/). If you use [conditional logic](http://www.gravityhelp.com/documentation/page/Enable_Conditional_Logic) to hide/show a product field and a recurring payment field, you can even let customers choose between a one-off payment and a recurring payment. Payments can be scheduled for weekly, fortnightly, monthly or yearly billing. Examples will be presented on [the plugin's homepage](http://snippets.webaware.com.au/wordpress-plugins/gravityforms-eway/) as time permits.
 
+NB: when testing recurring payments in the Sandbox, you must use the special test customer ID 87654321. You can temporarily force this by enabling the setting "Force Test Customer ID in Sandbox".
+
 = I get an SSL error when my form attempts to connect with eWAY =
 
 This is a common problem in local testing environments. Please [read this post](http://snippets.webaware.com.au/howto/stop-turning-off-curlopt_ssl_verifypeer-and-fix-your-php-config/) for more information.
@@ -140,6 +142,10 @@ The plugin will run in shared hosting environments, but requires PHP 5 with the 
 
 == Changelog ==
 
+= 1.5.3 [2013-04-07] =
+* fixed: don't squabble with other plugins (e.g. DPS PxPay) for custom merge tags of same name
+* added: recurring payments can set customer reference and invoice reference independently, through the filters `gfeway_invoice_ref` and `gfeway_invoice_trans_number` respectively
+
 = 1.5.2 [2013-03-19] =
 * added: filter `gfeway_invoice_trans_number` for setting the invoice transaction reference (NB: 16 character limit)
 
@@ -148,7 +154,7 @@ The plugin will run in shared hosting environments, but requires PHP 5 with the 
 * added: filter `gfeway_recurring_periods` for removing recurring payment periods, from `array('weekly', 'fortnightly', 'monthly', 'yearly')`
 
 = 1.5.0 [2013-01-26] =
-* added: support for [Beagle (free)](http://www.eway.com.au/developers/resources/beagle-(free)-rules) anti-fraud using geo-IP (Direct Payments only)
+* added: support for [Beagle (free)](http://www.eway.com.au/developers/resources/beagle-%28free%29-rules) anti-fraud using geo-IP (Direct Payments only)
 * added: record authcode for transactions, and show on entry details screen
 * added: merge tags for authcode and beagle_score, for notification emails
 * changed: use WordPress function wp_remote_post() instead of directly calling curl functions

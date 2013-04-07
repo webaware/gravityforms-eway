@@ -310,6 +310,7 @@ class GFEwayPlugin {
 			$eway->postcode = $formData->postcode;
 			$eway->country = $formData->address_country;
 			$eway->phone = $formData->phone;
+			$eway->customerReference = $data['form']['id'];
 			$eway->invoiceReference = $data['form']['id'];
 			$eway->invoiceDescription = get_bloginfo('name') . " -- {$data['form']['title']}";
 			$eway->cardHoldersName = $formData->ccName;
@@ -326,8 +327,8 @@ class GFEwayPlugin {
 
 			// allow plugins/themes to modify invoice description and reference, and set option fields
 			$eway->invoiceDescription = apply_filters('gfeway_invoice_desc', $eway->invoiceDescription, $data['form']);
-			$eway->invoiceReference = apply_filters('gfeway_invoice_ref', $eway->invoiceReference, $data['form']);
-			$eway->transactionNumber = apply_filters('gfeway_invoice_trans_number', $eway->transactionNumber, $data['form']);
+			$eway->customerReference = apply_filters('gfeway_invoice_ref', $eway->customerReference, $data['form']);
+			$eway->invoiceReference = apply_filters('gfeway_invoice_trans_number', $eway->invoiceReference, $data['form']);
 			$eway->customerComments = apply_filters('gfeway_invoice_cust_comments', '', $data['form']);
 
 //~ error_log(__METHOD__ . "\n" . print_r($eway,1));
@@ -428,34 +429,39 @@ class GFEwayPlugin {
 	* @return string
 	*/
 	public function gformReplaceMergeTags($text, $form, $lead, $url_encode, $esc_html, $nl2br, $format) {
-		if (is_null($this->txResult)) {
-			// lead loaded from database, get values from lead meta
-			$transaction_id = isset($lead['transaction_id']) ? $lead['transaction_id'] : '';
-			$payment_amount = isset($lead['payment_amount']) ? $lead['payment_amount'] : '';
-			$authcode = (string) gform_get_meta($lead['id'], 'authcode');
-			$beagle_score = (string) gform_get_meta($lead['id'], 'beagle_score');
-		}
-		else {
-			// lead not yet saved, get values from transaction results
-			$transaction_id = isset($this->txResult['transaction_id']) ? $this->txResult['transaction_id'] : '';
-			$payment_amount = isset($this->txResult['payment_amount']) ? $this->txResult['payment_amount'] : '';
-			$authcode = isset($this->txResult['authcode']) ? $this->txResult['authcode'] : '';
-			$beagle_score = isset($this->txResult['beagle_score']) ? $this->txResult['beagle_score'] : '';
+		if ($this->hasFieldType($form['fields'], 'creditcard')) {
+			if (is_null($this->txResult)) {
+				// lead loaded from database, get values from lead meta
+				$transaction_id = isset($lead['transaction_id']) ? $lead['transaction_id'] : '';
+				$payment_amount = isset($lead['payment_amount']) ? $lead['payment_amount'] : '';
+				$authcode = (string) gform_get_meta($lead['id'], 'authcode');
+				$beagle_score = (string) gform_get_meta($lead['id'], 'beagle_score');
+			}
+			else {
+				// lead not yet saved, get values from transaction results
+				$transaction_id = isset($this->txResult['transaction_id']) ? $this->txResult['transaction_id'] : '';
+				$payment_amount = isset($this->txResult['payment_amount']) ? $this->txResult['payment_amount'] : '';
+				$authcode = isset($this->txResult['authcode']) ? $this->txResult['authcode'] : '';
+				$beagle_score = isset($this->txResult['beagle_score']) ? $this->txResult['beagle_score'] : '';
+			}
+
+			$tags = array (
+				'{transaction_id}',
+				'{payment_amount}',
+				'{authcode}',
+				'{beagle_score}',
+			);
+			$values = array (
+				$transaction_id,
+				$payment_amount,
+				$authcode,
+				$beagle_score,
+			);
+
+			$text = str_replace($tags, $values, $text);
 		}
 
-		$tags = array (
-			'{transaction_id}',
-			'{payment_amount}',
-			'{authcode}',
-			'{beagle_score}',
-		);
-		$values = array (
-			$transaction_id,
-			$payment_amount,
-			$authcode,
-			$beagle_score,
-		);
-		return str_replace($tags, $values, $text);
+		return $text;
 	}
 
 	/**
