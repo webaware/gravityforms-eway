@@ -1,12 +1,20 @@
 <?php
+
+/**
+* custom exception types
+*/
+class GFEwayException extends Exception {}
+class GFEwayCurlException extends Exception {}
+
 /**
 * class for managing the plugin
 */
 class GFEwayPlugin {
 	public $urlBase;									// string: base URL path to files in plugin
+	public $options;									// array of plugin options
 
 	private $acceptedCards;								// hash map of accepted credit cards
-	private $txResult;									// results from credit card payment transaction
+	private $txResult = null;							// results from credit card payment transaction
 
 	/**
 	* static method for getting the instance of this singleton object
@@ -17,8 +25,7 @@ class GFEwayPlugin {
 		static $instance = NULL;
 
 		if (is_null($instance)) {
-			$class = __CLASS__;
-			$instance = new $class;
+			$instance = new self();
 		}
 
 		return $instance;
@@ -46,18 +53,15 @@ class GFEwayPlugin {
 	private function initOptions() {
 		static $defaults = array (
 			'customerID' => '87654321',
-			'useTest' => TRUE,
-			'roundTestAmounts' => TRUE,
-			'forceTestAccount' => TRUE,
-			'sslVerifyPeer' => TRUE,
+			'useStored' => false,
+			'useTest' => true,
+			'useBeagle' => false,
+			'roundTestAmounts' => true,
+			'forceTestAccount' => true,
+			'sslVerifyPeer' => true,
 		);
 
 		$this->options = (array) get_option(GFEWAY_PLUGIN_OPTIONS);
-
-		// if haven't defined whether to verify peer (i.e. older version), then default to TRUE
-		if (count($this->options) > 1 && !array_key_exists('sslVerifyPeer', $this->options)) {
-			$this->options['sslVerifyPeer'] = TRUE;
-		}
 
 		if (count(array_diff_assoc($defaults, $this->options)) > 0) {
 			$this->options = array_merge($defaults, $this->options);
@@ -69,46 +73,33 @@ class GFEwayPlugin {
 	* handle the plugin's init action
 	*/
 	public function init() {
-		// hook into Gravity Forms to enable credit cards and trap form submissions
-		add_action('gform_enable_credit_card_field', '__return_true');		// just return true to enable CC fields
-		add_filter('gform_creditcard_types', array($this, 'gformCCTypes'));
-		add_filter('gform_currency', array($this, 'gformCurrency'));
-		add_filter('gform_currency_disabled', '__return_true');
-		add_filter('gform_validation', array($this, "gformValidation"));
-		add_action('gform_after_submission', array($this, "gformAfterSubmission"), 10, 2);
-		add_action('gform_enqueue_scripts', array($this, "gformEnqueueScripts"), 20, 2);
+		// do nothing if Gravity Forms isn't enabled
+		if (class_exists('GFCommon')) {
+			// hook into Gravity Forms to enable credit cards and trap form submissions
+			add_action('gform_enable_credit_card_field', '__return_true');		// just return true to enable CC fields
+			add_filter('gform_creditcard_types', array($this, 'gformCCTypes'));
+			add_filter('gform_currency', array($this, 'gformCurrency'));
+			add_filter('gform_currency_disabled', '__return_true');
+			add_filter('gform_validation', array($this, 'gformValidation'));
+			add_action('gform_after_submission', array($this, 'gformAfterSubmission'), 10, 2);
+			add_filter('gform_custom_merge_tags', array($this, 'gformCustomMergeTags'), 10, 4);
+			add_filter('gform_replace_merge_tags', array($this, 'gformReplaceMergeTags'), 10, 7);
 
-		// hook into Gravity Forms to handle Recurring Payments custom field
-		new GFEwayRecurringField($this);
+			// hook into Gravity Forms to handle Recurring Payments custom field
+			new GFEwayRecurringField($this);
+
+			// recurring payments field has datepickers, register required scripts / stylesheets
+			$gfBaseUrl = GFCommon::get_base_url();
+			wp_register_script('gforms_ui_datepicker', $gfBaseUrl . '/js/jquery-ui/ui.datepicker.js', array('jquery'), GFCommon::$version, true);
+			wp_register_script('gforms_datepicker', $gfBaseUrl . '/js/datepicker.js', array('gforms_ui_datepicker'), GFCommon::$version, true);
+			wp_register_script('gfeway_recurring', $this->urlBase . 'js/recurring.min.js', array('gforms_datepicker'), GFEWAY_PLUGIN_VERSION, true);
+			wp_register_style('gfeway', $this->urlBase . 'style.css', false, GFEWAY_PLUGIN_VERSION);
+		}
 
 		if (is_admin()) {
 			// kick off the admin handling
 			new GFEwayAdmin($this);
 		}
-	}
-
-	/**
-	* enqueue additional scripts if required by form
-	* @param array $form
-	* @param boolean $ajax
-	*/
-	public function gformEnqueueScripts($form, $ajax) {
-		$version = GFEWAY_PLUGIN_VERSION;
-
-		// scripts/styling for recurring payments field
-		if (self::has_field_type($form, 'gfewayrecurring')) {
-			// recurring payments field has datepickers
-			$gfBaseUrl = GFCommon::get_base_url();
-			wp_enqueue_script('gforms_ui_datepicker', $gfBaseUrl . '/js/jquery-ui/ui.datepicker.js', array('jquery'), GFCommon::$version, true);
-			wp_enqueue_script('gforms_datepicker', $gfBaseUrl . '/js/datepicker.js', array('gforms_ui_datepicker'), GFCommon::$version, true);
-
-			// enqueue script for recurring payments
-			wp_enqueue_script('gfeway_recurring', $this->urlBase . 'js/recurring.min.js', array('gforms_ui_datepicker'), $version, true);
-
-			// enqueue default styling
-			wp_enqueue_style('gfeway', $this->urlBase . 'style.css', false, $version);
-		}
-
 	}
 
 	/**
@@ -213,7 +204,11 @@ class GFEwayPlugin {
 	*/
 	private function processSinglePayment($data, $formData) {
 		try {
-			$eway = new GFEwayPayment($this->getCustomerID(), !$this->options['useTest']);
+			if ($this->options['useStored'])
+				$eway = new GFEwayStoredPayment($this->getCustomerID(), !$this->options['useTest']);
+			else
+				$eway = new GFEwayPayment($this->getCustomerID(), !$this->options['useTest']);
+
 			$eway->sslVerifyPeer = $this->options['sslVerifyPeer'];
 			$eway->invoiceDescription = get_bloginfo('name') . " -- {$data['form']['title']}";
 			$eway->invoiceReference = $data['form']['id'];
@@ -233,16 +228,18 @@ class GFEwayPlugin {
 			$eway->postcode = $formData->postcode;
 			$eway->cardVerificationNumber = $formData->ccCVN;
 
+			// if Beagle is enabled, get the country code
+			if ($this->options['useBeagle']) {
+				$eway->customerCountryCode = GFCommon::get_country_code($formData->address_country);
+			}
+
 			// allow plugins/themes to modify invoice description and reference, and set option fields
 			$eway->invoiceDescription = apply_filters('gfeway_invoice_desc', $eway->invoiceDescription, $data['form']);
 			$eway->invoiceReference = apply_filters('gfeway_invoice_ref', $eway->invoiceReference, $data['form']);
+			$eway->transactionNumber = apply_filters('gfeway_invoice_trans_number', $eway->transactionNumber, $data['form']);
 			$eway->option1 = apply_filters('gfeway_invoice_option1', '', $data['form']);
 			$eway->option2 = apply_filters('gfeway_invoice_option2', '', $data['form']);
 			$eway->option3 = apply_filters('gfeway_invoice_option3', '', $data['form']);
-
-//~ $data['is_valid'] = false;
-//~ $formData->ccField['failed_validation'] = true;
-//~ $formData->ccField['validation_message'] = nl2br("success:\n" . htmlspecialchars($eway->getPaymentXML()));
 
 			// if live, pass through amount exactly, but if using test site, round up to whole dollars or eWAY will fail
 			if ($this->options['useTest'] && $this->options['roundTestAmounts'])
@@ -250,15 +247,20 @@ class GFEwayPlugin {
 			else
 				$eway->amount = $formData->total;
 
+//~ error_log(__METHOD__ . "\n" . print_r($eway,1));
+//~ error_log(__METHOD__ . "\n" . $eway->getPaymentXML());
+
 			$response = $eway->processPayment();
 			if ($response->status) {
 				// transaction was successful, so record transaction number and continue
 				$this->txResult = array (
 					'transaction_id' => $response->transactionNumber,
-					'payment_status' => 'Approved',
+					'payment_status' => ($this->options['useStored'] ? 'Pending' : 'Approved'),
 					'payment_date' => date('Y-m-d H:i:s'),
 					'payment_amount' => $response->amount,
 					'transaction_type' => 1,
+					'authcode' => $response->authCode,
+					'beagle_score' => $response->beagleScore,
 				);
 			}
 			else {
@@ -270,7 +272,7 @@ class GFEwayPlugin {
 				);
 			}
 		}
-		catch (Exception $e) {
+		catch (GFEwayException $e) {
 			$data['is_valid'] = false;
 			$this->txResult = array (
 				'payment_status' => 'Failed',
@@ -308,6 +310,7 @@ class GFEwayPlugin {
 			$eway->postcode = $formData->postcode;
 			$eway->country = $formData->address_country;
 			$eway->phone = $formData->phone;
+			$eway->customerReference = $data['form']['id'];
 			$eway->invoiceReference = $data['form']['id'];
 			$eway->invoiceDescription = get_bloginfo('name') . " -- {$data['form']['title']}";
 			$eway->cardHoldersName = $formData->ccName;
@@ -324,12 +327,12 @@ class GFEwayPlugin {
 
 			// allow plugins/themes to modify invoice description and reference, and set option fields
 			$eway->invoiceDescription = apply_filters('gfeway_invoice_desc', $eway->invoiceDescription, $data['form']);
-			$eway->invoiceReference = apply_filters('gfeway_invoice_ref', $eway->invoiceReference, $data['form']);
+			$eway->customerReference = apply_filters('gfeway_invoice_ref', $eway->customerReference, $data['form']);
+			$eway->invoiceReference = apply_filters('gfeway_invoice_trans_number', $eway->invoiceReference, $data['form']);
 			$eway->customerComments = apply_filters('gfeway_invoice_cust_comments', '', $data['form']);
 
-//~ $data['is_valid'] = false;
-//~ $formData->ccField['failed_validation'] = true;
-//~ $formData->ccField['validation_message'] = nl2br("success:\n" . htmlspecialchars($eway->getPaymentXML()));
+//~ error_log(__METHOD__ . "\n" . print_r($eway,1));
+//~ error_log(__METHOD__ . "\n" . $eway->getPaymentXML());
 
 			$response = $eway->processPayment();
 			if ($response->status) {
@@ -349,7 +352,7 @@ class GFEwayPlugin {
 				);
 			}
 		}
-		catch (Exception $e) {
+		catch (GFEwayException $e) {
 			$data['is_valid'] = false;
 			$this->txResult = array (
 				'payment_status' => 'Failed',
@@ -371,13 +374,94 @@ class GFEwayPlugin {
 
 		if (!empty($this->txResult)) {
 			foreach ($this->txResult as $key => $value) {
-				$entry[$key] = $value;
+				switch ($key) {
+					case 'authcode':
+					case 'beagle_score':
+						// record bank authorisation code, Beagle score
+						gform_update_meta($entry['id'], $key, $value);
+						break;
+
+					default:
+						$entry[$key] = $value;
+						break;
+				}
 			}
 			RGFormsModel::update_lead($entry);
 
 			// record entry's unique ID in database
-			gform_update_meta($entry['id'], 'gfeway_unique_id', RGFormsModel::get_form_unique_id($form['id']));
+			$unique_id = RGFormsModel::get_form_unique_id($form['id']);
+
+			gform_update_meta($entry['id'], 'gfeway_unique_id', $unique_id);
+
+			// record payment gateway
+			gform_update_meta($entry['id'], 'payment_gateway', 'gfeway');
 		}
+	}
+
+	/**
+	* add custom merge tags
+	* @param array $merge_tags
+	* @param int $form_id
+	* @param array $fields
+	* @param int $element_id
+	* @return array
+	*/
+	public function gformCustomMergeTags($merge_tags, $form_id, $fields, $element_id) {
+		if ($fields && $this->hasFieldType($fields, 'creditcard')) {
+			$merge_tags[] = array('label' => 'Transaction ID', 'tag' => '{transaction_id}');
+			$merge_tags[] = array('label' => 'Auth Code', 'tag' => '{authcode}');
+			$merge_tags[] = array('label' => 'Payment Amount', 'tag' => '{payment_amount}');
+			$merge_tags[] = array('label' => 'Beagle Score', 'tag' => '{beagle_score}');
+		}
+
+		return $merge_tags;
+	}
+
+	/**
+	* replace custom merge tags
+	* @param string $text
+	* @param array $form
+	* @param array $lead
+	* @param bool $url_encode
+	* @param bool $esc_html
+	* @param bool $nl2br
+	* @param string $format
+	* @return string
+	*/
+	public function gformReplaceMergeTags($text, $form, $lead, $url_encode, $esc_html, $nl2br, $format) {
+		if ($this->hasFieldType($form['fields'], 'creditcard')) {
+			if (is_null($this->txResult)) {
+				// lead loaded from database, get values from lead meta
+				$transaction_id = isset($lead['transaction_id']) ? $lead['transaction_id'] : '';
+				$payment_amount = isset($lead['payment_amount']) ? $lead['payment_amount'] : '';
+				$authcode = (string) gform_get_meta($lead['id'], 'authcode');
+				$beagle_score = (string) gform_get_meta($lead['id'], 'beagle_score');
+			}
+			else {
+				// lead not yet saved, get values from transaction results
+				$transaction_id = isset($this->txResult['transaction_id']) ? $this->txResult['transaction_id'] : '';
+				$payment_amount = isset($this->txResult['payment_amount']) ? $this->txResult['payment_amount'] : '';
+				$authcode = isset($this->txResult['authcode']) ? $this->txResult['authcode'] : '';
+				$beagle_score = isset($this->txResult['beagle_score']) ? $this->txResult['beagle_score'] : '';
+			}
+
+			$tags = array (
+				'{transaction_id}',
+				'{payment_amount}',
+				'{authcode}',
+				'{beagle_score}',
+			);
+			$values = array (
+				$transaction_id,
+				$payment_amount,
+				$authcode,
+				$beagle_score,
+			);
+
+			$text = str_replace($tags, $values, $text);
+		}
+
+		return $text;
 	}
 
 	/**
@@ -405,14 +489,14 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* check form to see if it has a Recurring Payments field
-	* @param array $form form object
+	* check form to see if it has a field of specified type
+	* @param array $fields array of fields
 	* @param string $type name of field type
 	* @return boolean
 	*/
-	public static function has_field_type($form, $type) {
-		if (is_array($form['fields'])) {
-			foreach ($form['fields'] as $field) {
+	public static function hasFieldType($fields, $type) {
+		if (is_array($fields)) {
+			foreach ($fields as $field) {
 				if (RGFormsModel::get_input_type($field) == $type)
 					return true;
 			}
@@ -444,6 +528,66 @@ class GFEwayPlugin {
 		}
 
 		return $msg;
+	}
+
+	/**
+	* send data via cURL and return result
+	* @param string $url
+	* @param string $data
+	* @param bool $sslVerifyPeer whether to validate the SSL certificate
+	* @return string $response
+	* @throws GFEwayCurlException
+	*/
+	public static function curlSendRequest($url, $data, $sslVerifyPeer = true) {
+		// send data via HTTPS and receive response
+		$response = wp_remote_post($url, array(
+			'user-agent' => GFEWAY_CURL_USER_AGENT,
+			'sslverify' => $sslVerifyPeer,
+			'timeout' => 60,
+			'headers' => array('Content-Type' => 'text/xml; charset=utf-8'),
+			'body' => $data,
+		));
+
+//~ error_log(__METHOD__ . "\n" . print_r($response,1));
+
+		if (is_wp_error($response)) {
+			throw new GFEwayCurlException($response->get_error_message());
+		}
+
+		return $response['body'];
+	}
+
+	/**
+	* get the customer's IP address dynamically from server variables
+	* @return string
+	*/
+	public static function getCustomerIP() {
+		// if test mode and running on localhost, then kludge to an Aussie IP address
+		if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] == '127.0.0.1' && get_option('eway_test')) {
+			return '210.1.199.10';
+		}
+
+		// check for remote address, ignore all other headers as they can be spoofed easily
+		if (isset($_SERVER['REMOTE_ADDR']) && self::isIpAddress($_SERVER['REMOTE_ADDR'])) {
+			return $_SERVER['REMOTE_ADDR'];
+		}
+
+		return '';
+	}
+
+	/**
+	* check whether a given string is an IP address
+	* @param string $maybeIP
+	* @return bool
+	*/
+	protected static function isIpAddress($maybeIP) {
+		if (function_exists('inet_pton')) {
+			// check for IPv4 and IPv6 addresses
+			return !!inet_pton($maybeIP);
+		}
+
+		// just check for IPv4 addresses
+		return !!ip2long($maybeIP);
 	}
 
 	/**
