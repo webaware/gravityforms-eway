@@ -55,7 +55,7 @@ class GFEwayAdmin {
 	*/
 	public function actionAdminNotices() {
 		if (!self::isGfActive()) {
-			$this->plugin->showError('GravityForms eWAY plugin requires <a href="http://www.gravityforms.com/">GravityForms</a> plugin to be installed and activated.');
+			$this->plugin->showError('Gravity Forms eWAY requires <a href="http://www.gravityforms.com/">Gravity Forms</a> to be installed and activated.');
 		}
 	}
 

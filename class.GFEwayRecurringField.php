@@ -30,6 +30,7 @@ class GFEwayRecurringField {
 		add_filter('gform_add_field_buttons', array($this, 'gformAddFieldButtons'));
 		add_filter('gform_field_type_title', array($this, 'gformFieldTypeTitle'), 10, 2);
 		add_filter('gform_field_input', array($this, 'gformFieldInput'), 10, 5);
+		add_filter('gform_pre_validation', array($this, 'gformPreValidation'));
 		add_filter('gform_field_validation', array($this, 'gformFieldValidation'), 10, 4);
 		add_filter('gform_tooltips', array($this, 'gformTooltips'));
 		add_filter('gform_pre_submission', array($this, 'gformPreSubmit'));
@@ -215,6 +216,24 @@ class GFEwayRecurringField {
 					. " {$recurring['intervalTypeDesc']} from {$recurring['dateStart']->format('d M Y')}";
 			}
 		}
+	}
+
+	/**
+	* prime the inputs that will be checked by standard validation tests,
+	* e.g. so that "required" fields don't fail
+	* @param array $form
+	* @return array
+	*/
+	public function gformPreValidation($form) {
+        foreach($form["fields"] as $field) {
+			if ($field['type'] == GFEWAY_FIELD_RECURRING && !RGFormsModel::is_field_hidden($form, $field, RGForms::post('gform_field_values'))) {
+				$recurring = self::getPost($field['id']);
+				$_POST["input_{$field['id']}"] = sprintf('$%0.2d %s from %s',
+					$recurring['amountRecur'], $recurring['intervalTypeDesc'], $recurring['dateStart']->format('d M Y'));
+			}
+		}
+
+		return $form;
 	}
 
 	/**
@@ -538,7 +557,7 @@ class GFEwayRecurringField {
 
 		$label = htmlspecialchars($field['label']);
 
-		$periods = apply_filters('gfeway_recurring_periods', array('weekly', 'fortnightly', 'monthly', 'yearly'), $form_id, $field);
+		$periods = apply_filters('gfeway_recurring_periods', array('weekly', 'fortnightly', 'monthly', 'quarterly', 'yearly'), $form_id, $field);
 		if (count($periods) == 1) {
 			// build a hidden field and label
 			$input  = "<span class='gfeway_recurring_left $spanClass'>";
@@ -622,6 +641,11 @@ class GFEwayRecurringField {
 
 				case 'monthly':
 					$intervalType = GFEwayRecurringPayment::MONTHS;
+					break;
+
+				case 'quarterly':
+					$intervalType = GFEwayRecurringPayment::MONTHS;
+					$intervalSize = 3;
 					break;
 
 				case 'yearly':

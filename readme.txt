@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards, australia
 Requires at least: 3.3
 Tested up to: 3.5.1
-Stable tag: 1.5.3
+Stable tag: 1.5.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,7 +47,7 @@ Developers can use these filter hooks to modify some eWAY invoice properties. Ea
 * `gfeway_invoice_option2` for setting the option2 field (one-off payments)
 * `gfeway_invoice_option3` for setting the option3 field (one-off payments)
 * `gfeway_invoice_cust_comments` for setting the customer comments field (recurring payments)
-* `gfeway_recurring_periods` for filtering the available recurring periods (from 'weekly', 'fortnightly', 'monthly', 'yearly')
+* `gfeway_recurring_periods` for filtering the available recurring periods (from 'weekly', 'fortnightly', 'monthly', 'quarterly', 'yearly')
 
 == Installation ==
 
@@ -115,7 +115,7 @@ When your form has a credit card field, it accepts very sensitive details from y
 
 = Can I do recurring payments? =
 
-Yes, thanks to the generous sponsorship of [Castle Design](http://castledesign.com.au/). If you use [conditional logic](http://www.gravityhelp.com/documentation/page/Enable_Conditional_Logic) to hide/show a product field and a recurring payment field, you can even let customers choose between a one-off payment and a recurring payment. Payments can be scheduled for weekly, fortnightly, monthly or yearly billing. Examples will be presented on [the plugin's homepage](http://snippets.webaware.com.au/wordpress-plugins/gravityforms-eway/) as time permits.
+Yes, thanks to the generous sponsorship of [Castle Design](http://castledesign.com.au/). If you use [conditional logic](http://www.gravityhelp.com/documentation/page/Enable_Conditional_Logic) to hide/show a product field and a recurring payment field, you can even let customers choose between a one-off payment and a recurring payment. Payments can be scheduled for weekly, fortnightly, monthly, quarterly, or yearly billing. Examples will be presented on [the plugin's homepage](http://snippets.webaware.com.au/wordpress-plugins/gravityforms-eway/) as time permits.
 
 NB: when testing recurring payments in the Sandbox, you must use the special test customer ID 87654321. You can temporarily force this by enabling the setting "Force Test Customer ID in Sandbox".
 
@@ -141,6 +141,10 @@ The plugin will run in shared hosting environments, but requires PHP 5 with the 
 7. Forcing SSL on a page with a credit card form
 
 == Changelog ==
+
+= 1.5.4 [2013-04-21] =
+* fixed: recurring payments fields marked "required" were generating error "This field is required"
+* added: quarterly recurring time period
 
 = 1.5.3 [2013-04-07] =
 * fixed: don't squabble with other plugins (e.g. DPS PxPay) for custom merge tags of same name
