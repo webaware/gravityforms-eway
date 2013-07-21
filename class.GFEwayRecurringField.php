@@ -6,9 +6,9 @@
 */
 class GFEwayRecurringField {
 
-	private $plugin;
+	protected $plugin;
 
-	private static $defaults = array (
+	protected static $defaults = array (
 		'gfeway_initial_amount_label' => 'Initial Amount',
 		'gfeway_recurring_amount_label' => 'Recurring Amount',
 		'gfeway_initial_date_label' => 'Initial Date',
@@ -24,14 +24,32 @@ class GFEwayRecurringField {
 		$this->plugin = $plugin;
 
 		// add Gravity Forms hooks
+		add_action('gform_enqueue_scripts', array($this, 'gformEnqueueScripts'), 20, 2);
 		add_action('gform_editor_js', array($this, 'gformEditorJS'));
 		add_action('gform_field_standard_settings', array($this, 'gformFieldStandardSettings'), 10, 2);
 		add_filter('gform_add_field_buttons', array($this, 'gformAddFieldButtons'));
 		add_filter('gform_field_type_title', array($this, 'gformFieldTypeTitle'), 10, 2);
 		add_filter('gform_field_input', array($this, 'gformFieldInput'), 10, 5);
+		add_filter('gform_pre_validation', array($this, 'gformPreValidation'));
 		add_filter('gform_field_validation', array($this, 'gformFieldValidation'), 10, 4);
 		add_filter('gform_tooltips', array($this, 'gformTooltips'));
 		add_filter('gform_pre_submission', array($this, 'gformPreSubmit'));
+	}
+
+	/**
+	* enqueue additional scripts if required by form
+	* @param array $form
+	* @param boolean $ajax
+	*/
+	public function gformEnqueueScripts($form, $ajax) {
+		if ($this->plugin->hasFieldType($form['fields'], GFEWAY_FIELD_RECURRING)) {
+			// enqueue script for field
+			wp_enqueue_script('gfeway_recurring');
+
+			// enqueue default styling
+			wp_enqueue_style('gfeway');
+		}
+
 	}
 
 	/**
@@ -39,7 +57,8 @@ class GFEwayRecurringField {
 	*/
 	public function gformEditorJS() {
 		$version = GFEWAY_PLUGIN_VERSION;
-		echo "<script src=\"{$this->plugin->urlBase}js/admin-recurring.min.js?v=$version\"></script>\n";
+		$min = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
+		echo "<script src=\"{$this->plugin->urlBase}js/admin-recurring$min.js?v=$version\"></script>\n";
 	}
 
 	/**
@@ -53,7 +72,7 @@ class GFEwayRecurringField {
 				$group['fields'][] = array (
 					'class' => 'button',
 					'value' => 'Recurring',
-					'onclick' => "StartAddField('gfewayrecurring');",
+					'onclick' => "StartAddField('" . GFEWAY_FIELD_RECURRING . "');",
 				);
 				break;
 			}
@@ -68,7 +87,7 @@ class GFEwayRecurringField {
 	* @return string
 	*/
 	public function gformFieldTypeTitle($title, $field_type) {
-		if ($field_type == 'gfewayrecurring') {
+		if ($field_type == GFEWAY_FIELD_RECURRING) {
 			$title = 'Recurring Payments';
 		}
 
@@ -192,12 +211,30 @@ class GFEwayRecurringField {
 	*/
 	public function gformPreSubmit($form) {
 		foreach ($form['fields'] as $field) {
-			if ($field['type'] == 'gfewayrecurring' && !RGFormsModel::is_field_hidden($form, $field, RGForms::post('gform_field_values'))) {
+			if ($field['type'] == GFEWAY_FIELD_RECURRING && !RGFormsModel::is_field_hidden($form, $field, RGForms::post('gform_field_values'))) {
 				$recurring = self::getPost($field['id']);
 				$_POST["input_{$field['id']}"] = '$' . number_format($recurring['amountRecur'], 2)
 					. " {$recurring['intervalTypeDesc']} from {$recurring['dateStart']->format('d M Y')}";
 			}
 		}
+	}
+
+	/**
+	* prime the inputs that will be checked by standard validation tests,
+	* e.g. so that "required" fields don't fail
+	* @param array $form
+	* @return array
+	*/
+	public function gformPreValidation($form) {
+        foreach($form["fields"] as $field) {
+			if ($field['type'] == GFEWAY_FIELD_RECURRING && !RGFormsModel::is_field_hidden($form, $field, RGForms::post('gform_field_values'))) {
+				$recurring = self::getPost($field['id']);
+				$_POST["input_{$field['id']}"] = sprintf('$%0.2d %s from %s',
+					$recurring['amountRecur'], $recurring['intervalTypeDesc'], $recurring['dateStart']->format('d M Y'));
+			}
+		}
+
+		return $form;
 	}
 
 	/**
@@ -209,7 +246,7 @@ class GFEwayRecurringField {
 	* @return array
 	*/
 	public function gformFieldValidation($validation_result, $value, $form, $field) {
-		if ($field['type'] == 'gfewayrecurring') {
+		if ($field['type'] == GFEWAY_FIELD_RECURRING) {
 			if (!RGFormsModel::is_field_hidden($form, $field, RGForms::post('gform_field_values'))) {
 				// get the real values
 				$value = self::getPost($field['id']);
@@ -270,7 +307,7 @@ class GFEwayRecurringField {
 	* @return string
 	*/
 	public function gformFieldInput($input, $field, $value, $lead_id, $form_id) {
-		if ($field['type'] == 'gfewayrecurring') {
+		if ($field['type'] == GFEWAY_FIELD_RECURRING) {
 
 			// pick up the real value
 			$value = rgpost('gfeway_' . $field['id']);
@@ -405,7 +442,7 @@ class GFEwayRecurringField {
 	* @param integer $form_id
 	* @return string
 	*/
-	private function fieldDate($field, $value="", $lead_id=0, $form_id=0) {
+	protected function fieldDate($field, $value="", $lead_id=0, $form_id=0) {
 		$id = $field["id"];
 		$sub_id = $field["sub_id"];
 		$field_id = IS_ADMIN || $form_id == 0 ? "gfeway_{$id}_{$sub_id}" : "gfeway_{$form_id}_{$id}_{$sub_id}";
@@ -459,7 +496,7 @@ class GFEwayRecurringField {
 	* @param integer $form_id
 	* @return string
 	*/
-	private function fieldDonation($field, $value="", $lead_id=0, $form_id=0) {
+	protected function fieldDonation($field, $value="", $lead_id=0, $form_id=0) {
 		$id = $field["id"];
 		$sub_id = $field["sub_id"];
 		$field_id = IS_ADMIN || $form_id == 0 ? "gfeway_{$id}_{$sub_id}" : "gfeway_{$form_id}_{$id}_{$sub_id}";
@@ -499,7 +536,7 @@ class GFEwayRecurringField {
 	* @param integer $form_id
 	* @return string
 	*/
-	private function fieldIntervalType($field, $value="", $lead_id=0, $form_id=0) {
+	protected function fieldIntervalType($field, $value="", $lead_id=0, $form_id=0) {
 		$id = $field["id"];
 		$sub_id = $field["sub_id"];
 		$field_id = IS_ADMIN || $form_id == 0 ? "gfeway_{$id}_{$sub_id}" : "gfeway_{$form_id}_{$id}_{$sub_id}";
@@ -521,20 +558,29 @@ class GFEwayRecurringField {
 
 		$label = htmlspecialchars($field['label']);
 
-		$types = array ('weekly', 'fortnightly', 'monthly', 'yearly');
-
-		$opts = '';
-		foreach ($types as $type) {
-			$opts .= "<option value='$type'";
-			if ($type == $value)
-				$opts .= " selected='selected'";
-			$opts .= ">$type</option>";
+		$periods = apply_filters('gfeway_recurring_periods', array('weekly', 'fortnightly', 'monthly', 'quarterly', 'yearly'), $form_id, $field);
+		if (count($periods) == 1) {
+			// build a hidden field and label
+			$input  = "<span class='gfeway_recurring_left $spanClass'>";
+			$input .= "<input type='hidden' name='gfeway_{$id}[{$sub_id}]' value='{$periods[0]}' />";
+			$input .= "<label class='{$field['label_class']}' for='$field_id' id='{$field_id}_label'>$label: {$periods[0]}</label>";
+			$input .= "</span>";
 		}
+		else {
+			// build a drop-down list
+			$opts = '';
+			foreach ($periods as $period) {
+				$opts .= "<option value='$period'";
+				if ($period == $value)
+					$opts .= " selected='selected'";
+				$opts .= ">$period</option>";
+			}
 
-		$input  = "<span class='gfeway_recurring_left $spanClass'>";
-		$input .= "<select size='1' name='gfeway_{$id}[{$sub_id}]' id='$field_id' $tabindex class='gfield_select $class' $disabled_text>$opts</select>";
-		$input .= "<label class='{$field['label_class']}' for='$field_id' id='{$field_id}_label'>$label</label>";
-		$input .= "</span>";
+			$input  = "<span class='gfeway_recurring_left $spanClass'>";
+			$input .= "<select size='1' name='gfeway_{$id}[{$sub_id}]' id='$field_id' $tabindex class='gfield_select $class' $disabled_text>$opts</select>";
+			$input .= "<label class='{$field['label_class']}' for='$field_id' id='{$field_id}_label'>$label</label>";
+			$input .= "</span>";
+		}
 
 		return $input;
 	}
@@ -547,7 +593,7 @@ class GFEwayRecurringField {
 	* @param integer $form_id
 	* @return string
 	*/
-	private function fieldConcatenated($field, $value="", $lead_id=0, $form_id=0) {
+	protected function fieldConcatenated($field, $value="", $lead_id=0, $form_id=0) {
 		$id = $field["id"];
 		$field_id = IS_ADMIN || $form_id == 0 ? "input_{$id}" : "input_{$form_id}_{$id}";
 		$form_id = IS_ADMIN && empty($form_id) ? rgget("id") : $form_id;
@@ -564,7 +610,7 @@ class GFEwayRecurringField {
 	* @param string $year
 	* @return boolean
 	*/
-	private static function checkdate($month, $day, $year) {
+	protected static function checkdate($month, $day, $year) {
 		if (empty($month) || !is_numeric($month) || empty($day) || !is_numeric($day) || empty($year) || !is_numeric($year) || strlen($year) != 4)
 			return false;
 
@@ -596,6 +642,11 @@ class GFEwayRecurringField {
 
 				case 'monthly':
 					$intervalType = GFEwayRecurringPayment::MONTHS;
+					break;
+
+				case 'quarterly':
+					$intervalType = GFEwayRecurringPayment::MONTHS;
+					$intervalSize = 3;
 					break;
 
 				case 'yearly':
@@ -631,7 +682,7 @@ class GFEwayRecurringField {
 	* @param string $value date value in dd/mm/yyyy format
 	* @return DateTime
 	*/
-	private static function parseDate($value) {
+	protected static function parseDate($value) {
 		$tm = strptime($value, '%d/%m/%Y');
 
 		if ($tm !== FALSE) {
