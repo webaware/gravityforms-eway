@@ -89,7 +89,8 @@ class GFEwayOptionsAdmin {
 		$this->menuPage = $menuPage;
 		$this->scriptURL = parse_url($_SERVER['SCRIPT_NAME'], PHP_URL_PATH) . "?page={$menuPage}";
 
-		wp_enqueue_script('gfeway-options', $this->plugin->urlBase . 'js/admin-options.min.js', array('jquery'), GFEWAY_PLUGIN_VERSION, true);
+		$min = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
+		wp_enqueue_script('gfeway-options', "{$this->plugin->urlBase}js/admin-options$min.js", array('jquery'), GFEWAY_PLUGIN_VERSION, true);
 	}
 
 	/**
@@ -103,6 +104,10 @@ class GFEwayOptionsAdmin {
 
 		$this->frm = new GFEwayOptionsForm();
 		if ($this->frm->isFormPost()) {
+
+			if (!wp_verify_nonce($_POST[$this->menuPage . '_wpnonce'], 'save'))
+				die('Security exception');
+
 			$errmsg = $this->frm->validate();
 			if (empty($errmsg)) {
 				$this->plugin->options['customerID'] = $this->frm->customerID;
@@ -228,7 +233,7 @@ class GFEwayOptionsAdmin {
 			<p class="submit">
 			<input type="submit" name="Submit" class="button-primary" value="Save Changes" />
 			<input type="hidden" name="action" value="save" />
-			<?php wp_nonce_field($this->menuPage); ?>
+			<?php wp_nonce_field('save', $this->menuPage . '_wpnonce', false); ?>
 			</p>
 		</form>
 

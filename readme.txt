@@ -6,8 +6,8 @@ Author URI: http://www.webaware.com.au/
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8V9YCKATQHKEN
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards, australia
 Requires at least: 3.3
-Tested up to: 3.5.1
-Stable tag: 1.5.4
+Tested up to: 3.6
+Stable tag: 1.5.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -111,7 +111,7 @@ When the sandbox is enabled, the payment amount is rounded up by default, becaus
 
 = Why do I get an error "This page is unsecured"? =
 
-When your form has a credit card field, it accepts very sensitive details from your customers and these must be encrypted. You must have an SSL certificate installed on your website, and your page must be accessed via SSL (i.e. the page address must start with "https:"). You can force a page with a credit card form to be accessed via SSL by ticking Force SSL on the Credit Card Field advanced settings page; see [screenshots](http://wordpress.org/extend/plugins/gravityforms-eway/screenshots/).
+When your form has a credit card field, it accepts very sensitive details from your customers and these must be encrypted. You must have an SSL certificate installed on your website, and your page must be accessed via SSL (i.e. the page address must start with "https:"). You can force a page with a credit card form to be accessed via SSL by ticking Force SSL on the Credit Card Field advanced settings page; see [screenshots](http://wordpress.org/plugins/gravityforms-eway/screenshots/).
 
 = Can I do recurring payments? =
 
@@ -141,6 +141,11 @@ The plugin will run in shared hosting environments, but requires PHP 5 with the 
 7. Forcing SSL on a page with a credit card form
 
 == Changelog ==
+
+= 1.5.5 [2013-07-21] =
+* fixed: can select currency for Gravity Forms for forms not using credit card field, but still enforces AUD for forms with credit card field
+* fixed: nonce (number once) handling in settings admin
+* added: load unminified script if SCRIPT_DEBUG is defined / true
 
 = 1.5.4 [2013-04-21] =
 * fixed: recurring payments fields marked "required" were generating error "This field is required"

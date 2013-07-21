@@ -13,8 +13,9 @@ class GFEwayPlugin {
 	public $urlBase;									// string: base URL path to files in plugin
 	public $options;									// array of plugin options
 
-	private $acceptedCards;								// hash map of accepted credit cards
-	private $txResult = null;							// results from credit card payment transaction
+	protected $acceptedCards;							// hash map of accepted credit cards
+	protected $txResult = null;							// results from credit card payment transaction
+	protected $formHasCcField = false;					// true if current form has credit card field
 
 	/**
 	* static method for getting the instance of this singleton object
@@ -50,7 +51,7 @@ class GFEwayPlugin {
 	/**
 	* initialise plug-in options, handling undefined options by setting defaults
 	*/
-	private function initOptions() {
+	protected function initOptions() {
 		static $defaults = array (
 			'customerID' => '87654321',
 			'useStored' => false,
@@ -76,10 +77,11 @@ class GFEwayPlugin {
 		// do nothing if Gravity Forms isn't enabled
 		if (class_exists('GFCommon')) {
 			// hook into Gravity Forms to enable credit cards and trap form submissions
+			add_filter('gform_pre_render', array($this, 'gformPreRenderSniff'));
+			add_filter('gform_admin_pre_render', array($this, 'gformPreRenderSniff'));
 			add_action('gform_enable_credit_card_field', '__return_true');		// just return true to enable CC fields
 			add_filter('gform_creditcard_types', array($this, 'gformCCTypes'));
 			add_filter('gform_currency', array($this, 'gformCurrency'));
-			add_filter('gform_currency_disabled', '__return_true');
 			add_filter('gform_validation', array($this, 'gformValidation'));
 			add_action('gform_after_submission', array($this, 'gformAfterSubmission'), 10, 2);
 			add_filter('gform_custom_merge_tags', array($this, 'gformCustomMergeTags'), 10, 4);
@@ -90,9 +92,10 @@ class GFEwayPlugin {
 
 			// recurring payments field has datepickers, register required scripts / stylesheets
 			$gfBaseUrl = GFCommon::get_base_url();
+			$min = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
 			wp_register_script('gforms_ui_datepicker', $gfBaseUrl . '/js/jquery-ui/ui.datepicker.js', array('jquery'), GFCommon::$version, true);
 			wp_register_script('gforms_datepicker', $gfBaseUrl . '/js/datepicker.js', array('gforms_ui_datepicker'), GFCommon::$version, true);
-			wp_register_script('gfeway_recurring', $this->urlBase . 'js/recurring.min.js', array('gforms_datepicker'), GFEWAY_PLUGIN_VERSION, true);
+			wp_register_script('gfeway_recurring', "{$this->urlBase}js/recurring$min.js", array('gforms_datepicker'), GFEWAY_PLUGIN_VERSION, true);
 			wp_register_style('gfeway', $this->urlBase . 'style.css', false, GFEWAY_PLUGIN_VERSION);
 		}
 
@@ -100,6 +103,18 @@ class GFEwayPlugin {
 			// kick off the admin handling
 			new GFEwayAdmin($this);
 		}
+	}
+
+	/**
+	* check current form for information
+	* @param array $form
+	* @return array
+	*/
+	public function gformPreRenderSniff($form) {
+		// test whether form has a credit card field
+		$this->formHasCcField = self::hasFieldType($form['fields'], 'creditcard');
+
+		return $form;
 	}
 
 	/**
@@ -173,7 +188,7 @@ class GFEwayPlugin {
 	* @param array $form
 	* @return boolean
 	*/
-	private function hasFormBeenProcessed($form) {
+	protected function hasFormBeenProcessed($form) {
 		global $wpdb;
 
 		$unique_id = RGFormsModel::get_form_unique_id($form['id']);
@@ -188,7 +203,7 @@ class GFEwayPlugin {
 	* get customer ID to use with payment gateway
 	* @return string
 	*/
-	private function getCustomerID() {
+	protected function getCustomerID() {
 		if ($this->options['useTest'] && $this->options['forceTestAccount']) {
 			return '87654321';
 		}
@@ -202,7 +217,7 @@ class GFEwayPlugin {
 	* @param GFEwayFormData $formData pre-parsed data from $data
 	* @return array
 	*/
-	private function processSinglePayment($data, $formData) {
+	protected function processSinglePayment($data, $formData) {
 		try {
 			if ($this->options['useStored'])
 				$eway = new GFEwayStoredPayment($this->getCustomerID(), !$this->options['useTest']);
@@ -290,7 +305,7 @@ class GFEwayPlugin {
 	* @param GFEwayFormData $formData pre-parsed data from $data
 	* @return array
 	*/
-	private function processRecurringPayment($data, $formData) {
+	protected function processRecurringPayment($data, $formData) {
 		try {
 			$eway = new GFEwayRecurringPayment($this->getCustomerID(), !$this->options['useTest']);
 			$eway->sslVerifyPeer = $this->options['sslVerifyPeer'];
@@ -485,7 +500,12 @@ class GFEwayPlugin {
 	* @return string
 	*/
 	public function gformCurrency($currency) {
-		return 'AUD';
+		// only force currency to AUD if current form has a CC field
+		if ($this->formHasCcField) {
+			$currency = 'AUD';
+		}
+
+		return $currency;
 	}
 
 	/**

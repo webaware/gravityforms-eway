@@ -50,7 +50,6 @@ class GFEwayFormData {
 	*/
 	private function loadForm(&$form) {
 		foreach ($form['fields'] as &$field) {
-			$fieldName = empty($field['adminLabel']) ? $field['label'] : $field['adminLabel'];
 			$id = $field['id'];
 
 			switch(RGFormsModel::get_input_type($field)){

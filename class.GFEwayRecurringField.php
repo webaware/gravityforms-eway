@@ -57,7 +57,8 @@ class GFEwayRecurringField {
 	*/
 	public function gformEditorJS() {
 		$version = GFEWAY_PLUGIN_VERSION;
-		echo "<script src=\"{$this->plugin->urlBase}js/admin-recurring.min.js?v=$version\"></script>\n";
+		$min = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
+		echo "<script src=\"{$this->plugin->urlBase}js/admin-recurring$min.js?v=$version\"></script>\n";
 	}
 
 	/**

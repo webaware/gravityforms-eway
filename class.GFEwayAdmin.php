@@ -78,7 +78,7 @@ class GFEwayAdmin {
 	public static function addPluginDetailsLinks($links, $file) {
 		if ($file == GFEWAY_PLUGIN_NAME) {
 			$links[] = '<a href="http://wordpress.org/support/plugin/gravityforms-eway">' . __('Get help') . '</a>';
-			$links[] = '<a href="http://wordpress.org/extend/plugins/gravityforms-eway/">' . __('Rating') . '</a>';
+			$links[] = '<a href="http://wordpress.org/plugins/gravityforms-eway/">' . __('Rating') . '</a>';
 			$links[] = '<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=8V9YCKATQHKEN">' . __('Donate') . '</a>';
 		}
 
@@ -103,7 +103,7 @@ class GFEwayAdmin {
 	* @return array
 	*/
 	public function gformCurrencySettingMessage() {
-		echo "<div class='gform_currency_message'>eWAY payments only supports Australian Dollars (AUD).</div>\n";
+		echo "<div class='gform_currency_message'>NB: Gravity Forms eWAY only supports Australian Dollars (AUD).</div>\n";
 	}
 
 	/**
