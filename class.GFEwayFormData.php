@@ -50,12 +50,11 @@ class GFEwayFormData {
 	*/
 	private function loadForm(&$form) {
 		foreach ($form['fields'] as &$field) {
-			$fieldName = empty($field['adminLabel']) ? $field['label'] : $field['adminLabel'];
 			$id = $field['id'];
 
 			switch(RGFormsModel::get_input_type($field)){
 				case 'name':
-					// only pick up the first name (assume later ones are additional info)
+					// only pick up the first name field (assume later ones are additional info)
 					if (empty($this->firstName) && empty($this->lastName)) {
 						$this->namePrefix = rgpost("input_{$id}_2");
 						$this->firstName = rgpost("input_{$id}_3");
@@ -64,19 +63,19 @@ class GFEwayFormData {
 					break;
 
 				case 'email':
-					// only pick up the first email address (assume later ones are additional info)
+					// only pick up the first email address field (assume later ones are additional info)
 					if (empty($this->email))
 						$this->email = rgpost("input_{$id}");
 					break;
 
 				case 'phone':
-					// only pick up the first phone number (assume later ones are additional info)
+					// only pick up the first phone number field (assume later ones are additional info)
 					if (empty($this->phone))
 						$this->phone = rgpost("input_{$id}");
 					break;
 
 				case 'address':
-					// only pick up the first address (assume later ones are additional info, e.g. shipping)
+					// only pick up the first address field (assume later ones are additional info, e.g. shipping)
 					if (empty($this->address) && empty($this->postcode)) {
 						$this->postcode = trim(rgpost("input_{$id}_5"));
 						$parts = array(trim(rgpost("input_{$id}_1")), trim(rgpost("input_{$id}_2")));
@@ -107,7 +106,7 @@ class GFEwayFormData {
 					$this->hasPurchaseFieldsFlag = true;
 					break;
 
-				case 'gfewayrecurring':
+				case GFEWAY_FIELD_RECURRING:
 					// only pick it up if it isn't hidden
 					if (!RGFormsModel::is_field_hidden($form, $field, RGForms::post('gform_field_values'))) {
 						$this->recurring = GFEwayRecurringField::getPost($id);
