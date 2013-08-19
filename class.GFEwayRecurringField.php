@@ -23,6 +23,10 @@ class GFEwayRecurringField {
 	public function __construct($plugin) {
 		$this->plugin = $plugin;
 
+		// WordPress script hooks -- NB: must happen after Gravity Forms registers scripts
+		add_action('wp_enqueue_scripts', array($this, 'registerScripts'), 20);
+		add_action('admin_enqueue_scripts', array($this, 'registerScripts'), 20);
+
 		// add Gravity Forms hooks
 		add_action('gform_enqueue_scripts', array($this, 'gformEnqueueScripts'), 20, 2);
 		add_action('gform_editor_js', array($this, 'gformEditorJS'));
@@ -34,6 +38,30 @@ class GFEwayRecurringField {
 		add_filter('gform_field_validation', array($this, 'gformFieldValidation'), 10, 4);
 		add_filter('gform_tooltips', array($this, 'gformTooltips'));
 		add_filter('gform_pre_submission', array($this, 'gformPreSubmit'));
+	}
+
+	/**
+	* register and enqueue required scripts
+	* NB: must happen after Gravity Forms registers scripts
+	*/
+	public function registerScripts() {
+		// recurring payments field has datepickers; register required scripts / stylesheets
+		if (version_compare(GFCommon::$version, '1.7.6.99999', '<')) {
+			// pre-1.7.7 script registrations
+			$gfBaseUrl = GFCommon::get_base_url();
+			wp_register_script('gforms_ui_datepicker', $gfBaseUrl . '/js/jquery-ui/ui.datepicker.js', array('jquery'), GFCommon::$version, true);
+			wp_register_script('gforms_datepicker', $gfBaseUrl . '/js/datepicker.js', array('gforms_ui_datepicker'), GFCommon::$version, true);
+			$reqs = array('gforms_datepicker');
+		}
+		else {
+			// post-1.7.7
+			$reqs = array('gform_datepicker_init');
+		}
+
+		$min = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
+		wp_register_script('gfeway_recurring', "{$this->plugin->urlBase}js/recurring$min.js", $reqs, GFEWAY_PLUGIN_VERSION, true);
+
+		wp_register_style('gfeway', $this->plugin->urlBase . 'style.css', false, GFEWAY_PLUGIN_VERSION);
 	}
 
 	/**
@@ -384,7 +412,7 @@ class GFEwayRecurringField {
 				'isRequired' => true,
 				'size' => 'medium',
 				'label_class' => 'gfeway_start_date_label',
-				'hidden' => (isset($field['gfeway_initial_setting']) ? !$field['gfeway_initial_setting'] : false),
+				'hidden' => (isset($field['gfeway_recurring_date_setting']) ? !$field['gfeway_recurring_date_setting'] : false),
 			);
 			$input .= $this->fieldDate($sub_field, $start_date, $lead_id, $form_id);
 
@@ -402,7 +430,7 @@ class GFEwayRecurringField {
 				'isRequired' => true,
 				'size' => 'medium',
 				'label_class' => 'gfeway_end_date_label',
-				'hidden' => (isset($field['gfeway_initial_setting']) ? !$field['gfeway_initial_setting'] : false),
+				'hidden' => (isset($field['gfeway_recurring_date_setting']) ? !$field['gfeway_recurring_date_setting'] : false),
 			);
 			$input .= $this->fieldDate($sub_field, $end_date, $lead_id, $form_id);
 

@@ -89,14 +89,6 @@ class GFEwayPlugin {
 
 			// hook into Gravity Forms to handle Recurring Payments custom field
 			new GFEwayRecurringField($this);
-
-			// recurring payments field has datepickers, register required scripts / stylesheets
-			$gfBaseUrl = GFCommon::get_base_url();
-			$min = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
-			wp_register_script('gforms_ui_datepicker', $gfBaseUrl . '/js/jquery-ui/ui.datepicker.js', array('jquery'), GFCommon::$version, true);
-			wp_register_script('gforms_datepicker', $gfBaseUrl . '/js/datepicker.js', array('gforms_ui_datepicker'), GFCommon::$version, true);
-			wp_register_script('gfeway_recurring', "{$this->urlBase}js/recurring$min.js", array('gforms_datepicker'), GFEWAY_PLUGIN_VERSION, true);
-			wp_register_style('gfeway', $this->urlBase . 'style.css', false, GFEWAY_PLUGIN_VERSION);
 		}
 
 		if (is_admin()) {

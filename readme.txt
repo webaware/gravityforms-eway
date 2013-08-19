@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards, australia
 Requires at least: 3.3
 Tested up to: 3.6
-Stable tag: 1.5.5
+Stable tag: 1.5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -141,6 +141,10 @@ The plugin will run in shared hosting environments, but requires PHP 5 with the 
 7. Forcing SSL on a page with a credit card form
 
 == Changelog ==
+
+= 1.5.6 [2013-08-19] =
+* fixed: Gravity Forms 1.7.7 **changed their datepicker script handle** and broke recurring fields (not all change is good!)
+* fixed: can now set Show Start/End Dates without Show Initial Amount
 
 = 1.5.5 [2013-07-21] =
 * fixed: can select currency for Gravity Forms for forms not using credit card field, but still enforces AUD for forms with credit card field
