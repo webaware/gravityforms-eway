@@ -5,9 +5,7 @@ form editor for Recurring Payments field
 */
 
 // create namespace to avoid collisions
-var GFEwayRecurring = (function() {
-
-	var	$ = jQuery;
+var GFEwayRecurring = (function($) {
 
 	return {
 		/**
@@ -56,7 +54,7 @@ var GFEwayRecurring = (function() {
 		}
 	};
 
-})();
+})(jQuery);
 
 // initialise form on page load
 jQuery(function($) {
