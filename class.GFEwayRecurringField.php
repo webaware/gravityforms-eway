@@ -471,25 +471,29 @@ class GFEwayRecurringField {
 	* @return string
 	*/
 	protected function fieldDate($field, $value="", $lead_id=0, $form_id=0) {
-		$id = $field["id"];
-		$sub_id = $field["sub_id"];
+		$id = $field['id'];
+		$sub_id = $field['sub_id'];
 		$field_id = IS_ADMIN || $form_id == 0 ? "gfeway_{$id}_{$sub_id}" : "gfeway_{$form_id}_{$id}_{$sub_id}";
-		$form_id = IS_ADMIN && empty($form_id) ? rgget("id") : $form_id;
+		$form_id = IS_ADMIN && empty($form_id) ? rgget('id') : $form_id;
 
-		$format = empty($field["dateFormat"]) ? "dmy" : esc_attr($field["dateFormat"]);
-		$size = rgar($field, "size");
+		$format = empty($field['dateFormat']) ? 'dmy' : esc_attr($field['dateFormat']);
+		$size = rgar($field, 'size');
 		$disabled_text = (IS_ADMIN && RG_CURRENT_VIEW != "entry") ? "disabled='disabled'" : "";
-		$class_suffix = RG_CURRENT_VIEW == "entry" ? "_admin" : "";
-		$class = $size . $class_suffix;
+		$class_suffix = RG_CURRENT_VIEW == 'entry' ? '_admin' : '';
 
 		$value = GFCommon::date_display($value, $format);
 		$icon_class = $field["calendarIconType"] == "none" ? "datepicker_no_icon" : "datepicker_with_icon";
 		$icon_url = empty($field["calendarIconUrl"]) ? GFCommon::get_base_url() . "/images/calendar.png" : $field["calendarIconUrl"];
 		$tabindex = GFCommon::get_tabindex();
 
-		$spanClass = '';
-		if (!empty($field['hidden'])) {
-			$spanClass = 'gf_hidden';
+		$inputClass = array($size . $class_suffix, $format, $icon_class);
+		$spanClass = array('gfeway_recurring_left', 'gfeway_recurring_date');
+
+		if (empty($field['hidden'])) {
+			$inputClass[] = 'datepicker';
+		}
+		else {
+			$spanClass[] = 'gf_hidden';
 		}
 
 		$dataMin = '';
@@ -503,12 +507,13 @@ class GFEwayRecurringField {
 		}
 
 		$value = esc_attr($value);
-		$class = esc_attr($class);
+		$spanClass = esc_attr(implode(' ', $spanClass));
+		$inputClass = esc_attr(implode(' ', $inputClass));
 
 		$label = htmlspecialchars($field['label']);
 
-		$input  = "<span class='gfeway_recurring_left gfeway_recurring_date $spanClass'>";
-		$input .= "<input name='gfeway_{$id}[{$sub_id}]' id='$field_id' type='text' value='$value' $dataMin $dataMax class='datepicker $class $format $icon_class' $tabindex $disabled_text />";
+		$input  = "<span class='$spanClass'>";
+		$input .= "<input name='gfeway_{$id}[{$sub_id}]' id='$field_id' type='text' value='$value' $dataMin $dataMax class='$inputClass' $tabindex $disabled_text />";
 		$input .= "<input type='hidden' id='gforms_calendar_icon_$field_id' class='gform_hidden' value='$icon_url'/>";
 		$input .= "<label class='{$field['label_class']}' for='$field_id' id='{$field_id}_label'>$label</label>";
 		$input .= "</span>";
