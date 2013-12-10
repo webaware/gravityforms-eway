@@ -5,9 +5,9 @@ Plugin URI: http://snippets.webaware.com.au/wordpress-plugins/gravityforms-eway/
 Author URI: http://www.webaware.com.au/
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8V9YCKATQHKEN
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards, australia
-Requires at least: 3.3
-Tested up to: 3.6
-Stable tag: 1.5.7
+Requires at least: 3.4
+Tested up to: 3.8
+Stable tag: 1.5.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -87,11 +87,13 @@ No, this plugin only supports the [Direct Payments API](http://www.eway.com.au/d
 
 = What is Stored Payments? =
 
-Like Direct Payments, the purchase information is sent to eWAY for processing, but with [Stored Payments](http://www.eway.com.au/how-it-works/what-products-are-included-#stored-payments) it isn't processed right away. The merchant needs to login to their eWAY Business Centre to complete each transaction. It's useful for shops that do drop-shipping and want to delay billing. Most websites should have this option set to No.
+Like Direct Payments, the purchase information is sent to eWAY for processing, but with [Stored Payments](http://www.eway.com.au/how-it-works/payment-products#stored-payments) it isn't processed right away. The merchant needs to login to their eWAY Business Centre to complete each transaction. It's useful for shops that do drop-shipping and want to delay billing. Most websites should have this option set to No.
 
 = What is Beagle? =
 
-[Beagle](http://www.eway.com.au/how-it-works/what-products-are-included-#beagle-%28free%29) is a service from eWAY that provides a level of fraud protection for your transactions. It uses information about the IP address of the purchaser to suggest whether there is a risk of fraud. You must configure [Beagle rules](http://www.eway.com.au/developers/resources/beagle-%28free%29-rules) in your MYeWAY console before enabling Beagle in this plugin.
+[Beagle](http://www.eway.com.au/how-it-works/payment-products#beagle-%28free%29) is a service from eWAY that provides a level of fraud protection for your transactions. It uses information about the IP address of the purchaser to suggest whether there is a risk of fraud. You must configure [Beagle rules](http://www.eway.com.au/developers/resources/beagle-%28free%29-rules) in your MYeWAY console before enabling Beagle in this plugin.
+
+**NB**: You will also need to add an Address field to your form, and make it required. Beagle works by comparing the country of the address with the country where the purchaser is using the Internet; if you don't set it to Required, then Beagle won't be used when submitting the form without a country selected.
 
 = What Gravity Forms license do I need? =
 
@@ -141,6 +143,12 @@ The plugin will run in shared hosting environments, but requires PHP 5 with the 
 7. Forcing SSL on a page with a credit card form
 
 == Changelog ==
+
+= 1.5.8 [2013-11-10] =
+* fixed: settings wouldn't save in WordPress multisite installations
+* fixed: doco / settings page didn't explain that Beagle requires an Address field
+* fixed: Beagle IP address 127.0.0.1 for form submitted on server (substitutes with an Australian IP address)
+* changed: eWAY settings page is now a Gravity Forms settings subpage, like other addons
 
 = 1.5.7 [2013-08-23] =
 * fixed: a datepicker was being added to the bottom of the page when initial and start/end dates were hidden on recurring payments
