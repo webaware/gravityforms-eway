@@ -5,7 +5,7 @@
 */
 class GFEwayAdmin {
 
-	const MENU_PAGE = 'gfeway';					// slug for menu page(s)
+	public $settingsURL;
 
 	private $plugin;
 
@@ -15,8 +15,22 @@ class GFEwayAdmin {
 	public function __construct($plugin) {
 		$this->plugin = $plugin;
 
+		// handle change in settings pages
+		if (class_exists('GFCommon')) {
+			if (version_compare(GFCommon::$version, '1.6.99999', '<')) {
+				// pre-v1.7 settings
+				$this->settingsURL = admin_url('admin.php?page=gf_settings&addon=eWAY+Payments');
+			}
+			else {
+				// post-v1.7 settings
+				$this->settingsURL = admin_url('admin.php?page=gf_settings&subview=eWAY+Payments');
+			}
+		}
+
+		// handle admin init action
+		add_action('admin_init', array($this, 'adminInit'));
+
 		// add GravityForms hooks
-		add_filter("gform_addon_navigation", array($this, 'gformAddonNavigation'));
 		add_filter('gform_currency_setting_message', array($this, 'gformCurrencySettingMessage'));
 		add_action('gform_payment_status', array($this, 'gformPaymentStatus'), 10, 3);
 		add_action('gform_after_update_entry', array($this, 'gformAfterUpdateEntry'), 10, 2);
@@ -44,6 +58,20 @@ class GFEwayAdmin {
 	}
 
 	/**
+	* handle admin init action
+	*/
+	public function adminInit() {
+		if (isset($_GET['page'])) {
+			switch ($_GET['page']) {
+				case 'gf_settings':
+					// add our settings page to the Gravity Forms settings menu
+					RGForms::add_settings_page('eWAY Payments', array($this, 'optionsAdmin'));
+					break;
+			}
+		}
+	}
+
+	/**
 	* only output our stylesheet if this is our admin page
 	*/
 	public function enqueueScripts() {
@@ -65,7 +93,7 @@ class GFEwayAdmin {
 	public function addPluginActionLinks($links) {
 		// add settings link, but only if GravityForms plugin is active
 		if (self::isGfActive()) {
-			$settings_link = '<a href="admin.php?page=' . self::MENU_PAGE . '-options">' . __('Settings') . '</a>';
+			$settings_link = sprintf('<a href="%s">%s</a>', $this->settingsURL, __('Settings'));
 			array_unshift($links, $settings_link);
 		}
 
@@ -83,18 +111,6 @@ class GFEwayAdmin {
 		}
 
 		return $links;
-	}
-
-	/**
-	* filter hook for building GravityForms navigation
-	* @param array $menus
-	* @return array
-	*/
-	public function gformAddonNavigation($menus) {
-		// add menu item for options
-		$menus[] = array('name' => self::MENU_PAGE.'-options', 'label' => 'eWAY Payments', 'callback' => array($this, 'optionsAdmin'), 'permission' => 'manage_options');
-
-        return $menus;
 	}
 
 	/**
@@ -116,12 +132,12 @@ class GFEwayAdmin {
 		if ($payment_gateway == 'gfeway') {
 			$authcode = gform_get_meta($lead['id'], 'authcode');
 			if ($authcode) {
-				echo 'Auth Code: ', htmlspecialchars($authcode), "<br /><br />\n";
+				echo 'Auth Code: ', esc_html($authcode), "<br /><br />\n";
 			}
 
 			$beagle_score = gform_get_meta($lead['id'], 'beagle_score');
 			if ($beagle_score) {
-				echo 'Beagle Score: ', htmlspecialchars($beagle_score), "<br /><br />\n";
+				echo 'Beagle Score: ', esc_html($beagle_score), "<br /><br />\n";
 			}
 		}
 	}
@@ -130,7 +146,7 @@ class GFEwayAdmin {
 	* action hook for processing admin menu item
 	*/
 	public function optionsAdmin() {
-		$admin = new GFEwayOptionsAdmin($this->plugin, self::MENU_PAGE.'-options');
+		$admin = new GFEwayOptionsAdmin($this->plugin, 'gfeway-options', $this->settingsURL);
 		$admin->process();
 	}
 

@@ -575,7 +575,8 @@ class GFEwayPlugin {
 	*/
 	public static function getCustomerIP() {
 		// if test mode and running on localhost, then kludge to an Aussie IP address
-		if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] == '127.0.0.1' && get_option('eway_test')) {
+		$plugin = self::getInstance();
+		if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] == '127.0.0.1' && $plugin->options['useTest']) {
 			return '210.1.199.10';
 		}
 
