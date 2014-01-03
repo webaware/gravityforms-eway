@@ -3,13 +3,13 @@
 Plugin Name: Gravity Forms eWAY
 Plugin URI: http://snippets.webaware.com.au/wordpress-plugins/gravityforms-eway/
 Description: Integrates Gravity Forms with eWAY payment gateway, enabling end users to purchase goods and services through Gravity Forms.
-Version: 1.5.8
+Version: 1.5.9
 Author: WebAware
-Author URI: http://www.webaware.com.au/
+Author URI: http://webaware.com.au/
 */
 
 /*
-copyright (c) 2012-2013 WebAware Pty Ltd (email : rmckay@webaware.com.au)
+copyright (c) 2012-2014 WebAware Pty Ltd (email : rmckay@webaware.com.au)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -43,7 +43,7 @@ if (!defined('GFEWAY_PLUGIN_ROOT')) {
 	if (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG)
 		define('GFEWAY_PLUGIN_VERSION', time());
 	else
-		define('GFEWAY_PLUGIN_VERSION', '1.5.8');
+		define('GFEWAY_PLUGIN_VERSION', '1.5.9');
 
 	// error message names
 	define('GFEWAY_ERROR_ALREADY_SUBMITTED', 'gfeway_err_already');

@@ -1,6 +1,6 @@
 /*!
 WordPress plugin gravityforms-eway
-copyright (c) 2012 WebAware Pty Ltd, released under LGPL v2.1
+copyright (c) 2012-2014 WebAware Pty Ltd, released under LGPL v2.1
 Recurring Payments field
 */
 
@@ -9,7 +9,8 @@ jQuery(function($) {
 
 	var	thisYear = (new Date()).getFullYear(),
 		yearRange = thisYear + ":2099",				// year range for max date settings, mumble mumble jquery-ui mumble
-		reDatePattern = /^\d{4}-\d\d-\d\d$/;		// regex test for ISO date string
+		reDatePattern = /^\d{4}-\d\d-\d\d$/,		// regex test for ISO date string
+		setPickerOptions = false;
 
 	// set datepicker minimum date if given
 	$("input[data-gfeway-minDate]").each(function() {
@@ -22,6 +23,7 @@ jQuery(function($) {
 		}
 
 		input.datepicker("option", "minDate", minDate);
+		setPickerOptions = true;
 	});
 
 	// set datepicker maximum date if given
@@ -36,6 +38,12 @@ jQuery(function($) {
 
 		input.datepicker("option", "yearRange", yearRange);		// need to reset year range so can extend max date!
 		input.datepicker("option", "maxDate", maxDate);
+		setPickerOptions = true;
 	});
+
+	// hack: setting options on datepicker fields after initialisation makes the datepicker div show at the bottom of the page
+	if (setPickerOptions) {
+		$("#ui-datepicker-div").hide();
+	}
 
 });

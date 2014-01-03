@@ -2,7 +2,7 @@
 Contributors: webaware
 Plugin Name: Gravity Forms eWAY
 Plugin URI: http://snippets.webaware.com.au/wordpress-plugins/gravityforms-eway/
-Author URI: http://www.webaware.com.au/
+Author URI: http://webaware.com.au/
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8V9YCKATQHKEN
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards, australia
 Requires at least: 3.4
@@ -143,6 +143,10 @@ The plugin will run in shared hosting environments, but requires PHP 5 with the 
 7. Forcing SSL on a page with a credit card form
 
 == Changelog ==
+
+= 1.5.9 [2014-01-03] =
+* fixed: a datepicker was being added to the bottom of the page since WordPress 3.8 (jQuery-UI bug on set datepicker options late)
+* fixed: clean up JSHint warnings
 
 = 1.5.8 [2013-11-10] =
 * fixed: settings wouldn't save in WordPress multisite installations

@@ -1,6 +1,6 @@
 /*!
 WordPress plugin gravityforms-eway
-copyright (c) 2012 WebAware Pty Ltd, released under LGPL v2.1
+copyright (c) 2012-2014 WebAware Pty Ltd, released under LGPL v2.1
 form editor for Recurring Payments field
 */
 
@@ -60,27 +60,27 @@ var GFEwayRecurring = (function($) {
 jQuery(function($) {
 
 	// add required classes to the field on the admin form
-	fieldSettings["gfewayrecurring"] = ".conditional_logic_field_setting, .error_message_setting, .label_setting, .admin_label_setting, .rules_setting, .description_setting, .css_class_setting, .gfewayrecurring_setting";
+	fieldSettings.gfewayrecurring = ".conditional_logic_field_setting, .error_message_setting, .label_setting, .admin_label_setting, .rules_setting, .description_setting, .css_class_setting, .gfewayrecurring_setting";
 
 	// binding to the load field settings event to initialize custom inputs
 	$(document).bind("gform_load_field_settings", function(event, field, form) {
 
-		$("#gfeway_initial_setting").prop("checked", !!field["gfeway_initial_setting"]);
-		if (!field["gfeway_initial_setting"]) {
+		$("#gfeway_initial_setting").prop("checked", !!field.gfeway_initial_setting);
+		if (!field.gfeway_initial_setting) {
 			$("#gfeway_initial_fields").hide();
 		}
 
-		$("#gfeway_recurring_date_setting").prop("checked", !!field["gfeway_recurring_date_setting"]);
-		if (!field["gfeway_recurring_date_setting"]) {
+		$("#gfeway_recurring_date_setting").prop("checked", !!field.gfeway_recurring_date_setting);
+		if (!field.gfeway_recurring_date_setting) {
 			$("#gfeway_recurring_date_fields").hide();
 		}
 
-		$("#gfeway_initial_amount_label").val(field["gfeway_initial_amount_label"]);
-		$("#gfeway_recurring_amount_label").val(field["gfeway_recurring_amount_label"]);
-		$("#gfeway_initial_date_label").val(field["gfeway_initial_date_label"]);
-		$("#gfeway_start_date_label").val(field["gfeway_start_date_label"]);
-		$("#gfeway_end_date_label").val(field["gfeway_end_date_label"]);
-		$("#gfeway_interval_type_label").val(field["gfeway_interval_type_label"]);
+		$("#gfeway_initial_amount_label").val(field.gfeway_initial_amount_label);
+		$("#gfeway_recurring_amount_label").val(field.gfeway_recurring_amount_label);
+		$("#gfeway_initial_date_label").val(field.gfeway_initial_date_label);
+		$("#gfeway_start_date_label").val(field.gfeway_start_date_label);
+		$("#gfeway_end_date_label").val(field.gfeway_end_date_label);
+		$("#gfeway_interval_type_label").val(field.gfeway_interval_type_label);
 
 	});
 

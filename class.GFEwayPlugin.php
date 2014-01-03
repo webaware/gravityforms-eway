@@ -52,7 +52,7 @@ class GFEwayPlugin {
 	* initialise plug-in options, handling undefined options by setting defaults
 	*/
 	protected function initOptions() {
-		static $defaults = array (
+		$defaults = array (
 			'customerID' => '87654321',
 			'useStored' => false,
 			'useTest' => true,
