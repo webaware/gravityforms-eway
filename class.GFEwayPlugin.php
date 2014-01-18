@@ -418,6 +418,7 @@ class GFEwayPlugin {
 			$merge_tags[] = array('label' => 'Transaction ID', 'tag' => '{transaction_id}');
 			$merge_tags[] = array('label' => 'Auth Code', 'tag' => '{authcode}');
 			$merge_tags[] = array('label' => 'Payment Amount', 'tag' => '{payment_amount}');
+			$merge_tags[] = array('label' => 'Payment Status', 'tag' => '{payment_status}');
 			$merge_tags[] = array('label' => 'Beagle Score', 'tag' => '{beagle_score}');
 		}
 
@@ -441,6 +442,7 @@ class GFEwayPlugin {
 				// lead loaded from database, get values from lead meta
 				$transaction_id = isset($lead['transaction_id']) ? $lead['transaction_id'] : '';
 				$payment_amount = isset($lead['payment_amount']) ? $lead['payment_amount'] : '';
+				$payment_status = isset($lead['payment_status']) ? $lead['payment_status'] : '';
 				$authcode = (string) gform_get_meta($lead['id'], 'authcode');
 				$beagle_score = (string) gform_get_meta($lead['id'], 'beagle_score');
 			}
@@ -448,6 +450,7 @@ class GFEwayPlugin {
 				// lead not yet saved, get values from transaction results
 				$transaction_id = isset($this->txResult['transaction_id']) ? $this->txResult['transaction_id'] : '';
 				$payment_amount = isset($this->txResult['payment_amount']) ? $this->txResult['payment_amount'] : '';
+				$payment_status = isset($this->txResult['payment_status']) ? $this->txResult['payment_status'] : '';
 				$authcode = isset($this->txResult['authcode']) ? $this->txResult['authcode'] : '';
 				$beagle_score = isset($this->txResult['beagle_score']) ? $this->txResult['beagle_score'] : '';
 			}
@@ -455,12 +458,14 @@ class GFEwayPlugin {
 			$tags = array (
 				'{transaction_id}',
 				'{payment_amount}',
+				'{payment_status}',
 				'{authcode}',
 				'{beagle_score}',
 			);
 			$values = array (
 				$transaction_id,
 				$payment_amount,
+				$payment_status,
 				$authcode,
 				$beagle_score,
 			);
@@ -553,7 +558,7 @@ class GFEwayPlugin {
 	public static function curlSendRequest($url, $data, $sslVerifyPeer = true) {
 		// send data via HTTPS and receive response
 		$response = wp_remote_post($url, array(
-			'user-agent' => GFEWAY_CURL_USER_AGENT,
+			'user-agent' => 'Gravity Forms eWAY',
 			'sslverify' => $sslVerifyPeer,
 			'timeout' => 60,
 			'headers' => array('Content-Type' => 'text/xml; charset=utf-8'),

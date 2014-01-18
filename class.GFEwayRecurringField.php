@@ -38,6 +38,10 @@ class GFEwayRecurringField {
 		add_filter('gform_field_validation', array($this, 'gformFieldValidation'), 10, 4);
 		add_filter('gform_tooltips', array($this, 'gformTooltips'));
 		add_filter('gform_pre_submission', array($this, 'gformPreSubmit'));
+
+		if (is_admin()) {
+			add_filter('gform_field_css_class', array($this, 'watchFieldType'), 10, 2);
+		}
 	}
 
 	/**
@@ -325,6 +329,35 @@ class GFEwayRecurringField {
 		return $validation_result;
 	}
 
+
+	/**
+	* watch the field type so that we can use hooks that don't pass enough information
+	* @param string $classes
+	* @param array $field
+	* @return string
+	*/
+	public function watchFieldType($classes, $field) {
+		// if field type matches, add filters that don't allow testing for field type
+		if ($field['type'] == GFEWAY_FIELD_RECURRING) {
+			add_filter('gform_duplicate_field_link', array($this, 'gformDuplicateFieldLink'));
+		}
+
+		return $classes;
+	}
+
+	/**
+	* filter the field duplication link, we don't want one for this field type
+	* @param string $duplicate_field_link
+	* @return $duplicate_field_link
+	*/
+	public function gformDuplicateFieldLink($duplicate_field_link) {
+		// remove filter once called, only process current field
+		remove_filter('gform_duplicate_field_link', array($this, __FUNCTION__));
+
+		// erase duplicate field link for this field
+		return '';
+	}
+
 	/**
 	* filter hook for modifying a field's input tag (e.g. on custom fields)
 	* @param string $input the input tag before modification
@@ -348,7 +381,7 @@ class GFEwayRecurringField {
 			$initial_date = empty($value[2]) ? $today->format('d-m-Y') : $value[2];
 			$recurring_amount = empty($value[3]) ? '0.00' : $value[3];
 			$start_date = empty($value[4]) ? $today->format('d-m-Y') : $value[4];
-			$end_date = empty($value[5]) ? date_create('2099-12-31')->format('d-m-Y') : $value[5];
+			$end_date = empty($value[5]) ? '31-12-2099' : $value[5];
 			$interval_type = empty($value[6]) ? 'monthly' : $value[6];
 
 			$input = "<div class='ginput_complex ginput_container gfeway_recurring_complex $css' id='input_{$field['id']}'>";
@@ -716,14 +749,12 @@ class GFEwayRecurringField {
 	* @return DateTime
 	*/
 	protected static function parseDate($value) {
-		$tm = strptime($value, '%d/%m/%Y');
-
-		if ($tm !== FALSE) {
+		if (preg_match('#(\d{1,2})/(\d{1,2})/(\d{4})#', $value, $matches)) {
 			$date = date_create();
-			$date->setDate($tm['tm_year'] + 1900, $tm['tm_mon'] + 1, $tm['tm_mday']);
+			$date->setDate($matches[3], $matches[2], $matches[1]);
 			return $date;
 		}
 
-		return FALSE;
+		return false;
 	}
 }
