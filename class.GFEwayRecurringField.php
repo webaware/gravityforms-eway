@@ -78,6 +78,12 @@ class GFEwayRecurringField {
 			// enqueue script for field
 			wp_enqueue_script('gfeway_recurring');
 
+			// add datepicker style if Gravity Forms hasn't done so already -- since Gravity Forms v1.8.6
+			if (version_compare(GFCommon::$version, '1.8.6', '>=') && !wp_style_is('gforms_datepicker_css', 'done')) {
+				wp_enqueue_style('gforms_datepicker_css', GFCommon::get_base_url() . '/css/datepicker.css', null, GFCommon::$version);
+				wp_print_styles(array('gforms_datepicker_css'));
+			}
+
 			// enqueue default styling
 			wp_enqueue_style('gfeway');
 		}
