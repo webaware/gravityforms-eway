@@ -75,7 +75,8 @@ class GFEwayAdmin {
 	* only output our stylesheet if this is our admin page
 	*/
 	public function enqueueScripts() {
-		wp_enqueue_style('gfeway-admin', $this->plugin->urlBase . 'style-admin.css', false, GFEWAY_PLUGIN_VERSION);
+		$ver = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? time() : GFEWAY_PLUGIN_VERSION;
+		wp_enqueue_style('gfeway-admin', $this->plugin->urlBase . 'style-admin.css', false, $ver);
 	}
 
 	/**
