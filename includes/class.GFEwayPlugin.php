@@ -19,8 +19,7 @@ class GFEwayPlugin {
 
 	/**
 	* static method for getting the instance of this singleton object
-	*
-	* @return GFEwayPlugin
+	* @return self
 	*/
 	public static function getInstance() {
 		static $instance = NULL;
@@ -40,7 +39,7 @@ class GFEwayPlugin {
 		$this->initOptions();
 
 		// record plugin URL base
-		$this->urlBase = plugin_dir_url(__FILE__);
+		$this->urlBase = plugin_dir_url(GFEWAY_PLUGIN_FILE);
 
 		// filter the cards array to just Visa, MasterCard and Amex
 		$this->acceptedCards = array('amex' => 1, 'mastercard' => 1, 'visa' => 1);
@@ -393,7 +392,14 @@ class GFEwayPlugin {
 						break;
 				}
 			}
-			RGFormsModel::update_lead($entry);
+
+			// update the entry
+			if (class_exists('GFAPI')) {
+				GFAPI::update_entry($entry);
+			}
+			else {
+				RGFormsModel::update_lead($entry);
+			}
 
 			// record entry's unique ID in database
 			$unique_id = RGFormsModel::get_form_unique_id($form['id']);
@@ -454,6 +460,9 @@ class GFEwayPlugin {
 				$authcode = isset($this->txResult['authcode']) ? $this->txResult['authcode'] : '';
 				$beagle_score = isset($this->txResult['beagle_score']) ? $this->txResult['beagle_score'] : '';
 			}
+
+			// format payment amount as currency
+			$payment_amount = GFCommon::format_number($payment_amount, 'currency');
 
 			$tags = array (
 				'{transaction_id}',
@@ -558,7 +567,7 @@ class GFEwayPlugin {
 	public static function curlSendRequest($url, $data, $sslVerifyPeer = true) {
 		// send data via HTTPS and receive response
 		$response = wp_remote_post($url, array(
-			'user-agent' => 'Gravity Forms eWAY',
+			'user-agent' => 'Gravity Forms eWAY ' . GFEWAY_PLUGIN_VERSION,
 			'sslverify' => $sslVerifyPeer,
 			'timeout' => 60,
 			'headers' => array('Content-Type' => 'text/xml; charset=utf-8'),
@@ -608,19 +617,4 @@ class GFEwayPlugin {
 		return !!ip2long($maybeIP);
 	}
 
-	/**
-	* display a message (already HTML-conformant)
-	* @param string $msg HTML-encoded message to display inside a paragraph
-	*/
-	public static function showMessage($msg) {
-		echo "<div class='updated fade'><p><strong>$msg</strong></p></div>\n";
-	}
-
-	/**
-	* display an error message (already HTML-conformant)
-	* @param string $msg HTML-encoded message to display inside a paragraph
-	*/
-	public static function showError($msg) {
-		echo "<div class='error'><p><strong>$msg</strong></p></div>\n";
-	}
 }

@@ -551,7 +551,7 @@ class GFEwayRecurringField {
 		$spanClass = esc_attr(implode(' ', $spanClass));
 		$inputClass = esc_attr(implode(' ', $inputClass));
 
-		$label = htmlspecialchars($field['label']);
+		$label = esc_html($field['label']);
 
 		$input  = "<span class='$spanClass'>";
 		$input .= "<input name='gfeway_{$id}[{$sub_id}]' id='$field_id' type='text' value='$value' $dataMin $dataMax class='$inputClass' $tabindex $disabled_text />";
@@ -592,7 +592,7 @@ class GFEwayRecurringField {
 		$value = esc_attr($value);
 		$class = esc_attr($class);
 
-		$label = htmlspecialchars($field['label']);
+		$label = esc_html($field['label']);
 
 		$input  = "<span class='gfeway_recurring_left $spanClass'>";
 		$input .= "<input name='gfeway_{$id}[{$sub_id}]' id='$field_id' type='text' value='$value' class='ginput_amount $class' $tabindex $disabled_text />";
@@ -630,7 +630,7 @@ class GFEwayRecurringField {
 
 		$class = esc_attr($class);
 
-		$label = htmlspecialchars($field['label']);
+		$label = esc_html($field['label']);
 
 		$periods = apply_filters('gfeway_recurring_periods', array('weekly', 'fortnightly', 'monthly', 'quarterly', 'yearly'), $form_id, $field);
 		if (count($periods) == 1) {

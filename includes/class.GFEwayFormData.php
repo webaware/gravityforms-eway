@@ -6,6 +6,7 @@
 class GFEwayFormData {
 
 	public $amount = 0;
+	public $shipping = 0;
 	public $total = 0;
 	public $ccName = '';
 	public $ccNumber = '';
@@ -52,7 +53,7 @@ class GFEwayFormData {
 		foreach ($form['fields'] as &$field) {
 			$id = $field['id'];
 
-			switch(RGFormsModel::get_input_type($field)){
+			switch(GFFormsModel::get_input_type($field)){
 				case 'name':
 					// only pick up the first name field (assume later ones are additional info)
 					if (empty($this->firstName) && empty($this->lastName)) {
@@ -91,7 +92,7 @@ class GFEwayFormData {
 					break;
 
 				case 'creditcard':
-					$this->isCcHiddenFlag = RGFormsModel::is_field_hidden($form, $field, RGForms::post('gform_field_values'));
+					$this->isCcHiddenFlag = GFFormsModel::is_field_hidden($form, $field, RGForms::post('gform_field_values'));
 					$this->ccField =& $field;
 					$this->ccName = rgpost("input_{$id}_5");
 					$this->ccNumber = self::cleanCcNumber(rgpost("input_{$id}_1"));
@@ -108,14 +109,19 @@ class GFEwayFormData {
 
 				case GFEWAY_FIELD_RECURRING:
 					// only pick it up if it isn't hidden
-					if (!RGFormsModel::is_field_hidden($form, $field, RGForms::post('gform_field_values'))) {
+					if (!GFFormsModel::is_field_hidden($form, $field, RGForms::post('gform_field_values'))) {
 						$this->recurring = GFEwayRecurringField::getPost($id);
 					}
 					break;
 
 				default:
+					// check for shipping field
+					if ($field['type'] == 'shipping') {
+						$this->shipping += self::getShipping($form, $field);
+						$this->hasPurchaseFieldsFlag = true;
+					}
 					// check for product field
-					if (in_array($field['type'], array('option', 'donation', 'product', 'total', 'shipping', 'calculation'))) {
+					elseif (in_array($field['type'], array('option', 'donation', 'product', 'calculation'))) {
 						$this->amount += self::getProductPrice($form, $field);
 						$this->hasPurchaseFieldsFlag = true;
 					}
@@ -123,11 +129,9 @@ class GFEwayFormData {
 			}
 		}
 
-		// TODO: shipping?
-
-		// if form didn't pass the total, pick it up from calculated amount
-		if ($this->total == 0) {
-			$this->total = $this->amount;
+		// if form didn't pass the total, use sum of the product and shipping fields
+		if ($this->total === 0) {
+			$this->total = $this->amount + $this->shipping;
 		}
 	}
 
@@ -140,7 +144,7 @@ class GFEwayFormData {
 		$isProduct = false;
 		$id = $field['id'];
 
-		if (!RGFormsModel::is_field_hidden($form, $field, array())) {
+		if (!GFFormsModel::is_field_hidden($form, $field, array())) {
 			$lead_value = rgpost("input_{$id}");
 
 			// look for a quantity field for product
@@ -156,16 +160,12 @@ class GFEwayFormData {
 
 			switch ($field["inputType"]) {
 				case 'singleproduct':
+				case 'hiddenproduct':
 					$price = GFCommon::to_number(rgpost("input_{$id}_2"));
 					if (!$qty_field) {
 						// no quantity field, pick it up from input
 						$qty = (float) GFCommon::to_number(rgpost("input_{$id}_3"));
 					}
-					$isProduct = true;
-					break;
-
-				case 'hiddenproduct':
-					$price = GFCommon::to_number($field["basePrice"]);
 					$isProduct = true;
 					break;
 
@@ -188,7 +188,7 @@ class GFEwayFormData {
 			if ($isProduct) {
 				$options = GFCommon::get_product_fields_by_type($form, array('option'), $id);
 				foreach($options as $option){
-					if (!RGFormsModel::is_field_hidden($form, $option, array())) {
+					if (!GFFormsModel::is_field_hidden($form, $option, array())) {
 						$option_value = rgpost("input_{$option['id']}");
 
 						if (is_array(rgar($option, 'inputs'))) {
@@ -212,6 +212,28 @@ class GFEwayFormData {
 		}
 
 		return $price;
+	}
+
+	/**
+	* extract the shipping amount from a shipping field
+	* @return float
+	*/
+	private static function getShipping($form, $field) {
+		$shipping = 0;
+		$id = $field['id'];
+
+		if (!GFFormsModel::is_field_hidden($form, $field, array())) {
+			$value = rgpost("input_{$id}");
+
+			if (!empty($value) && $field["inputType"] != 'singleshipping') {
+				// drop-down list / radio buttons
+				list($name, $value) = rgexplode('|', $value, 2);
+			}
+
+			$shipping = GFCommon::to_number($value);
+		}
+
+		return $shipping;
 	}
 
 	/**

@@ -1,17 +1,17 @@
 === Gravity Forms eWAY ===
 Contributors: webaware
 Plugin Name: Gravity Forms eWAY
-Plugin URI: http://snippets.webaware.com.au/wordpress-plugins/gravityforms-eway/
+Plugin URI: http://shop.webaware.com.au/downloads/gravity-forms-eway/
 Author URI: http://webaware.com.au/
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8V9YCKATQHKEN
+Donate link: http://shop.webaware.com.au/downloads/gravity-forms-eway/
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards, australia
 Requires at least: 3.6.1
 Tested up to: 3.9.1
-Stable tag: 1.5.12
+Stable tag: 1.6.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Add a credit card payment gateway for eWAY to the Gravity Forms plugin
+Integrate Gravity Forms with the eWAY credit card payment gateway
 
 == Description ==
 
@@ -35,19 +35,6 @@ Thanks for sponsoring new features on Gravity Forms eWAY!
 * you need an SSL certificate for your hosting account
 * you need an account with eWAY Australia
 * this plugin uses eWAY's [Direct Payments API](http://www.eway.com.au/developers/api/direct-payments.html) or [Stored Payments API](http://www.eway.com.au/developers/api/stored-%28xml%29), and does not support eWAY's hosted payment form
-
-= Filter hooks =
-
-Developers can use these filter hooks to modify some eWAY invoice properties. Each filter receives a string for the field value, and the Gravity Forms form array.
-
-* `gfeway_invoice_desc` for modifying the invoice description
-* `gfeway_invoice_ref` for modifying the invoice reference
-* `gfeway_invoice_trans_number` for modifying the invoice transaction reference
-* `gfeway_invoice_option1` for setting the option1 field (one-off payments)
-* `gfeway_invoice_option2` for setting the option2 field (one-off payments)
-* `gfeway_invoice_option3` for setting the option3 field (one-off payments)
-* `gfeway_invoice_cust_comments` for setting the customer comments field (recurring payments)
-* `gfeway_recurring_periods` for filtering the available recurring periods (from 'weekly', 'fortnightly', 'monthly', 'quarterly', 'yearly')
 
 == Installation ==
 
@@ -142,7 +129,32 @@ The plugin will run in shared hosting environments, but requires PHP 5 with the 
 6. Example with recurring payments
 7. Forcing SSL on a page with a credit card form
 
+== Filter hooks ==
+
+Developers can use these filter hooks to modify some eWAY invoice properties. Each filter receives a string for the field value, and the Gravity Forms form array.
+
+* `gfeway_invoice_desc` for modifying the invoice description
+* `gfeway_invoice_ref` for modifying the invoice reference
+* `gfeway_invoice_trans_number` for modifying the invoice transaction reference
+* `gfeway_invoice_option1` for setting the option1 field (one-off payments)
+* `gfeway_invoice_option2` for setting the option2 field (one-off payments)
+* `gfeway_invoice_option3` for setting the option3 field (one-off payments)
+* `gfeway_invoice_cust_comments` for setting the customer comments field (recurring payments)
+* `gfeway_recurring_periods` for filtering the available recurring periods (from 'weekly', 'fortnightly', 'monthly', 'quarterly', 'yearly')
+
+== Contributions ==
+
+* [Fork me on GitHub](https://github.com/webaware/gravityforms-eway/)
+
 == Changelog ==
+
+= 1.6.0 [2014-06-07] =
+* fixed: hidden products are now correctly handled
+* fixed: shipping is now correctly handled
+* fixed: RGFormsModel::update_lead() is deprecated in Gravity Forms v1.8.8
+* changed: move authcode, beagle score into Gravity Forms 1.8.8 Payment Details box on entry details
+* changed: merge template for payment amount is now formatted as currency
+* changed: some code refactoring
 
 = 1.5.12 [2014-05-14] =
 * fixed: products with separate quantity fields fail

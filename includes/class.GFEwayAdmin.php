@@ -15,8 +15,16 @@ class GFEwayAdmin {
 	public function __construct($plugin) {
 		$this->plugin = $plugin;
 
-		// handle change in settings pages
+		// handle basic plugin actions and filters
+		add_action('admin_init', array($this, 'adminInit'));
+		add_action('admin_notices', array($this, 'checkPrerequisites'));
+		add_action('plugin_action_links_' . GFEWAY_PLUGIN_NAME, array($this, 'addPluginActionLinks'));
+		add_filter('plugin_row_meta', array($this, 'addPluginDetailsLinks'), 10, 2);
+		add_filter('admin_enqueue_scripts', array($this, 'enqueueScripts'));
+
+		// only if Gravity Forms is activated
 		if (class_exists('GFCommon')) {
+			// handle change in settings pages
 			if (version_compare(GFCommon::$version, '1.6.99999', '<')) {
 				// pre-v1.7 settings
 				$this->settingsURL = admin_url('admin.php?page=gf_settings&addon=eWAY+Payments');
@@ -25,28 +33,22 @@ class GFEwayAdmin {
 				// post-v1.7 settings
 				$this->settingsURL = admin_url('admin.php?page=gf_settings&subview=eWAY+Payments');
 			}
+
+			// add GravityForms hooks
+			add_filter('gform_currency_setting_message', array($this, 'gformCurrencySettingMessage'));
+			add_action('gform_payment_status', array($this, 'gformPaymentStatus'), 10, 3);
+			add_action('gform_after_update_entry', array($this, 'gformAfterUpdateEntry'), 10, 2);
+
+			// handle the new Payment Details box if supported
+			if (version_compare(GFCommon::$version, '1.8.7.99999', '<')) {
+				// pre-v1.8.8 settings
+				add_action('gform_entry_info', array($this, 'gformPaymentDetails'), 10, 2);
+			}
+			else {
+				// post-v1.8.8 settings
+				add_action('gform_payment_details', array($this, 'gformPaymentDetails'), 10, 2);
+			}
 		}
-
-		// handle admin init action
-		add_action('admin_init', array($this, 'adminInit'));
-
-		// add GravityForms hooks
-		add_filter('gform_currency_setting_message', array($this, 'gformCurrencySettingMessage'));
-		add_action('gform_payment_status', array($this, 'gformPaymentStatus'), 10, 3);
-		add_action('gform_after_update_entry', array($this, 'gformAfterUpdateEntry'), 10, 2);
-		add_action("gform_entry_info", array($this, 'gformEntryInfo'), 10, 2);
-
-		// hook for showing admin messages
-		add_action('admin_notices', array($this, 'actionAdminNotices'));
-
-		// add action hook for adding plugin action links
-		add_action('plugin_action_links_' . GFEWAY_PLUGIN_NAME, array($this, 'addPluginActionLinks'));
-
-		// hook for adding links to plugin info
-		add_filter('plugin_row_meta', array($this, 'addPluginDetailsLinks'), 10, 2);
-
-		// hook for enqueuing admin styles
-		add_filter('admin_enqueue_scripts', array($this, 'enqueueScripts'));
 	}
 
 	/**
@@ -80,11 +82,30 @@ class GFEwayAdmin {
 	}
 
 	/**
-	* show admin messages
+	* check for required PHP extensions, tell admin if any are missing
 	*/
-	public function actionAdminNotices() {
+	public function checkPrerequisites() {
+		// need at least PHP 5.2.11 for libxml_disable_entity_loader()
+		$php_min = '5.2.11';
+		if (version_compare(PHP_VERSION, $php_min, '<')) {
+			include GFEWAY_PLUGIN_ROOT . 'views/requires-php.php';
+		}
+
+		// need these PHP extensions too
+		$prereqs = array('libxml', 'SimpleXML', 'xmlwriter');
+		$missing = array();
+		foreach ($prereqs as $ext) {
+			if (!extension_loaded($ext)) {
+				$missing[] = $ext;
+			}
+		}
+		if (!empty($missing)) {
+			include GFEWAY_PLUGIN_ROOT . 'views/requires-extensions.php';
+		}
+
+		// and of course, we need Gravity Forms
 		if (!self::isGfActive()) {
-			$this->plugin->showError('Gravity Forms eWAY requires <a href="http://www.gravityforms.com/">Gravity Forms</a> to be installed and activated.');
+			include GFEWAY_PLUGIN_ROOT . 'views/requires-gravity-forms.php';
 		}
 	}
 
@@ -108,7 +129,7 @@ class GFEwayAdmin {
 		if ($file == GFEWAY_PLUGIN_NAME) {
 			$links[] = '<a href="http://wordpress.org/support/plugin/gravityforms-eway">' . __('Get help') . '</a>';
 			$links[] = '<a href="http://wordpress.org/plugins/gravityforms-eway/">' . __('Rating') . '</a>';
-			$links[] = '<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=8V9YCKATQHKEN">' . __('Donate') . '</a>';
+			$links[] = '<a href="http://shop.webaware.com.au/downloads/gravity-forms-eway/">' . __('Donate') . '</a>';
 		}
 
 		return $links;
@@ -128,7 +149,7 @@ class GFEwayAdmin {
 	* @param int $form_id
 	* @param array $lead
 	*/
-	public function gformEntryInfo($form_id, $lead) {
+	public function gformPaymentDetails($form_id, $lead) {
 		$payment_gateway = gform_get_meta($lead['id'], 'payment_gateway');
 		if ($payment_gateway == 'gfeway') {
 			$authcode = gform_get_meta($lead['id'], 'authcode');

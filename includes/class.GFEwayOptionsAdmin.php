@@ -112,10 +112,11 @@ class GFEwayOptionsAdmin {
 
 				update_option(GFEWAY_PLUGIN_OPTIONS, $this->plugin->options);
 				$this->saveErrorMessages();
-				$this->plugin->showMessage(__('Options saved.'));
+				$msg = __('Options saved.');
+				echo "<div class='updated fade'><p><strong>$msg</strong></p></div>\n";
 			}
 			else {
-				$this->plugin->showError($errmsg);
+				echo "<div class='error'><p><strong>$errmsg</strong></p></div>\n";
 			}
 		}
 		else {
