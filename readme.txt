@@ -7,7 +7,7 @@ Donate link: http://shop.webaware.com.au/downloads/gravity-forms-eway/
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards, australia
 Requires at least: 3.6.1
 Tested up to: 3.9.1
-Stable tag: 1.6.0
+Stable tag: 1.6.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
