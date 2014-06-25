@@ -1,6 +1,6 @@
 # Gravity Forms eWAY #
 
-Integrate Gravity Forms with the eWAY credit card payment gateway
+Integrate [Gravity Forms](https://www.e-junkie.com/ecom/gb.php?cl=54585&c=ib&aff=277327) with the eWAY credit card payment gateway
 
 * [Home](http://shop.webaware.com.au/downloads/gravity-forms-eway/)
 * [GitHub](https://github.com/webaware/gravityforms-eway/)
