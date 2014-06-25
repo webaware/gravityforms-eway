@@ -34,10 +34,13 @@ class GFEwayAdmin {
 				$this->settingsURL = admin_url('admin.php?page=gf_settings&subview=eWAY+Payments');
 			}
 
-			// add GravityForms hooks
+			// add Gravity Forms hooks
 			add_filter('gform_currency_setting_message', array($this, 'gformCurrencySettingMessage'));
 			add_action('gform_payment_status', array($this, 'gformPaymentStatus'), 10, 3);
 			add_action('gform_after_update_entry', array($this, 'gformAfterUpdateEntry'), 10, 2);
+
+			// tell Gravity Forms not to put payment details into info (i.e. do put them into the new payment details box!)
+			add_filter('gform_enable_entry_info_payment_details', '__return_false');
 
 			// handle the new Payment Details box if supported
 			if (version_compare(GFCommon::$version, '1.8.7.99999', '<')) {
