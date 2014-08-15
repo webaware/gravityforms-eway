@@ -200,8 +200,8 @@ class GFEwayRecurringPayment {
 	* @param string $accountID eWAY account ID
 	* @param boolean $isLiveSite running on the live (production) website
 	*/
-	public function __construct($accountID, $isLiveSite = FALSE) {
-		$this->sslVerifyPeer = TRUE;
+	public function __construct($accountID, $isLiveSite = false) {
+		$this->sslVerifyPeer = true;
 		$this->isLiveSite = $isLiveSite;
 		$this->accountID = $accountID;
 	}
@@ -403,10 +403,18 @@ class GFEwayRecurringResponse {
 	* @param string $response eWAY response as a string (hopefully of XML data)
 	*/
 	public function loadResponseXML($response) {
+		GFEwayPlugin::log_debug(sprintf('%s: eWAY says "%s"', __METHOD__, $response));
+
+		// make sure we actually got something from eWAY
+		if (strlen($response) === 0) {
+			throw new GFEwayException('eWAY payment request returned nothing; please check your card details');
+		}
+
+		// prevent XML injection attacks, and handle errors without warnings
+		$oldDisableEntityLoader = libxml_disable_entity_loader(true);
+		$oldUseInternalErrors = libxml_use_internal_errors(true);
+
 		try {
-			// prevent XML injection attacks, and handle errors without warnings
-			$oldDisableEntityLoader = libxml_disable_entity_loader(TRUE);
-			$oldUseInternalErrors = libxml_use_internal_errors(TRUE);
 
 //~ error_log(__METHOD__ . "\n" . $response);
 
