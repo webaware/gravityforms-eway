@@ -7,7 +7,7 @@ Donate link: http://shop.webaware.com.au/downloads/gravity-forms-eway/
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards, australia
 Requires at least: 3.6.1
 Tested up to: 4.0
-Stable tag: 1.6.2
+Stable tag: 1.6.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -133,6 +133,7 @@ The plugin will run in shared hosting environments, but requires PHP 5 with the 
 
 Developers can use these filter hooks to modify some eWAY invoice properties. Each filter receives a string for the field value, and the Gravity Forms form array.
 
+* `gfeway_form_is_eway` for telling Gravity Forms eWAY to ignore a form
 * `gfeway_invoice_desc` for modifying the invoice description
 * `gfeway_invoice_ref` for modifying the invoice reference
 * `gfeway_invoice_trans_number` for modifying the invoice transaction reference
@@ -147,6 +148,9 @@ Developers can use these filter hooks to modify some eWAY invoice properties. Ea
 * [Fork me on GitHub](https://github.com/webaware/gravityforms-eway/)
 
 == Changelog ==
+
+= 1.6.3 [2014-08-25] =
+* added: filter `gfeway_form_is_eway` for telling Gravity Forms eWAY to ignore a form
 
 = 1.6.2 [2014-08-15] =
 * added: basic support for Gravity Forms Logging Add-On, to assist support requests; credit card numbers are obfuscated

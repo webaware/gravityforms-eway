@@ -76,7 +76,7 @@ class GFEwayRecurringField {
 	* @param boolean $ajax
 	*/
 	public function gformEnqueueScripts($form, $ajax) {
-		if ($this->plugin->hasFieldType($form['fields'], GFEWAY_FIELD_RECURRING)) {
+		if (GFEwayPlugin::hasFieldType($form['fields'], GFEWAY_FIELD_RECURRING)) {
 			// enqueue script for field
 			wp_enqueue_script('gfeway_recurring');
 

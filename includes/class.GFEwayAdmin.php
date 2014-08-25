@@ -190,12 +190,12 @@ class GFEwayAdmin {
 
 		// make sure payment is one of ours (probably)
 		$payment_gateway = gform_get_meta($lead['id'], 'payment_gateway');
-		if ((empty($payment_gateway) && $this->plugin->hasFieldType($form['fields'], 'creditcard')) || $payment_gateway != 'gfeway') {
+		if ((empty($payment_gateway) && GFEwayPlugin::isEwayForm($form['id'], $form['fields'])) || $payment_gateway != 'gfeway') {
 			return $payment_status;
 		}
 
 		// make sure payment isn't a recurring payment
-		if ($this->plugin->hasFieldType($form['fields'], GFEWAY_FIELD_RECURRING)) {
+		if (GFEwayPlugin::hasFieldType($form['fields'], GFEWAY_FIELD_RECURRING)) {
 			return $payment_status;
 		}
 
@@ -227,7 +227,7 @@ HTML;
 
 		// make sure payment is one of ours (probably)
 		$payment_gateway = gform_get_meta($lead_id, 'payment_gateway');
-		if ((empty($payment_gateway) && $this->plugin->hasFieldType($form['fields'], 'creditcard')) || $payment_gateway != 'gfeway') {
+		if ((empty($payment_gateway) && GFEwayPlugin::isEwayForm($form['id'], $form['fields'])) || $payment_gateway != 'gfeway') {
 			return;
 		}
 

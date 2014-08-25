@@ -104,7 +104,7 @@ class GFEwayPlugin {
 	*/
 	public function gformPreRenderSniff($form) {
 		// test whether form has a credit card field
-		$this->formHasCcField = self::hasFieldType($form['fields'], 'creditcard');
+		$this->formHasCcField = self::isEwayForm($form['id'], $form['fields']);
 
 		return $form;
 	}
@@ -117,7 +117,7 @@ class GFEwayPlugin {
 	public function gformValidation($data) {
 
 		// make sure all other validations passed
-		if ($data['is_valid']) {
+		if ($data['is_valid'] && self::isEwayForm($data['form']['id'], $data['form']['fields'])) {
 			$formData = new GFEwayFormData($data['form']);
 
 			// make sure form hasn't already been submitted / processed
@@ -407,6 +407,9 @@ class GFEwayPlugin {
 	* @return array
 	*/
 	public function gformAfterSubmission($entry, $form) {
+		if (!self::isEwayForm($form['id'], $form['fields']))
+			return;
+
 		$formData = new GFEwayFormData($form);
 
 		if (!empty($this->txResult)) {
@@ -451,7 +454,7 @@ class GFEwayPlugin {
 	* @return array
 	*/
 	public function gformCustomMergeTags($merge_tags, $form_id, $fields, $element_id) {
-		if ($fields && $this->hasFieldType($fields, 'creditcard')) {
+		if ($fields && self::isEwayForm($form_id, $fields)) {
 			$merge_tags[] = array('label' => 'Transaction ID', 'tag' => '{transaction_id}');
 			$merge_tags[] = array('label' => 'Auth Code', 'tag' => '{authcode}');
 			$merge_tags[] = array('label' => 'Payment Amount', 'tag' => '{payment_amount}');
@@ -474,7 +477,7 @@ class GFEwayPlugin {
 	* @return string
 	*/
 	public function gformReplaceMergeTags($text, $form, $lead, $url_encode, $esc_html, $nl2br, $format) {
-		if ($this->hasFieldType($form['fields'], 'creditcard')) {
+		if (self::isEwayForm($form['id'], $form['fields'])) {
 			if (is_null($this->txResult)) {
 				// lead loaded from database, get values from lead meta
 				$transaction_id = isset($lead['transaction_id']) ? $lead['transaction_id'] : '';
@@ -543,6 +546,21 @@ class GFEwayPlugin {
 		}
 
 		return $currency;
+	}
+
+	/**
+	* see if form is an eWAY credit card form
+	* @param int $form_id
+	* @param array $fields
+	* @return bool
+	*/
+	public static function isEwayForm($form_id, $fields) {
+		$isEwayForm = self::hasFieldType($fields, 'creditcard');
+
+		$isEwayForm = apply_filters('gfeway_form_is_eway', $isEwayForm, $form_id);
+		$isEwayForm = apply_filters('gfeway_form_is_eway_' . $form_id, $isEwayForm);
+
+		return $isEwayForm;
 	}
 
 	/**
