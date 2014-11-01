@@ -310,8 +310,6 @@ class GFEwayPayment {
 			$url = $this->isLiveSite ? self::REALTIME_CVN_API_LIVE : self::REALTIME_CVN_API_SANDBOX;
 		}
 
-//~ error_log(__METHOD__ . ": url = $url");
-
 		// execute the cURL request, and retrieve the response
 		try {
 			$responseXML = GFEwayPlugin::curlSendRequest($url, $xml, $this->sslVerifyPeer);

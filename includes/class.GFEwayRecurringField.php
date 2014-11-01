@@ -89,7 +89,6 @@ class GFEwayRecurringField {
 			// enqueue default styling
 			wp_enqueue_style('gfeway');
 		}
-
 	}
 
 	/**
@@ -323,9 +322,6 @@ class GFEwayRecurringField {
 						$messages[] = "Please select a valid interval type.";
 					}
 
-//~ echo "<pre>", print_r($messages,1), "</pre>";
-//~ echo "<pre>", print_r($value,1), "</pre>"; exit;
-
 					if (count($messages) > 0) {
 						$validation_result['is_valid'] = false;
 						$validation_result['message'] = implode("<br />\n", $messages);
@@ -381,7 +377,6 @@ class GFEwayRecurringField {
 			// pick up the real value
 			$value = rgpost('gfeway_' . $field['id']);
 
-			$disabled_text = (IS_ADMIN && RG_CURRENT_VIEW != "entry") ? "disabled='disabled' " : "";
 			$css = isset($field['cssClass']) ? esc_attr($field['cssClass']) : '';
 
 			$today = date_create('now', timezone_open('Australia/Sydney'));
@@ -698,8 +693,6 @@ class GFEwayRecurringField {
 	*/
 	public static function getPost($field_id) {
 		$recurring = rgpost('gfeway_' . $field_id);
-
-//~ echo "<pre>'gfeway_$field_id: ", print_r($recurring,1), "</pre>\n"; exit;
 
 		if (is_array($recurring)) {
 			$intervalSize = 1;

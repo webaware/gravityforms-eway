@@ -24,15 +24,7 @@ class GFEwayAdmin {
 
 		// only if Gravity Forms is activated
 		if (class_exists('GFCommon')) {
-			// handle change in settings pages
-			if (version_compare(GFCommon::$version, '1.6.99999', '<')) {
-				// pre-v1.7 settings
-				$this->settingsURL = admin_url('admin.php?page=gf_settings&addon=eWAY+Payments');
-			}
-			else {
-				// post-v1.7 settings
-				$this->settingsURL = admin_url('admin.php?page=gf_settings&subview=eWAY+Payments');
-			}
+			$this->settingsURL = admin_url('admin.php?page=gf_settings&subview=eWAY+Payments');
 
 			// add Gravity Forms hooks
 			add_filter('gform_currency_setting_message', array($this, 'gformCurrencySettingMessage'));
@@ -59,7 +51,7 @@ class GFEwayAdmin {
 	* @return boolean
 	*/
 	public static function isGfActive() {
-		return class_exists('RGForms');
+		return class_exists('GFCommon');
 	}
 
 	/**
@@ -109,6 +101,9 @@ class GFEwayAdmin {
 		// and of course, we need Gravity Forms
 		if (!self::isGfActive()) {
 			include GFEWAY_PLUGIN_ROOT . 'views/requires-gravity-forms.php';
+		}
+		elseif (GFEwayPlugin::versionCompareGF(GFEwayPlugin::MIN_VERSION_GF, '<')) {
+			include GFEWAY_PLUGIN_ROOT . 'views/requires-gravity-forms-upgrade.php';
 		}
 	}
 
@@ -222,7 +217,7 @@ HTML;
 		check_admin_referer('gforms_save_entry', 'gforms_save_entry');
 
 		// check that save action is for update
-		if (strtolower(rgpost("save")) <> 'update')
+		if (strtolower(rgpost('save')) <> 'update')
 			return;
 
 		// make sure payment is one of ours (probably)
@@ -239,7 +234,7 @@ HTML;
 
 		// update payment status
 		$lead = GFFormsModel::get_lead($lead_id);
-		$lead["payment_status"] = $payment_status;
+		$lead['payment_status'] = $payment_status;
 
 		GFFormsModel::update_lead($lead);
 	}

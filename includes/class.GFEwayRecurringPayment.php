@@ -415,9 +415,6 @@ class GFEwayRecurringResponse {
 		$oldUseInternalErrors = libxml_use_internal_errors(true);
 
 		try {
-
-//~ error_log(__METHOD__ . "\n" . $response);
-
 			$xml = simplexml_load_string($response);
 			if ($xml === false) {
 				$errmsg = '';
