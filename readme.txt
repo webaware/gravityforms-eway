@@ -279,5 +279,8 @@ Developers can use these filter hooks to modify some eWAY invoice properties. Ea
 
 == Upgrade Notice ==
 
+= 1.7.0 =
+* changed: minimum requirements now WordPress 3.7, Gravity Forms 1.7
+
 = 1.2.0 =
 * After upgrading, if you get connection errors posting to eWAY, please change your settings for "Verify remote SSL certificate"; only disable if your website can't be correctly configured!
