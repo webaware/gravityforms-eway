@@ -7,7 +7,7 @@ Donate link: http://shop.webaware.com.au/downloads/gravity-forms-eway/
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards, australia
 Requires at least: 3.7
 Tested up to: 4.0
-Stable tag: 1.6.3
+Stable tag: 1.7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -150,8 +150,9 @@ Developers can use these filter hooks to modify some eWAY invoice properties. Ea
 
 == Changelog ==
 
-= 1.7.0, soon... =
+= 1.7.0, 2014-11-08 =
 * fixed: Gravity Forms 1.9 compatibility
+* added: custom entry meta `authcode` and `payment_gateway` which can be added to listings
 * changed: cache result of `isEwayForm()` (may affect some hookers intercepting filter `gfeway_form_is_eway`)
 * changed: some code cleanup
 * changed: minimum requirements now WordPress 3.7, Gravity Forms 1.7

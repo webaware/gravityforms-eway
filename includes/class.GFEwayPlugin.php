@@ -89,10 +89,10 @@ class GFEwayPlugin {
 			add_filter('gform_creditcard_types', array($this, 'gformCCTypes'));
 			add_filter('gform_currency', array($this, 'gformCurrency'));
 			add_filter('gform_validation', array($this, 'gformValidation'));
-			add_action('gform_after_submission', array($this, 'gformAfterSubmission'), 10, 2);
 			add_action('gform_entry_post_save', array($this, 'gformEntryPostSave'), 10, 2);
 			add_filter('gform_custom_merge_tags', array($this, 'gformCustomMergeTags'), 10, 4);
 			add_filter('gform_replace_merge_tags', array($this, 'gformReplaceMergeTags'), 10, 7);
+			add_filter('gform_entry_meta', array($this, 'gformEntryMeta'), 10, 2);
 
 			// hook into Gravity Forms to handle Recurring Payments custom field
 			new GFEwayRecurringField($this);
@@ -299,16 +299,18 @@ class GFEwayPlugin {
 				$data['is_valid'] = false;
 				$formData->ccField['failed_validation'] = true;
 				$formData->ccField['validation_message'] = nl2br($this->getErrMsg(GFEWAY_ERROR_EWAY_FAIL) . ":\n{$response->error}");
-				$this->txResult['payment_status'] = 'Failed';
+				$this->txResult['payment_status']	= 'Failed';
+				$this->txResult['authcode']			= '';			// empty bank authcode, for conditional logic
 
 				self::log_debug(sprintf('%s: failed; %s', __FUNCTION__, $response->error));
 			}
 		}
 		catch (GFEwayException $e) {
 			$data['is_valid'] = false;
-			$this->txResult['payment_status'] = 'Failed';
 			$formData->ccField['failed_validation'] = true;
 			$formData->ccField['validation_message'] = nl2br($this->getErrMsg(GFEWAY_ERROR_EWAY_FAIL) . ":\n{$e->getMessage()}");
+			$this->txResult['payment_status']	= 'Failed';
+			$this->txResult['authcode']			= '';			// empty bank authcode, for conditional logic
 
 			self::log_error(__METHOD__ . ": " . $e->getMessage());
 		}
@@ -395,30 +397,14 @@ class GFEwayPlugin {
 		}
 		catch (GFEwayException $e) {
 			$data['is_valid'] = false;
-			$this->txResult['payment_status'] = 'Failed';
 			$formData->ccField['failed_validation'] = true;
 			$formData->ccField['validation_message'] = nl2br($this->getErrMsg(GFEWAY_ERROR_EWAY_FAIL) . ":\n{$e->getMessage()}");
+			$this->txResult['payment_status'] = 'Failed';
 
 			self::log_error(__METHOD__ . ": " . $e->getMessage());
 		}
 
 		return $data;
-	}
-
-	/**
-	* save the transaction details to the entry after it has been created
-	* @param array $entry
-	* @param array $form
-	*/
-	public function gformAfterSubmission($entry, $form) {
-		if (!self::isEwayForm($form['id'], $form['fields'])) {
-			return;
-		}
-
-		if (!empty($this->txResult)) {
-			// record lead ID for post-processing, so we can update the lead
-			$this->txResult['lead_id'] = $entry['id'];
-		}
 	}
 
 	/**
@@ -437,6 +423,8 @@ class GFEwayPlugin {
 					case 'payment_amount':
 					case 'transaction_id':
 					case 'transaction_type':
+					case 'payment_gateway':				// custom entry meta must be saved with entry
+					case 'authcode':					// custom entry meta must be saved with entry
 						// update entry
 						$entry[$key] = $value;
 						break;
@@ -533,6 +521,35 @@ class GFEwayPlugin {
 		}
 
 		return $text;
+	}
+
+	/**
+	* activate and configure custom entry meta
+	* @param array $entry_meta
+	* @param int $form_id
+	* @return array
+	*/
+	public function gformEntryMeta($entry_meta, $form_id) {
+
+		$entry_meta['payment_gateway'] = array(
+			'label'					=> 'Payment Gateway',
+			'is_numeric'			=> false,
+			'is_default_column'		=> false,
+			'filter'				=> array(
+											'operators' => array('is', 'isnot')
+										),
+		);
+
+		$entry_meta['authcode'] = array(
+			'label'					=> 'AuthCode',
+			'is_numeric'			=> false,
+			'is_default_column'		=> false,
+			'filter'				=> array(
+											'operators' => array('is', 'isnot')
+										),
+		);
+
+		return $entry_meta;
 	}
 
 	/**
