@@ -125,8 +125,8 @@ class GFEwayAdmin {
 	*/
 	public static function addPluginDetailsLinks($links, $file) {
 		if ($file == GFEWAY_PLUGIN_NAME) {
-			$links[] = '<a href="http://wordpress.org/support/plugin/gravityforms-eway">' . __('Get help') . '</a>';
-			$links[] = '<a href="http://wordpress.org/plugins/gravityforms-eway/">' . __('Rating') . '</a>';
+			$links[] = '<a href="https://wordpress.org/support/plugin/gravityforms-eway">' . __('Get help') . '</a>';
+			$links[] = '<a href="https://wordpress.org/plugins/gravityforms-eway/">' . __('Rating') . '</a>';
 			$links[] = '<a href="http://shop.webaware.com.au/downloads/gravity-forms-eway/">' . __('Donate') . '</a>';
 		}
 

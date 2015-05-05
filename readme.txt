@@ -101,7 +101,7 @@ When the sandbox is enabled, the payment amount is rounded up by default, becaus
 
 = Why do I get an error "This page is unsecured"? =
 
-When your form has a credit card field, it accepts very sensitive details from your customers and these must be encrypted. You must have an SSL certificate installed on your website, and your page must be accessed via SSL (i.e. the page address must start with "https:"). You can force a page with a credit card form to be accessed via SSL by ticking Force SSL on the Credit Card Field advanced settings page; see [screenshots](http://wordpress.org/plugins/gravityforms-eway/screenshots/).
+When your form has a credit card field, it accepts very sensitive details from your customers and these must be encrypted. You must have an SSL certificate installed on your website, and your page must be accessed via SSL (i.e. the page address must start with "https:"). You can force a page with a credit card form to be accessed via SSL by ticking Force SSL on the Credit Card Field advanced settings page; see [screenshots](https://wordpress.org/plugins/gravityforms-eway/screenshots/).
 
 = Can I do recurring payments? =
 
