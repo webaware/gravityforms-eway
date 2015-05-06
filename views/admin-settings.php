@@ -1,7 +1,7 @@
 <div class='wrap'>
 <h3>Gravity Forms eWAY Payments</h3>
 
-<form action="<?php echo $this->scriptURL; ?>" method="post" id="eway-settings-form">
+<form action="<?php echo esc_url($this->scriptURL); ?>" method="post" id="eway-settings-form">
 	<table class="form-table">
 
 		<tr>

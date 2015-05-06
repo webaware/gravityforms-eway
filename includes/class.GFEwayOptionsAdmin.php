@@ -18,7 +18,7 @@ class GFEwayOptionsForm {
 	*/
 	public function __construct() {
 		if (self::isFormPost()) {
-			$this->customerID = self::getPostValue('customerID');
+			$this->customerID = sanitize_text_field(self::getPostValue('customerID'));
 			$this->useStored = self::getPostValue('useStored');
 			$this->useTest = self::getPostValue('useTest');
 			$this->useBeagle = self::getPostValue('useBeagle');

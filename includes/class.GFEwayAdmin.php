@@ -113,7 +113,7 @@ class GFEwayAdmin {
 	public function addPluginActionLinks($links) {
 		// add settings link, but only if GravityForms plugin is active
 		if (self::isGfActive()) {
-			$settings_link = sprintf('<a href="%s">%s</a>', $this->settingsURL, __('Settings'));
+			$settings_link = sprintf('<a href="%s">%s</a>', esc_url($this->settingsURL), __('Settings'));
 			array_unshift($links, $settings_link);
 		}
 
@@ -195,14 +195,9 @@ class GFEwayAdmin {
 		}
 
 		// create drop down for payment status
-		//~ $payment_string = gform_tooltip("paypal_edit_payment_status","",true);
-		$input = <<<HTML
-<select name="payment_status">
- <option value="$payment_status" selected="selected">$payment_status</option>
- <option value="Approved">Approved</option>
-</select>
-
-HTML;
+		ob_start();
+		include GFEWAY_PLUGIN_ROOT . 'views/admin-entry-payment-status.php';
+		$input = ob_get_clean();
 
 		return $input;
     }
