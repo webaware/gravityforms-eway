@@ -48,11 +48,10 @@ Recurring Payments field
 
 	// watch for conditional logic changes, reset fields to initial values on show
 	gform.addAction("gform_post_conditional_logic_field_action", function(formId, action, targetId, defaultValues, isInit) {
-		// only on init action
-		if (isInit) {
-			var target = $(targetId);
-
+		// only on show action
+		if (action === "show") {
 			// only recurring payment fields
+			var target = $(targetId);
 			if (target.hasClass("recurring-payment-details")) {
 				target.find("input.datepicker").each(function() {
 					this.value = this.getAttribute("value");
