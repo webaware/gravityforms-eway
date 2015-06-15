@@ -48,28 +48,6 @@ if (!defined('GFEWAY_PLUGIN_ROOT')) {
 	define('GFEWAY_FIELD_RECURRING', 'gfewayrecurring');
 }
 
-/**
-* autoload classes as/when needed
-*
-* @param string $class_name name of class to attempt to load
-*/
-function gfeway_autoload($class_name) {
-	static $classMap = array (
-		'GFEwayAdmin'						=> 'includes/class.GFEwayAdmin.php',
-		'GFEwayFormData'					=> 'includes/class.GFEwayFormData.php',
-		'GFEwayOptionsAdmin'				=> 'includes/class.GFEwayOptionsAdmin.php',
-		'GFEwayPayment'						=> 'includes/class.GFEwayPayment.php',
-		'GFEwayPlugin'						=> 'includes/class.GFEwayPlugin.php',
-		'GFEwayRecurringField'				=> 'includes/class.GFEwayRecurringField.php',
-		'GFEwayRecurringPayment'			=> 'includes/class.GFEwayRecurringPayment.php',
-		'GFEwayStoredPayment'				=> 'includes/class.GFEwayStoredPayment.php',
-	);
-
-	if (isset($classMap[$class_name])) {
-		require GFEWAY_PLUGIN_ROOT . $classMap[$class_name];
-	}
-}
-spl_autoload_register('gfeway_autoload');
-
 // instantiate the plug-in
+require GFEWAY_PLUGIN_ROOT . 'includes/class.GFEwayPlugin.php';
 GFEwayPlugin::getInstance();

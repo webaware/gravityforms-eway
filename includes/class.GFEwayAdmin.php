@@ -166,6 +166,8 @@ class GFEwayAdmin {
 	* action hook for processing admin menu item
 	*/
 	public function optionsAdmin() {
+		require GFEWAY_PLUGIN_ROOT . 'includes/class.GFEwayOptionsAdmin.php';
+
 		$admin = new GFEwayOptionsAdmin($this->plugin, 'gfeway-options', $this->settingsURL);
 		$admin->process();
 	}

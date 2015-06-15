@@ -37,6 +37,8 @@ class GFEwayPlugin {
 	* initialise plugin
 	*/
 	private function __construct() {
+		spl_autoload_register(array(__CLASS__, 'autoload'));
+
 		// grab options, setting new defaults for any that are missing
 		$this->initOptions();
 
@@ -91,11 +93,13 @@ class GFEwayPlugin {
 			add_filter('gform_entry_meta', array($this, 'gformEntryMeta'), 10, 2);
 
 			// hook into Gravity Forms to handle Recurring Payments custom field
+			require GFEWAY_PLUGIN_ROOT . 'includes/class.GFEwayRecurringField.php';
 			new GFEwayRecurringField($this);
 		}
 
 		if (is_admin()) {
 			// kick off the admin handling
+			require GFEWAY_PLUGIN_ROOT . 'includes/class.GFEwayAdmin.php';
 			new GFEwayAdmin($this);
 		}
 	}
@@ -121,6 +125,7 @@ class GFEwayPlugin {
 
 		// make sure all other validations passed
 		if ($data['is_valid'] && self::isEwayForm($data['form']['id'], $data['form']['fields'])) {
+			require GFEWAY_PLUGIN_ROOT . 'includes/class.GFEwayFormData.php';
 			$formData = new GFEwayFormData($data['form']);
 
 			// make sure form hasn't already been submitted / processed
@@ -760,6 +765,23 @@ class GFEwayPlugin {
 
 		// just check for IPv4 addresses
 		return !!ip2long($maybeIP);
+	}
+
+	/**
+	* autoload classes as/when needed
+	*
+	* @param string $class_name name of class to attempt to load
+	*/
+	public static function autoload($class_name) {
+		static $classMap = array (
+			'GFEwayPayment'						=> 'includes/class.GFEwayPayment.php',
+			'GFEwayRecurringPayment'			=> 'includes/class.GFEwayRecurringPayment.php',
+			'GFEwayStoredPayment'				=> 'includes/class.GFEwayStoredPayment.php',
+		);
+
+		if (isset($classMap[$class_name])) {
+			require GFEWAY_PLUGIN_ROOT . $classMap[$class_name];
+		}
 	}
 
 }
