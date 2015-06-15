@@ -1,0 +1,18 @@
+{
+  "name": "Gravity Forms eWAY",
+  "version": "1.7.1",
+  "description": "Integrates Gravity Forms with eWAY payment gateway, enabling end users to purchase goods and services through Gravity Forms.",
+  "main": "Gruntfile.js",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^0.11.0",
+    "grunt-contrib-uglify": "^0.8.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webaware/gravityforms-eway"
+  },
+  "author": "WebAware http://webaware.com.au/",
+  "license": "GPLv2 or later",
+  "homepage": "http://shop.webaware.com.au/downloads/gravity-forms-eway/"
+}

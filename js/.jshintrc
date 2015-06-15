@@ -9,6 +9,7 @@
 	"browser": true,
 	"jquery": true,
 	"globals": {
+		"module": false,
 		"SetFieldProperty": false,
 		"fieldSettings": true
 	}
