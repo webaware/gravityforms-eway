@@ -111,6 +111,7 @@ class GFEwayRecurringField {
 				$group['fields'][] = array (
 					'class'		=> 'button',
 					'value'		=> 'Recurring',
+					'data-type'	=> GFEWAY_FIELD_RECURRING,
 					'onclick'	=> "StartAddField('" . GFEWAY_FIELD_RECURRING . "');",
 				);
 				break;
