@@ -62,10 +62,13 @@ class GFEwayAdmin {
 			switch ($_GET['page']) {
 				case 'gf_settings':
 					// add our settings page to the Gravity Forms settings menu
-					RGForms::add_settings_page('eWAY Payments', array($this, 'optionsAdmin'));
+					RGForms::add_settings_page('eWAY Payments', array($this, 'settingsPage'));
 					break;
 			}
 		}
+
+		add_settings_section(GFEWAY_PLUGIN_OPTIONS, false, false, GFEWAY_PLUGIN_OPTIONS);
+		register_setting(GFEWAY_PLUGIN_OPTIONS, GFEWAY_PLUGIN_OPTIONS, array($this, 'settingsValidate'));
 	}
 
 	/**
@@ -163,13 +166,45 @@ class GFEwayAdmin {
 	}
 
 	/**
-	* action hook for processing admin menu item
+	* settings admin
 	*/
-	public function optionsAdmin() {
-		require GFEWAY_PLUGIN_ROOT . 'includes/class.GFEwayOptionsAdmin.php';
+	public function settingsPage() {
+		$options = $this->plugin->options;
+		require GFEWAY_PLUGIN_ROOT . 'views/admin-settings.php';
+	}
 
-		$admin = new GFEwayOptionsAdmin($this->plugin, 'gfeway-options', $this->settingsURL);
-		$admin->process();
+	/**
+	* validate settings on save
+	* @param array $input
+	* @return array
+	*/
+	public function settingsValidate($input) {
+		$output = array();
+
+		$output['customerID']			= trim(sanitize_text_field($input['customerID']));
+		$output['useStored']			= empty($input['useStored']) ? '' : 1;
+		$output['useTest']				= empty($input['useTest']) ? '' : 1;
+		$output['useBeagle']			= empty($input['useBeagle']) ? '' : 1;
+		$output['roundTestAmounts']		= empty($input['roundTestAmounts']) ? '' : 1;
+		$output['forceTestAccount']		= empty($input['forceTestAccount']) ? '' : 1;
+		$output['sslVerifyPeer']		= empty($input['sslVerifyPeer']) ? '' : 1;
+
+		$errNames = array (
+			GFEWAY_ERROR_ALREADY_SUBMITTED,
+			GFEWAY_ERROR_NO_AMOUNT,
+			GFEWAY_ERROR_REQ_CARD_HOLDER,
+			GFEWAY_ERROR_REQ_CARD_NAME,
+			GFEWAY_ERROR_EWAY_FAIL,
+		);
+		foreach ($errNames as $name) {
+			$output[$name] = trim(sanitize_text_field($input[$name]));
+		}
+
+		if (empty($output['customerID'])) {
+			add_settings_error(GFEWAY_PLUGIN_OPTIONS, '', 'Please enter the eWAY account number.');
+		}
+
+		return $output;
 	}
 
 	/**

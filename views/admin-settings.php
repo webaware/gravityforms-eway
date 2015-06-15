@@ -1,13 +1,17 @@
-<div class='wrap'>
+
+<?php settings_errors(GFEWAY_PLUGIN_OPTIONS); ?>
+
 <h3>Gravity Forms eWAY Payments</h3>
 
-<form action="<?php echo esc_url($this->scriptURL); ?>" method="post" id="eway-settings-form">
+<form action="<?php echo admin_url('options.php'); ?>" method="POST" id="eway-settings-form">
+	<?php settings_fields(GFEWAY_PLUGIN_OPTIONS); ?>
+
 	<table class="form-table">
 
 		<tr>
 			<th>eWAY Customer ID</th>
 			<td>
-				<input type='text' class="regular-text" name='customerID' value="<?php echo esc_attr($this->frm->customerID); ?>" />
+				<input type="text" class="regular-text" name="gfeway_plugin[customerID]" value="<?php echo esc_attr($options['customerID']); ?>" />
 			</td>
 		</tr>
 
@@ -19,32 +23,32 @@
 				</span>
 			</th>
 			<td>
-				<label><input type="radio" name="useStored" value="Y" <?php checked($this->frm->useStored, 'Y'); ?> />&nbsp;yes</label>
-				&nbsp;&nbsp;<label><input type="radio" name="useStored" value="N" <?php checked($this->frm->useStored, 'N'); ?> />&nbsp;no</label>
+				<label><input type="radio" name="gfeway_plugin[useStored]" value="1" <?php checked($options['useStored'], '1'); ?> />&nbsp;yes</label>
+				&nbsp;&nbsp;<label><input type="radio" name="gfeway_plugin[useStored]" value="" <?php checked($options['useStored'], ''); ?> />&nbsp;no</label>
 			</td>
 		</tr>
 
 		<tr valign='top'>
 			<th>Use Sandbox (testing environment)</th>
 			<td>
-				<label><input type="radio" name="useTest" value="Y" <?php checked($this->frm->useTest, 'Y'); ?> />&nbsp;yes</label>
-				&nbsp;&nbsp;<label><input type="radio" name="useTest" value="N" <?php checked($this->frm->useTest, 'N'); ?> />&nbsp;no</label>
+				<label><input type="radio" name="gfeway_plugin[useTest]" value="1" <?php checked($options['useTest'], '1'); ?> />&nbsp;yes</label>
+				&nbsp;&nbsp;<label><input type="radio" name="gfeway_plugin[useTest]" value="" <?php checked($options['useTest'], ''); ?> />&nbsp;no</label>
 			</td>
 		</tr>
 
 		<tr valign='top'>
 			<th>Round Amounts for Sandbox</th>
 			<td>
-				<label><input type="radio" name="roundTestAmounts" value="Y" <?php checked($this->frm->roundTestAmounts, 'Y'); ?> />&nbsp;yes</label>
-				&nbsp;&nbsp;<label><input type="radio" name="roundTestAmounts" value="N" <?php checked($this->frm->roundTestAmounts, 'N'); ?> />&nbsp;no</label>
+				<label><input type="radio" name="gfeway_plugin[roundTestAmounts]" value="1" <?php checked($options['roundTestAmounts'], '1'); ?> />&nbsp;yes</label>
+				&nbsp;&nbsp;<label><input type="radio" name="gfeway_plugin[roundTestAmounts]" value="" <?php checked($options['roundTestAmounts'], ''); ?> />&nbsp;no</label>
 			</td>
 		</tr>
 
 		<tr valign='top'>
 			<th>Force Test Customer ID in Sandbox</th>
 			<td>
-				<label><input type="radio" name="forceTestAccount" value="Y" <?php checked($this->frm->forceTestAccount, 'Y'); ?> />&nbsp;yes</label>
-				&nbsp;&nbsp;<label><input type="radio" name="forceTestAccount" value="N" <?php checked($this->frm->forceTestAccount, 'N'); ?> />&nbsp;no</label>
+				<label><input type="radio" name="gfeway_plugin[forceTestAccount]" value="1" <?php checked($options['forceTestAccount'], '1'); ?> />&nbsp;yes</label>
+				&nbsp;&nbsp;<label><input type="radio" name="gfeway_plugin[forceTestAccount]" value="" <?php checked($options['forceTestAccount'], ''); ?> />&nbsp;no</label>
 			</td>
 		</tr>
 
@@ -55,8 +59,8 @@
 				</span>
 			</th>
 			<td>
-				<label><input type="radio" name="useBeagle" value="Y" <?php checked($this->frm->useBeagle, 'Y'); ?> />&nbsp;yes</label>
-				&nbsp;&nbsp;<label><input type="radio" name="useBeagle" value="N" <?php checked($this->frm->useBeagle, 'N'); ?> />&nbsp;no</label>
+				<label><input type="radio" name="gfeway_plugin[useBeagle]" value="1" <?php checked($options['useBeagle'], '1'); ?> />&nbsp;yes</label>
+				&nbsp;&nbsp;<label><input type="radio" name="gfeway_plugin[useBeagle]" value="" <?php checked($options['useBeagle'], ''); ?> />&nbsp;no</label>
 				<span id="gfeway-opt-admin-beagle-address">
 					<br />You will also need to add an Address field to your form, and make it required. Beagle works by comparing
 					the country of the address with the country where the purchaser is using the Internet; if you don't set it to Required,
@@ -72,8 +76,8 @@
 				  href="http://snippets.webaware.com.au/howto/stop-turning-off-curlopt_ssl_verifypeer-and-fix-your-php-config/">correctly configured</a>!</i>)
 			</th>
 			<td>
-				<label><input type="radio" name="sslVerifyPeer" value="Y" <?php checked($this->frm->sslVerifyPeer, 'Y'); ?> />&nbsp;yes</label>
-				&nbsp;&nbsp;<label><input type="radio" name="sslVerifyPeer" value="N" <?php checked($this->frm->sslVerifyPeer, 'N'); ?> />&nbsp;no</label>
+				<label><input type="radio" name="gfeway_plugin[sslVerifyPeer]" value="Y" <?php checked($options['sslVerifyPeer'], '1'); ?> />&nbsp;yes</label>
+				&nbsp;&nbsp;<label><input type="radio" name="gfeway_plugin[sslVerifyPeer]" value="N" <?php checked($options['sslVerifyPeer'], ''); ?> />&nbsp;no</label>
 			</td>
 		</tr>
 
@@ -91,13 +95,13 @@
 			GFEWAY_ERROR_EWAY_FAIL,
 		);
 		foreach ($errNames as $errName) {
-			$defmsg = esc_html($this->plugin->getErrMsg($errName, true));
-			$msg = esc_attr(get_option($errName));
+			$defmsg = $this->plugin->getErrMsg($errName, true);
+			$msg    = isset($options[$errName]) ? $options[$errName] : get_option($errName);
 			?>
 
 			<tr>
-				<th><?php echo $defmsg; ?></th>
-				<td><input type="text" name="<?php echo esc_attr($errName); ?>" class="large-text" value="<?php echo $msg; ?>" /></td>
+				<th><?php echo esc_html($defmsg); ?></th>
+				<td><input type="text" name="gfeway_plugin[<?php echo esc_attr($errName); ?>]" class="large-text" value="<?php echo esc_attr($msg); ?>" /></td>
 			</tr>
 
 			<?php
@@ -105,14 +109,10 @@
 
 		?>
 	</table>
-	<p class="submit">
-	<input type="submit" name="Submit" class="button-primary" value="Save Changes" />
-	<input type="hidden" name="action" value="save" />
-	<?php wp_nonce_field('save', $this->menuPage . '_wpnonce', false); ?>
-	</p>
-</form>
 
-</div>
+	<?php submit_button(); ?>
+
+</form>
 
 <script>
 (function($) {
@@ -122,9 +122,9 @@
 	* show warning message if they are
 	*/
 	function setVisibility() {
-		var	useTest   = ($("input[name='useTest']:checked").val()   == "Y"),
-			useBeagle = ($("input[name='useBeagle']:checked").val() == "Y"),
-			useStored = ($("input[name='useStored']:checked").val() == "Y");
+		var	useTest   = ($("input[name='gfeway_plugin[useTest]']:checked").val()   === "1"),
+			useBeagle = ($("input[name='gfeway_plugin[useBeagle]']:checked").val() === "1"),
+			useStored = ($("input[name='gfeway_plugin[useStored]']:checked").val() === "1");
 
 		function display(element, visible) {
 			if (visible)
@@ -138,7 +138,7 @@
 		display($("#gfeway-opt-admin-beagle-address"), useBeagle);
 	}
 
-	$("#eway-settings-form").on("change", "input[name='useTest'],input[name='useBeagle'],input[name='useStored']", setVisibility);
+	$("#eway-settings-form").on("change", "input[name='gfeway_plugin[useTest]'],input[name='gfeway_plugin[useBeagle]'],input[name='gfeway_plugin[useStored]']", setVisibility);
 
 	setVisibility();
 

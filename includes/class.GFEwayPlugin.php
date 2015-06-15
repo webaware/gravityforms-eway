@@ -643,7 +643,16 @@ class GFEwayPlugin {
 
 		// check for custom message
 		if (!$useDefault) {
-			$msg = get_option($errName, $msg);
+			// check that messages are stored in options array; only since v1.7.1
+			if (isset($this->options[$errName])) {
+				if (!empty($this->options[$errName])) {
+					$msg = $this->options[$errName];
+				}
+			}
+			else {
+				// pre-1.7.1 settings stored individually, not using settings API
+				$msg = get_option($errName, $msg);
+			}
 		}
 
 		return $msg;
