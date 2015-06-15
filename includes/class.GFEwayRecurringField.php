@@ -97,7 +97,7 @@ class GFEwayRecurringField {
 	public function gformEditorJS() {
 		$min = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
 		$ver = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? time() : GFEWAY_PLUGIN_VERSION;
-		printf('<script src="%s?ver=%s"></script>', plugins_url("js/admin-recurring$min.js", GFEWAY_PLUGIN_FILE), $ver);
+		printf('<script src="%s?ver=%s"></script>', esc_url(plugins_url("js/admin-recurring$min.js", GFEWAY_PLUGIN_FILE)), $ver);
 	}
 
 	/**
