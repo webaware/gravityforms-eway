@@ -9,7 +9,8 @@
 	"browser": true,
 	"jquery": true,
 	"globals": {
+		"gform": false,
 		"SetFieldProperty": false,
-		"fieldSettings": true
+		"fieldSettings": false
 	}
 }
