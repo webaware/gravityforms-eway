@@ -19,32 +19,32 @@
 				</span>
 			</th>
 			<td>
-				<label><input type="radio" name="useStored" value="Y" <?php echo checked($this->frm->useStored, 'Y'); ?> />&nbsp;yes</label>
-				&nbsp;&nbsp;<label><input type="radio" name="useStored" value="N" <?php echo checked($this->frm->useStored, 'N'); ?> />&nbsp;no</label>
+				<label><input type="radio" name="useStored" value="Y" <?php checked($this->frm->useStored, 'Y'); ?> />&nbsp;yes</label>
+				&nbsp;&nbsp;<label><input type="radio" name="useStored" value="N" <?php checked($this->frm->useStored, 'N'); ?> />&nbsp;no</label>
 			</td>
 		</tr>
 
 		<tr valign='top'>
 			<th>Use Sandbox (testing environment)</th>
 			<td>
-				<label><input type="radio" name="useTest" value="Y" <?php echo checked($this->frm->useTest, 'Y'); ?> />&nbsp;yes</label>
-				&nbsp;&nbsp;<label><input type="radio" name="useTest" value="N" <?php echo checked($this->frm->useTest, 'N'); ?> />&nbsp;no</label>
+				<label><input type="radio" name="useTest" value="Y" <?php checked($this->frm->useTest, 'Y'); ?> />&nbsp;yes</label>
+				&nbsp;&nbsp;<label><input type="radio" name="useTest" value="N" <?php checked($this->frm->useTest, 'N'); ?> />&nbsp;no</label>
 			</td>
 		</tr>
 
 		<tr valign='top'>
 			<th>Round Amounts for Sandbox</th>
 			<td>
-				<label><input type="radio" name="roundTestAmounts" value="Y" <?php echo checked($this->frm->roundTestAmounts, 'Y'); ?> />&nbsp;yes</label>
-				&nbsp;&nbsp;<label><input type="radio" name="roundTestAmounts" value="N" <?php echo checked($this->frm->roundTestAmounts, 'N'); ?> />&nbsp;no</label>
+				<label><input type="radio" name="roundTestAmounts" value="Y" <?php checked($this->frm->roundTestAmounts, 'Y'); ?> />&nbsp;yes</label>
+				&nbsp;&nbsp;<label><input type="radio" name="roundTestAmounts" value="N" <?php checked($this->frm->roundTestAmounts, 'N'); ?> />&nbsp;no</label>
 			</td>
 		</tr>
 
 		<tr valign='top'>
 			<th>Force Test Customer ID in Sandbox</th>
 			<td>
-				<label><input type="radio" name="forceTestAccount" value="Y" <?php echo checked($this->frm->forceTestAccount, 'Y'); ?> />&nbsp;yes</label>
-				&nbsp;&nbsp;<label><input type="radio" name="forceTestAccount" value="N" <?php echo checked($this->frm->forceTestAccount, 'N'); ?> />&nbsp;no</label>
+				<label><input type="radio" name="forceTestAccount" value="Y" <?php checked($this->frm->forceTestAccount, 'Y'); ?> />&nbsp;yes</label>
+				&nbsp;&nbsp;<label><input type="radio" name="forceTestAccount" value="N" <?php checked($this->frm->forceTestAccount, 'N'); ?> />&nbsp;no</label>
 			</td>
 		</tr>
 
@@ -55,8 +55,8 @@
 				</span>
 			</th>
 			<td>
-				<label><input type="radio" name="useBeagle" value="Y" <?php echo checked($this->frm->useBeagle, 'Y'); ?> />&nbsp;yes</label>
-				&nbsp;&nbsp;<label><input type="radio" name="useBeagle" value="N" <?php echo checked($this->frm->useBeagle, 'N'); ?> />&nbsp;no</label>
+				<label><input type="radio" name="useBeagle" value="Y" <?php checked($this->frm->useBeagle, 'Y'); ?> />&nbsp;yes</label>
+				&nbsp;&nbsp;<label><input type="radio" name="useBeagle" value="N" <?php checked($this->frm->useBeagle, 'N'); ?> />&nbsp;no</label>
 				<span id="gfeway-opt-admin-beagle-address">
 					<br />You will also need to add an Address field to your form, and make it required. Beagle works by comparing
 					the country of the address with the country where the purchaser is using the Internet; if you don't set it to Required,
@@ -72,8 +72,8 @@
 				  href="http://snippets.webaware.com.au/howto/stop-turning-off-curlopt_ssl_verifypeer-and-fix-your-php-config/">correctly configured</a>!</i>)
 			</th>
 			<td>
-				<label><input type="radio" name="sslVerifyPeer" value="Y" <?php echo checked($this->frm->sslVerifyPeer, 'Y'); ?> />&nbsp;yes</label>
-				&nbsp;&nbsp;<label><input type="radio" name="sslVerifyPeer" value="N" <?php echo checked($this->frm->sslVerifyPeer, 'N'); ?> />&nbsp;no</label>
+				<label><input type="radio" name="sslVerifyPeer" value="Y" <?php checked($this->frm->sslVerifyPeer, 'Y'); ?> />&nbsp;yes</label>
+				&nbsp;&nbsp;<label><input type="radio" name="sslVerifyPeer" value="N" <?php checked($this->frm->sslVerifyPeer, 'N'); ?> />&nbsp;no</label>
 			</td>
 		</tr>
 
