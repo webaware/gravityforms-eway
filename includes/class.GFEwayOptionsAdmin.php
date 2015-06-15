@@ -18,13 +18,13 @@ class GFEwayOptionsForm {
 	*/
 	public function __construct() {
 		if (self::isFormPost()) {
-			$this->customerID = sanitize_text_field(self::getPostValue('customerID'));
-			$this->useStored = self::getPostValue('useStored');
-			$this->useTest = self::getPostValue('useTest');
-			$this->useBeagle = self::getPostValue('useBeagle');
-			$this->roundTestAmounts = self::getPostValue('roundTestAmounts');
-			$this->forceTestAccount = self::getPostValue('forceTestAccount');
-			$this->sslVerifyPeer = self::getPostValue('sslVerifyPeer');
+			$this->customerID			= sanitize_text_field(self::getPostValue('customerID'));
+			$this->useStored			= self::getPostValue('useStored');
+			$this->useTest				= self::getPostValue('useTest');
+			$this->useBeagle			= self::getPostValue('useBeagle');
+			$this->roundTestAmounts		= self::getPostValue('roundTestAmounts');
+			$this->forceTestAccount		= self::getPostValue('forceTestAccount');
+			$this->sslVerifyPeer		= self::getPostValue('sslVerifyPeer');
 		}
 	}
 
@@ -48,7 +48,7 @@ class GFEwayOptionsForm {
 	* @param string $fieldname name of the field in the form post
 	*/
 	public static function getPostValue($fieldname) {
-		return isset($_POST[$fieldname]) ? stripslashes(trim($_POST[$fieldname])) : '';
+		return isset($_POST[$fieldname]) ? wp_unslash(trim($_POST[$fieldname])) : '';
 	}
 
 	/**
@@ -68,6 +68,7 @@ class GFEwayOptionsForm {
 
 		return $errmsg;
 	}
+
 }
 
 /**
@@ -85,9 +86,9 @@ class GFEwayOptionsAdmin {
 	* @param string $menuPage URL slug for this admin menu page
 	*/
 	public function __construct($plugin, $menuPage, $scriptURL) {
-		$this->plugin = $plugin;
-		$this->menuPage = $menuPage;
-		$this->scriptURL = $scriptURL;
+		$this->plugin		= $plugin;
+		$this->menuPage		= $menuPage;
+		$this->scriptURL	= $scriptURL;
 
 		wp_enqueue_script('jquery');
 	}
@@ -102,13 +103,13 @@ class GFEwayOptionsAdmin {
 
 			$errmsg = $this->frm->validate();
 			if (empty($errmsg)) {
-				$this->plugin->options['customerID'] = $this->frm->customerID;
-				$this->plugin->options['useStored'] = ($this->frm->useStored == 'Y');
-				$this->plugin->options['useTest'] = ($this->frm->useTest == 'Y');
-				$this->plugin->options['useBeagle'] = ($this->frm->useBeagle == 'Y');
-				$this->plugin->options['roundTestAmounts'] = ($this->frm->roundTestAmounts == 'Y');
-				$this->plugin->options['forceTestAccount'] = ($this->frm->forceTestAccount == 'Y');
-				$this->plugin->options['sslVerifyPeer'] = ($this->frm->sslVerifyPeer == 'Y');
+				$this->plugin->options['customerID']		= $this->frm->customerID;
+				$this->plugin->options['useStored']			= ($this->frm->useStored == 'Y');
+				$this->plugin->options['useTest']			= ($this->frm->useTest == 'Y');
+				$this->plugin->options['useBeagle']			= ($this->frm->useBeagle == 'Y');
+				$this->plugin->options['roundTestAmounts']	= ($this->frm->roundTestAmounts == 'Y');
+				$this->plugin->options['forceTestAccount']	= ($this->frm->forceTestAccount == 'Y');
+				$this->plugin->options['sslVerifyPeer']		= ($this->frm->sslVerifyPeer == 'Y');
 
 				update_option(GFEWAY_PLUGIN_OPTIONS, $this->plugin->options);
 				$this->saveErrorMessages();
@@ -121,13 +122,13 @@ class GFEwayOptionsAdmin {
 		}
 		else {
 			// initialise form from stored options
-			$this->frm->customerID = $this->plugin->options['customerID'];
-			$this->frm->useStored = $this->plugin->options['useStored'] ? 'Y' : 'N';
-			$this->frm->useTest = $this->plugin->options['useTest'] ? 'Y' : 'N';
-			$this->frm->useBeagle = $this->plugin->options['useBeagle'] ? 'Y' : 'N';
-			$this->frm->roundTestAmounts = $this->plugin->options['roundTestAmounts'] ? 'Y' : 'N';
-			$this->frm->forceTestAccount = $this->plugin->options['forceTestAccount'] ? 'Y' : 'N';
-			$this->frm->sslVerifyPeer = $this->plugin->options['sslVerifyPeer'] ? 'Y' : 'N';
+			$this->frm->customerID			= $this->plugin->options['customerID'];
+			$this->frm->useStored			= $this->plugin->options['useStored'] ? 'Y' : 'N';
+			$this->frm->useTest				= $this->plugin->options['useTest'] ? 'Y' : 'N';
+			$this->frm->useBeagle			= $this->plugin->options['useBeagle'] ? 'Y' : 'N';
+			$this->frm->roundTestAmounts	= $this->plugin->options['roundTestAmounts'] ? 'Y' : 'N';
+			$this->frm->forceTestAccount	= $this->plugin->options['forceTestAccount'] ? 'Y' : 'N';
+			$this->frm->sslVerifyPeer		= $this->plugin->options['sslVerifyPeer'] ? 'Y' : 'N';
 		}
 
 		require GFEWAY_PLUGIN_ROOT . 'views/admin-settings.php';
@@ -152,4 +153,5 @@ class GFEwayOptionsAdmin {
 			}
 		}
 	}
+
 }

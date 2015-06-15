@@ -5,31 +5,31 @@
 */
 class GFEwayFormData {
 
-	public $amount = 0;
-	public $shipping = 0;
-	public $total = 0;
-	public $ccName = '';
-	public $ccNumber = '';
-	public $ccExpMonth = '';
-	public $ccExpYear = '';
-	public $ccCVN = '';
-	public $namePrefix = '';
-	public $firstName = '';
-	public $lastName = '';
-	public $email = '';
-	public $address = '';						// simple address, for regular payments
-	public $address_street = '';				// street address, for recurring payments
-	public $address_suburb = '';				// suburb, for recurring payments
-	public $address_state = '';					// state, for recurring payments
-	public $address_country = '';				// country, for recurring payments
-	public $postcode = '';						// postcode, for both regular and recurring payments
-	public $phone = '';							// phone number, for recurring payments
-	public $recurring = FALSE;					// false, or an array of inputs from complex field
-	public $ccField = FALSE;					// handle to meta-"field" for credit card in form
+	public $amount					= 0;
+	public $shipping				= 0;
+	public $total					= 0;
+	public $ccName					= '';
+	public $ccNumber				= '';
+	public $ccExpMonth				= '';
+	public $ccExpYear				= '';
+	public $ccCVN					= '';
+	public $namePrefix				= '';
+	public $firstName				= '';
+	public $lastName				= '';
+	public $email					= '';
+	public $address					= '';						// simple address, for regular payments
+	public $address_street			= '';				// street address, for recurring payments
+	public $address_suburb			= '';				// suburb, for recurring payments
+	public $address_state			= '';					// state, for recurring payments
+	public $address_country			= '';				// country, for recurring payments
+	public $postcode				= '';						// postcode, for both regular and recurring payments
+	public $phone					= '';							// phone number, for recurring payments
+	public $recurring				= false;					// false, or an array of inputs from complex field
+	public $ccField					= false;					// handle to meta-"field" for credit card in form
 
-	private $isLastPageFlag = FALSE;
-	private $isCcHiddenFlag = FALSE;
-	private $hasPurchaseFieldsFlag = FALSE;
+	private $isLastPageFlag			= false;
+	private $isCcHiddenFlag			= false;
+	private $hasPurchaseFieldsFlag	= false;
 
 	/**
 	* initialise instance
@@ -37,8 +37,8 @@ class GFEwayFormData {
 	*/
 	public function __construct(&$form) {
 		// check for last page
-        $current_page = GFFormDisplay::get_source_page($form['id']);
-        $target_page = GFFormDisplay::get_target_page($form, $current_page, rgpost('gform_field_values'));
+        $current_page	= GFFormDisplay::get_source_page($form['id']);
+        $target_page	= GFFormDisplay::get_target_page($form, $current_page, rgpost('gform_field_values'));
         $this->isLastPageFlag = ($target_page == 0);
 
 		// load the form data
@@ -57,9 +57,9 @@ class GFEwayFormData {
 				case 'name':
 					// only pick up the first name field (assume later ones are additional info)
 					if (empty($this->firstName) && empty($this->lastName)) {
-						$this->namePrefix = rgpost("input_{$id}_2");
-						$this->firstName = rgpost("input_{$id}_3");
-						$this->lastName = rgpost("input_{$id}_6");
+						$this->namePrefix			= rgpost("input_{$id}_2");
+						$this->firstName			= rgpost("input_{$id}_3");
+						$this->lastName				= rgpost("input_{$id}_6");
 					}
 					break;
 
@@ -78,12 +78,12 @@ class GFEwayFormData {
 				case 'address':
 					// only pick up the first address field (assume later ones are additional info, e.g. shipping)
 					if (empty($this->address) && empty($this->postcode)) {
-						$this->postcode = trim(rgpost("input_{$id}_5"));
 						$parts = array(trim(rgpost("input_{$id}_1")), trim(rgpost("input_{$id}_2")));
-						$this->address_street = implode(', ', array_filter($parts, 'strlen'));
-						$this->address_suburb = trim(rgpost("input_{$id}_3"));
-						$this->address_state = trim(rgpost("input_{$id}_4"));
-						$this->address_country = trim(rgpost("input_{$id}_6"));
+						$this->address_street		= implode(', ', array_filter($parts, 'strlen'));
+						$this->address_suburb		= trim(rgpost("input_{$id}_3"));
+						$this->address_state		= trim(rgpost("input_{$id}_4"));
+						$this->address_country		= trim(rgpost("input_{$id}_6"));
+						$this->postcode				= trim(rgpost("input_{$id}_5"));
 
 						// aggregate street, city, state, country into a single string (for regular one-off payments)
 						$parts = array($this->address_street, $this->address_suburb, $this->address_state, $this->address_country);
@@ -92,25 +92,26 @@ class GFEwayFormData {
 					break;
 
 				case 'creditcard':
-					$this->isCcHiddenFlag = GFFormsModel::is_field_hidden($form, $field, RGForms::post('gform_field_values'));
-					$this->ccField =& $field;
-					$this->ccName = rgpost("input_{$id}_5");
-					$this->ccNumber = self::cleanCcNumber(rgpost("input_{$id}_1"));
-					$ccExp = rgpost("input_{$id}_2");
-					if (is_array($ccExp))
+					$this->isCcHiddenFlag			= GFFormsModel::is_field_hidden($form, $field, RGForms::post('gform_field_values'));
+					$this->ccField					=& $field;
+					$this->ccName					= rgpost("input_{$id}_5");
+					$this->ccNumber					= self::cleanCcNumber(rgpost("input_{$id}_1"));
+					$ccExp							= rgpost("input_{$id}_2");
+					if (is_array($ccExp)) {
 						list($this->ccExpMonth, $this->ccExpYear) = $ccExp;
-					$this->ccCVN = rgpost("input_{$id}_3");
+					}
+					$this->ccCVN					= rgpost("input_{$id}_3");
 					break;
 
 				case 'total':
-					$this->total = GFCommon::to_number(rgpost("input_{$id}"));
-					$this->hasPurchaseFieldsFlag = true;
+					$this->total					= GFCommon::to_number(rgpost("input_{$id}"));
+					$this->hasPurchaseFieldsFlag	= true;
 					break;
 
 				case GFEWAY_FIELD_RECURRING:
 					// only pick it up if it isn't hidden
 					if (!GFFormsModel::is_field_hidden($form, $field, RGForms::post('gform_field_values'))) {
-						$this->recurring = GFEwayRecurringField::getPost($id);
+						$this->recurring			= GFEwayRecurringField::getPost($id);
 					}
 					break;
 
@@ -276,4 +277,5 @@ class GFEwayFormData {
 	public function hasRecurringPayments() {
 		return !!$this->recurring;
 	}
+
 }

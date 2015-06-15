@@ -122,7 +122,7 @@
 	* show warning message if they are
 	*/
 	function setVisibility() {
-		var	useTest = ($("input[name='useTest']:checked").val() == "Y"),
+		var	useTest   = ($("input[name='useTest']:checked").val()   == "Y"),
 			useBeagle = ($("input[name='useBeagle']:checked").val() == "Y"),
 			useStored = ($("input[name='useStored']:checked").val() == "Y");
 

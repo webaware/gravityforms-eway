@@ -7,14 +7,14 @@ Recurring Payments field
 // initialise form on page load
 jQuery(function($) {
 
-	var	thisYear = (new Date()).getFullYear(),
-		yearRange = thisYear + ":2099",				// year range for max date settings, mumble mumble jquery-ui mumble
-		reDatePattern = /^\d{4}-\d\d-\d\d$/,		// regex test for ISO date string
-		setPickerOptions = false;
+	var	thisYear			= (new Date()).getFullYear(),
+		yearRange			= thisYear + ":2099",				// year range for max date settings, mumble mumble jquery-ui mumble
+		reDatePattern		= /^\d{4}-\d\d-\d\d$/,		// regex test for ISO date string
+		setPickerOptions	= false;
 
 	// set datepicker minimum date if given
 	$("input[data-gfeway-minDate]").each(function() {
-		var	input = $(this),
+		var	input   = $(this),
 			minDate = this.getAttribute("data-gfeway-minDate");
 
 		// if minDate is an ISO date string, convert to a Date object as a reliable way to set minDate
@@ -28,7 +28,7 @@ jQuery(function($) {
 
 	// set datepicker maximum date if given
 	$("input[data-gfeway-maxDate]").each(function() {
-		var	input = $(this),
+		var	input   = $(this),
 			maxDate = this.getAttribute("data-gfeway-maxDate");
 
 		// if maxDate is an ISO date string, convert to a Date object as a reliable way to set maxDate

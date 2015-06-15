@@ -235,4 +235,5 @@ class GFEwayAdmin {
 
 		GFFormsModel::update_lead($lead);
 	}
+
 }
