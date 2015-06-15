@@ -10,7 +10,6 @@ class GFEwayCurlException extends Exception {}
 * class for managing the plugin
 */
 class GFEwayPlugin {
-	public $urlBase;                                    // string: base URL path to files in plugin
 	public $options;                                    // array of plugin options
 
 	protected $acceptedCards;                           // hash map of accepted credit cards
@@ -40,9 +39,6 @@ class GFEwayPlugin {
 	private function __construct() {
 		// grab options, setting new defaults for any that are missing
 		$this->initOptions();
-
-		// record plugin URL base
-		$this->urlBase = plugin_dir_url(GFEWAY_PLUGIN_FILE);
 
 		// filter the cards array to just Visa, MasterCard and Amex
 		$this->acceptedCards = array('amex' => 1, 'mastercard' => 1, 'visa' => 1);

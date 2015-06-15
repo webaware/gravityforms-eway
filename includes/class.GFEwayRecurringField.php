@@ -65,9 +65,9 @@ class GFEwayRecurringField {
 		$min = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
 		$ver = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? time() : GFEWAY_PLUGIN_VERSION;
 
-		wp_register_script('gfeway_recurring', "{$this->plugin->urlBase}js/recurring$min.js", $reqs, $ver, true);
+		wp_register_script('gfeway_recurring', plugins_url("js/recurring$min.js", GFEWAY_PLUGIN_FILE), $reqs, $ver, true);
 
-		wp_register_style('gfeway', $this->plugin->urlBase . 'style.css', false, $ver);
+		wp_register_style('gfeway', plugins_url('css/style.css', GFEWAY_PLUGIN_FILE), false, $ver);
 	}
 
 	/**
@@ -97,7 +97,7 @@ class GFEwayRecurringField {
 	public function gformEditorJS() {
 		$min = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
 		$ver = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? time() : GFEWAY_PLUGIN_VERSION;
-		echo "<script src=\"{$this->plugin->urlBase}js/admin-recurring$min.js?v=$ver\"></script>\n";
+		printf('<script src="%s?ver=%s"></script>', plugins_url("js/admin-recurring$min.js", GFEWAY_PLUGIN_FILE), $ver);
 	}
 
 	/**
