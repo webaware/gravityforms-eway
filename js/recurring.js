@@ -1,15 +1,15 @@
 /*!
 WordPress plugin gravityforms-eway
-copyright (c) 2012-2014 WebAware Pty Ltd, released under LGPL v2.1
+copyright (c) 2012-2015 WebAware Pty Ltd, released under LGPL v2.1
 Recurring Payments field
 */
 
 // initialise form on page load
-jQuery(function($) {
+(function($) {
 
 	var	thisYear			= (new Date()).getFullYear(),
 		yearRange			= thisYear + ":2099",				// year range for max date settings, mumble mumble jquery-ui mumble
-		reDatePattern		= /^\d{4}-\d\d-\d\d$/,		// regex test for ISO date string
+		reDatePattern		= /^\d{4}-\d\d-\d\d$/,				// regex test for ISO date string
 		setPickerOptions	= false;
 
 	// set datepicker minimum date if given
@@ -46,4 +46,18 @@ jQuery(function($) {
 		$("#ui-datepicker-div").hide();
 	}
 
-});
+	// watch for conditional logic changes, reset fields to initial values on show
+	gform.addAction("gform_post_conditional_logic_field_action", function(formId, action, targetId, defaultValues, isInit) {
+		// only on show action
+		if (action === "show") {
+			// only recurring payment fields
+			var target = $(targetId);
+			if (target.hasClass("recurring-payment-details")) {
+				target.find("input.datepicker").each(function() {
+					this.value = this.getAttribute("value");
+				});
+			}
+		}
+	});
+
+})(jQuery);
