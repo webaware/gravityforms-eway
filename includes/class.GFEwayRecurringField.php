@@ -112,7 +112,7 @@ class GFEwayRecurringField {
 					'class'		=> 'button',
 					'value'		=> 'Recurring',
 					'data-type'	=> GFEWAY_FIELD_RECURRING,
-					'onclick'	=> "StartAddField('" . GFEWAY_FIELD_RECURRING . "');",
+					'onclick'	=> sprintf("StartAddField('%s');", GFEWAY_FIELD_RECURRING),
 				);
 				break;
 			}
@@ -142,88 +142,7 @@ class GFEwayRecurringField {
 	public function gformFieldStandardSettings($position, $form_id) {
 		// add inputs for labels right after the field label input
 		if ($position == 25) {
-			?>
-				<li class="gfewayrecurring_setting field_setting">
-
-					<input type="checkbox" id="gfeway_initial_setting" onchange="GFEwayRecurring.ToggleInitialSetting(this)" />
-					<label for="gfeway_initial_setting" class="inline">
-						Show Initial Amount
-						<?php gform_tooltip("gfeway_initial_setting") ?>
-						<?php gform_tooltip("gfeway_initial_setting_html") ?>
-					</label>
-					<br />
-					<br />
-
-					<div id="gfeway_initial_fields">
-
-					<label for="gfeway_initial_date_label">
-						Initial Date Label
-						<?php gform_tooltip("gfeway_initial_date_label") ?>
-						<?php gform_tooltip("gfeway_initial_date_label_html") ?>
-					</label>
-					<input type="text" id="gfeway_initial_date_label" class="fieldwidth-3" size="35"
-						onkeyup="GFEwayRecurring.SetFieldLabel(this, '<?php echo esc_attr(self::$defaults['gfeway_initial_date_label']) ?>')" />
-
-					<label for="gfeway_initial_amount_label">
-						Initial Amount Label
-						<?php gform_tooltip("gfeway_initial_amount_label") ?>
-						<?php gform_tooltip("gfeway_initial_amount_label_html") ?>
-					</label>
-					<input type="text" id="gfeway_initial_amount_label" class="fieldwidth-3" size="35"
-						onkeyup="GFEwayRecurring.SetFieldLabel(this, '<?php echo esc_attr(self::$defaults['gfeway_initial_amount_label']) ?>')" />
-
-					</div>
-
-					<label for="gfeway_recurring_amount_label">
-						Recurring Amount Label
-						<?php gform_tooltip("gfeway_recurring_amount_label") ?>
-						<?php gform_tooltip("gfeway_recurring_amount_label_html") ?>
-					</label>
-					<input type="text" id="gfeway_recurring_amount_label" class="fieldwidth-3" size="35"
-						onkeyup="GFEwayRecurring.SetFieldLabel(this, '<?php echo esc_attr(self::$defaults['gfeway_recurring_amount_label']) ?>')" />
-
-					<br />
-					<br />
-					<input type="checkbox" id="gfeway_recurring_date_setting" onchange="GFEwayRecurring.ToggleRecurringDateSetting(this)" />
-					<label for="gfeway_recurring_date_setting" class="inline">
-						Show Start/End Dates
-						<?php gform_tooltip("gfeway_recurring_date_setting") ?>
-						<?php gform_tooltip("gfeway_recurring_date_setting_html") ?>
-					</label>
-					<br />
-					<br />
-
-					<div id="gfeway_recurring_date_fields">
-
-					<label for="gfeway_start_date_label">
-						Start Date Label
-						<?php gform_tooltip("gfeway_start_date_label") ?>
-						<?php gform_tooltip("gfeway_start_date_label_html") ?>
-					</label>
-					<input type="text" id="gfeway_start_date_label" class="fieldwidth-3" size="35"
-						onkeyup="GFEwayRecurring.SetFieldLabel(this, '<?php echo esc_attr(self::$defaults['gfeway_start_date_label']) ?>')" />
-
-					<label for="gfeway_end_date_label">
-						End Date Label
-						<?php gform_tooltip("gfeway_end_date_label") ?>
-						<?php gform_tooltip("gfeway_end_date_label_html") ?>
-					</label>
-					<input type="text" id="gfeway_end_date_label" class="fieldwidth-3" size="35"
-						onkeyup="GFEwayRecurring.SetFieldLabel(this, '<?php echo esc_attr(self::$defaults['gfeway_end_date_label']) ?>')" />
-
-					</div>
-
-					<label for="gfeway_interval_type_label">
-						Interval Type Label
-						<?php gform_tooltip("gfeway_interval_type_label") ?>
-						<?php gform_tooltip("gfeway_interval_type_label_html") ?>
-					</label>
-					<input type="text" id="gfeway_interval_type_label" class="fieldwidth-3" size="35"
-						onkeyup="GFEwayRecurring.SetFieldLabel(this, '<?php echo esc_attr(self::$defaults['gfeway_interval_type_label']) ?>')" />
-
-				</li>
-
-			<?php
+			require GFEWAY_PLUGIN_ROOT . 'views/admin-recurring-field-settings.php';
 		}
 	}
 
@@ -300,27 +219,27 @@ class GFEwayRecurringField {
 					$messages = array();
 
 					if ($value['amountInit'] === false || $value['amountInit'] < 0) {
-						$messages[] = "Please enter a valid initial amount.";
+						$messages[] = 'Please enter a valid initial amount.';
 					}
 
 					if (empty($value['dateInit'])) {
-						$messages[] = "Please enter a valid initial date in the format dd/mm/yyyy.";
+						$messages[] = 'Please enter a valid initial date in the format dd/mm/yyyy.';
 					}
 
 					if (empty($value['amountRecur']) || $value['amountRecur'] < 0) {
-						$messages[] = "Please enter a valid recurring amount.";
+						$messages[] = 'Please enter a valid recurring amount.';
 					}
 
 					if (empty($value['dateStart'])) {
-						$messages[] = "Please enter a valid start date in the format dd/mm/yyyy.";
+						$messages[] = 'Please enter a valid start date in the format dd/mm/yyyy.';
 					}
 
 					if (empty($value['dateEnd'])) {
-						$messages[] = "Please enter a valid end date in the format dd/mm/yyyy.";
+						$messages[] = 'Please enter a valid end date in the format dd/mm/yyyy.';
 					}
 
 					if ($value['intervalType'] === -1) {
-						$messages[] = "Please select a valid interval type.";
+						$messages[] = 'Please select a valid interval type.';
 					}
 
 					if (count($messages) > 0) {
@@ -493,7 +412,7 @@ class GFEwayRecurringField {
 			);
 			$input .= $this->fieldConcatenated($sub_field, $interval_type, $lead_id, $form_id);
 
-			$input .= "</div>";
+			$input .= '</div>';
 		}
 
 		return $input;
@@ -515,12 +434,12 @@ class GFEwayRecurringField {
 
 		$format			= empty($field['dateFormat']) ? 'dmy' : esc_attr($field['dateFormat']);
 		$size			= rgar($field, 'size');
-		$disabled_text	= (IS_ADMIN && RG_CURRENT_VIEW != "entry") ? "disabled='disabled'" : "";
+		$disabled_text	= (IS_ADMIN && RG_CURRENT_VIEW != 'entry') ? 'disabled="disabled"' : '';
 		$class_suffix	= RG_CURRENT_VIEW == 'entry' ? '_admin' : '';
 
 		$value			= GFCommon::date_display($value, $format);
-		$icon_class		= $field["calendarIconType"] == "none" ? "datepicker_no_icon" : "datepicker_with_icon";
-		$icon_url		= empty($field["calendarIconUrl"]) ? GFCommon::get_base_url() . "/images/calendar.png" : $field["calendarIconUrl"];
+		$icon_class		= $field['calendarIconType'] == 'none' ? 'datepicker_no_icon' : 'datepicker_with_icon';
+		$icon_url		= empty($field['calendarIconUrl']) ? GFCommon::get_base_url() . '/images/calendar.png' : $field['calendarIconUrl'];
 		$tabindex		= GFCommon::get_tabindex();
 
 		$inputClass		= array($size . $class_suffix, $format, $icon_class);
@@ -535,25 +454,24 @@ class GFEwayRecurringField {
 
 		$dataMin = '';
 		if (!empty($field['dateMin'])) {
-			$dataMin = "data-gfeway-minDate='" . esc_attr($field['dateMin']) . "'";
+			$dataMin = sprintf('data-gfeway-minDate="%s"', esc_attr($field['dateMin']));
 		}
 
 		$dataMax = '';
 		if (!empty($field['dateMax'])) {
-			$dataMax = "data-gfeway-maxDate='" . esc_attr($field['dateMax']) . "'";
+			$dataMax = sprintf('data-gfeway-maxDate="%s"', esc_attr($field['dateMax']));
 		}
 
 		$value			= esc_attr($value);
 		$spanClass		= esc_attr(implode(' ', $spanClass));
 		$inputClass		= esc_attr(implode(' ', $inputClass));
+		$inputName		= sprintf('gfeway_%s[%s]', $id, $sub_id);
 
 		$label			= esc_html($field['label']);
 
-		$input  = "<span class='$spanClass'>";
-		$input .= "<input name='gfeway_{$id}[{$sub_id}]' id='$field_id' type='text' value='$value' $dataMin $dataMax class='$inputClass' $tabindex $disabled_text />";
-		$input .= "<input type='hidden' id='gforms_calendar_icon_$field_id' class='gform_hidden' value='$icon_url'/>";
-		$input .= "<label class='{$field['label_class']}' for='$field_id' id='{$field_id}_label'>$label</label>";
-		$input .= "</span>";
+		ob_start();
+		require GFEWAY_PLUGIN_ROOT . 'views/recurring-field-input-date.php';
+		$input = ob_get_clean();
 
 		return $input;
 	}
@@ -567,14 +485,14 @@ class GFEwayRecurringField {
 	* @return string
 	*/
 	protected function fieldDonation($field, $value="", $lead_id=0, $form_id=0) {
-		$id				= $field["id"];
-		$sub_id			= $field["sub_id"];
+		$id				= $field['id'];
+		$sub_id			= $field['sub_id'];
 		$field_id		= IS_ADMIN || $form_id == 0 ? "gfeway_{$id}_{$sub_id}" : "gfeway_{$form_id}_{$id}_{$sub_id}";
-		$form_id		= IS_ADMIN && empty($form_id) ? rgget("id") : $form_id;
+		$form_id		= IS_ADMIN && empty($form_id) ? rgget('id') : $form_id;
 
-		$size			= rgar($field, "size");
-		$disabled_text	= (IS_ADMIN && RG_CURRENT_VIEW != "entry") ? "disabled='disabled'" : "";
-		$class_suffix	= RG_CURRENT_VIEW == "entry" ? "_admin" : "";
+		$size			= rgar($field, 'size');
+		$disabled_text	= (IS_ADMIN && RG_CURRENT_VIEW != 'entry') ? 'disabled="disabled"' : '';
+		$class_suffix	= RG_CURRENT_VIEW == 'entry' ? '_admin' : '';
 		$class			= $size . $class_suffix;
 
 		$tabindex		= GFCommon::get_tabindex();
@@ -587,13 +505,13 @@ class GFEwayRecurringField {
 
 		$value			= esc_attr($value);
 		$class			= esc_attr($class);
+		$inputName		= sprintf('gfeway_%s[%s]', $id, $sub_id);
 
 		$label			= esc_html($field['label']);
 
-		$input  = "<span class='gfeway_recurring_left $spanClass'>";
-		$input .= "<input name='gfeway_{$id}[{$sub_id}]' id='$field_id' type='text' value='$value' class='ginput_amount $class' $tabindex $disabled_text />";
-		$input .= "<label class='{$field['label_class']}' for='$field_id' id='{$field_id}_label'>$label</label>";
-		$input .= "</span>";
+		ob_start();
+		require GFEWAY_PLUGIN_ROOT . 'views/recurring-field-input-donation.php';
+		$input = ob_get_clean();
 
 		return $input;
 	}
@@ -607,14 +525,14 @@ class GFEwayRecurringField {
 	* @return string
 	*/
 	protected function fieldIntervalType($field, $value="", $lead_id=0, $form_id=0) {
-		$id				= $field["id"];
-		$sub_id			= $field["sub_id"];
+		$id				= $field['id'];
+		$sub_id			= $field['sub_id'];
 		$field_id		= IS_ADMIN || $form_id == 0 ? "gfeway_{$id}_{$sub_id}" : "gfeway_{$form_id}_{$id}_{$sub_id}";
-		$form_id		= IS_ADMIN && empty($form_id) ? rgget("id") : $form_id;
+		$form_id		= IS_ADMIN && empty($form_id) ? rgget('id') : $form_id;
 
 		$size			= rgar($field, "size");
-		$disabled_text	= (IS_ADMIN && RG_CURRENT_VIEW != "entry") ? "disabled='disabled'" : "";
-		$class_suffix	= RG_CURRENT_VIEW == "entry" ? "_admin" : "";
+		$disabled_text	= (IS_ADMIN && RG_CURRENT_VIEW != 'entry') ? 'disabled="disabled"' : '';
+		$class_suffix	= RG_CURRENT_VIEW == 'entry' ? '_admin' : '';
 		$class			= $size . $class_suffix;
 
 		$tabindex		= GFCommon::get_tabindex();
@@ -625,31 +543,23 @@ class GFEwayRecurringField {
 		}
 
 		$class			= esc_attr($class);
+		$inputName		= sprintf('gfeway_%s[%s]', $id, $sub_id);
 
 		$label			= esc_html($field['label']);
 
 		$periods = apply_filters('gfeway_recurring_periods', array('weekly', 'fortnightly', 'monthly', 'quarterly', 'yearly'), $form_id, $field);
 		if (count($periods) == 1) {
 			// build a hidden field and label
-			$input  = "<span class='gfeway_recurring_left $spanClass'>";
-			$input .= "<input type='hidden' name='gfeway_{$id}[{$sub_id}]' value='{$periods[0]}' />";
-			$input .= "<label class='{$field['label_class']}' for='$field_id' id='{$field_id}_label'>$label: {$periods[0]}</label>";
-			$input .= "</span>";
+			$label = sprintf('%s: %s', $label, $periods[0]);
+			ob_start();
+			require GFEWAY_PLUGIN_ROOT . 'views/recurring-field-hidden-interval.php';
+			$input = ob_get_clean();
 		}
 		else {
 			// build a drop-down list
-			$opts = '';
-			foreach ($periods as $period) {
-				$opts .= "<option value='$period'";
-				if ($period == $value)
-					$opts .= " selected='selected'";
-				$opts .= ">$period</option>";
-			}
-
-			$input  = "<span class='gfeway_recurring_left $spanClass'>";
-			$input .= "<select size='1' name='gfeway_{$id}[{$sub_id}]' id='$field_id' $tabindex class='gfield_select $class' $disabled_text>$opts</select>";
-			$input .= "<label class='{$field['label_class']}' for='$field_id' id='{$field_id}_label'>$label</label>";
-			$input .= "</span>";
+			ob_start();
+			require GFEWAY_PLUGIN_ROOT . 'views/recurring-field-select-interval.php';
+			$input = ob_get_clean();
 		}
 
 		return $input;
