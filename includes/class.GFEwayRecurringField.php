@@ -156,7 +156,8 @@ class GFEwayRecurringField {
 		$tooltips['gfeway_initial_amount_label']	= "<h6>Initial Amount</h6>The label shown for the Initial Amount field.";
 		$tooltips['gfeway_initial_date_label']		= "<h6>Initial Date</h6>The label shown for the Initial Date field.";
 		$tooltips['gfeway_recurring_amount_label']	= "<h6>Recurring Amount</h6>The label shown for the Recurring Amount field.";
-		$tooltips['gfeway_recurring_date_setting']	= "<h6>Show Start/End Dates</h6>Select this option to show Start Date and End Date fields.";
+		$tooltips['gfeway_recurring_date_start']	= "<h6>Show Start Date</h6>Select this option to show the Start Date field.";
+		$tooltips['gfeway_recurring_date_end']		= "<h6>Show End Date</h6>Select this option to show the End Date field.";
 		$tooltips['gfeway_start_date_label']		= "<h6>Start Date</h6>The label shown for the Start Date field.";
 		$tooltips['gfeway_end_date_label']			= "<h6>End Date</h6>The label shown for the End Date field.";
 		$tooltips['gfeway_interval_type_label']		= "<h6>Interval Type</h6>The label shown for the Interval Type field.";
@@ -368,7 +369,7 @@ class GFEwayRecurringField {
 				'isRequired'	=> true,
 				'size'			=> 'medium',
 				'label_class'	=> 'gfeway_start_date_label',
-				'hidden'		=> (isset($field['gfeway_recurring_date_setting']) ? !$field['gfeway_recurring_date_setting'] : false),
+				'hidden'		=> (empty($field['gfeway_recurring_date_start']) && empty($field['gfeway_recurring_date_setting'])),
 			);
 			$input .= $this->fieldDate($sub_field, $start_date, $lead_id, $form_id);
 
@@ -386,7 +387,7 @@ class GFEwayRecurringField {
 				'isRequired'	=> true,
 				'size'			=> 'medium',
 				'label_class'	=> 'gfeway_end_date_label',
-				'hidden'		=> (isset($field['gfeway_recurring_date_setting']) ? !$field['gfeway_recurring_date_setting'] : false),
+				'hidden'		=> (empty($field['gfeway_recurring_date_end']) && empty($field['gfeway_recurring_date_setting'])),
 			);
 			$input .= $this->fieldDate($sub_field, $end_date, $lead_id, $form_id);
 

@@ -1,60 +1,8 @@
 /*!
 WordPress plugin gravityforms-eway
-copyright (c) 2012-2014 WebAware Pty Ltd, released under LGPL v2.1
+copyright (c) 2012-2015 WebAware Pty Ltd, released under LGPL v2.1
 form editor for Recurring Payments field
 */
-
-// create namespace to avoid collisions
-var GFEwayRecurring = (function($) {
-
-	return {
-		/**
-		* set the label on a subfield in the recurring field
-		* @param {HTMLElement} field
-		* @param {String} defaultValue
-		*/
-		SetFieldLabel : function(field, defaultValue) {
-			var newLabel = field.value;
-
-			// if new label value is empty, pick up the default value instead
-			if (!(/\S/.test(newLabel)))
-				newLabel = defaultValue;
-
-			// set the new label, and record for the field
-			$("." + field.id).text(newLabel);
-			SetFieldProperty(field.id, newLabel);
-		},
-
-		/**
-		* toggle whether to show the Initial Amount and Initial Date fields
-		* @param {HTMLElement} field
-		*/
-		ToggleInitialSetting : function(field) {
-			SetFieldProperty(field.id, field.checked);
-			if (field.checked) {
-				$("#gfeway_initial_fields").slideDown();
-			}
-			else {
-				$("#gfeway_initial_fields").slideUp();
-			}
-		},
-
-		/**
-		* toggle whether to show the Start Date and End Date fields
-		* @param {HTMLElement} field
-		*/
-		ToggleRecurringDateSetting : function(field) {
-			SetFieldProperty(field.id, field.checked);
-			if (field.checked) {
-				$("#gfeway_recurring_date_fields").slideDown();
-			}
-			else {
-				$("#gfeway_recurring_date_fields").slideUp();
-			}
-		}
-	};
-
-})(jQuery);
 
 // initialise form on page load
 jQuery(function($) {
@@ -70,9 +18,22 @@ jQuery(function($) {
 			$("#gfeway_initial_fields").hide();
 		}
 
-		$("#gfeway_recurring_date_setting").prop("checked", !!field.gfeway_recurring_date_setting);
-		if (!field.gfeway_recurring_date_setting) {
-			$("#gfeway_recurring_date_fields").hide();
+		// NB: for backwards compatibility, check for combined start/end setting
+		if (field.gfeway_recurring_date_start || field.gfeway_recurring_date_setting) {
+			$("#gfeway_recurring_date_start").prop("checked", true);
+		}
+		else {
+			$("#gfeway_recurring_date_start").prop("checked", false);
+			$("#gfeway_recurring_start_date_fields").hide();
+		}
+
+		// NB: for backwards compatibility, check for combined start/end setting
+		if (field.gfeway_recurring_date_end || field.gfeway_recurring_date_setting) {
+			$("#gfeway_recurring_date_end").prop("checked", true);
+		}
+		else {
+			$("#gfeway_recurring_date_end").prop("checked", false);
+			$("#gfeway_recurring_end_date_fields").hide();
 		}
 
 		$("#gfeway_initial_amount_label").val(field.gfeway_initial_amount_label);
@@ -82,6 +43,78 @@ jQuery(function($) {
 		$("#gfeway_end_date_label").val(field.gfeway_end_date_label);
 		$("#gfeway_interval_type_label").val(field.gfeway_interval_type_label);
 
+	});
+
+	/**
+	* toggle whether to show the Initial Amount and Initial Date fields
+	*/
+	$("#gfeway_initial_setting").on("change", function() {
+		SetFieldProperty(this.id, this.checked ? "1" : "");
+
+		if (this.checked) {
+			$("#gfeway_initial_fields").slideDown();
+		}
+		else {
+			$("#gfeway_initial_fields").slideUp();
+		}
+	});
+
+	/**
+	* toggle whether to show the Start Date field
+	*/
+	$("#gfeway_recurring_date_start").on("change", function() {
+		SetFieldProperty(this.id, this.checked ? "1" : "");
+
+		// cleanup old combined start/end setting
+		var field = GetSelectedField();
+		if ("gfeway_recurring_date_setting" in field) {
+			field.gfeway_recurring_date_end = field.gfeway_recurring_date_setting ? "1" : "";
+			delete(field.gfeway_recurring_date_setting);
+		}
+
+		if (this.checked) {
+			$("#gfeway_recurring_start_date_fields").slideDown();
+		}
+		else {
+			$("#gfeway_recurring_start_date_fields").slideUp();
+		}
+	});
+
+	/**
+	* toggle whether to show the End Date field
+	*/
+	$("#gfeway_recurring_date_end").on("change", function() {
+		SetFieldProperty(this.id, this.checked ? "1" : "");
+
+		// cleanup old combined start/end setting
+		var field = GetSelectedField();
+		if ("gfeway_recurring_date_setting" in field) {
+			field.gfeway_recurring_date_start = field.gfeway_recurring_date_setting ? "1" : "";
+			delete(field.gfeway_recurring_date_setting);
+		}
+
+		if (this.checked) {
+			$("#gfeway_recurring_end_date_fields").slideDown();
+		}
+		else {
+			$("#gfeway_recurring_end_date_fields").slideUp();
+		}
+	});
+
+	/**
+	* set the label on a subfield in the recurring field
+	*/
+	$("li.gfewayrecurring_setting").on("keyup", "input.gfeway-field-label", function() {
+		var newLabel = this.value;
+
+		// if new label value is empty, pick up the default value instead
+		if (!(/\S/.test(newLabel))) {
+			newLabel = $(this).data("gfeway-field-label");
+		}
+
+		// set the new label, and record for the field
+		$("." + this.id).text(newLabel);
+		SetFieldProperty(this.id, newLabel);
 	});
 
 });

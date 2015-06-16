@@ -10,6 +10,7 @@
 	"jquery": true,
 	"globals": {
 		"module": false,
+		"GetSelectedField": false,
 		"SetFieldProperty": false,
 		"fieldSettings": true
 	}
