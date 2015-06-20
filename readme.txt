@@ -6,8 +6,8 @@ Author URI: http://webaware.com.au/
 Donate link: http://shop.webaware.com.au/downloads/gravity-forms-eway/
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards, australia
 Requires at least: 3.7
-Tested up to: 4.2.1
-Stable tag: 1.7.0
+Tested up to: 4.2.2
+Stable tag: 1.8.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -150,7 +150,7 @@ Developers can use these filter hooks to modify some eWAY invoice properties. Ea
 
 == Changelog ==
 
-= 1.7.1, soon... =
+= 1.8.0, 2015-06-20 =
 * fixed: prevent conditional recurring payment fields from losing their default values
 * fixed: register recurring field's "type" to avoid PHP notice "Deprecated button for the Recurring field"
 * added: some precautionary XSS prevention
