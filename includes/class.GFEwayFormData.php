@@ -18,12 +18,12 @@ class GFEwayFormData {
 	public $lastName				= '';
 	public $email					= '';
 	public $address					= '';						// simple address, for regular payments
-	public $address_street			= '';				// street address, for recurring payments
-	public $address_suburb			= '';				// suburb, for recurring payments
-	public $address_state			= '';					// state, for recurring payments
-	public $address_country			= '';				// country, for recurring payments
+	public $address_street			= '';						// street address, for recurring payments
+	public $address_suburb			= '';						// suburb, for recurring payments
+	public $address_state			= '';						// state, for recurring payments
+	public $address_country			= '';						// country, for recurring payments
 	public $postcode				= '';						// postcode, for both regular and recurring payments
-	public $phone					= '';							// phone number, for recurring payments
+	public $phone					= '';						// phone number, for recurring payments
 	public $recurring				= false;					// false, or an array of inputs from complex field
 	public $ccField					= false;					// handle to meta-"field" for credit card in form
 
