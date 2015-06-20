@@ -151,7 +151,13 @@ Developers can use these filter hooks to modify some eWAY invoice properties. Ea
 == Changelog ==
 
 = 1.7.1, soon... =
-* added: some more precautionary XSS prevention steps
+* fixed: prevent conditional recurring payment fields from losing their default values
+* fixed: register recurring field's "type" to avoid PHP notice "Deprecated button for the Recurring field"
+* added: some precautionary XSS prevention
+* changed: recurring start/end date can be hidden independently
+* changed: trim credit card posted values before submitting to gateway
+* changed: use Settings API for plugin settings
+* changed: some code refactoring for easier maintenance
 
 = 1.7.0, 2014-11-08 =
 * fixed: Gravity Forms 1.9 compatibility
