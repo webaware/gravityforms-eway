@@ -57,22 +57,24 @@ class GFEwayFormData {
 				case 'name':
 					// only pick up the first name field (assume later ones are additional info)
 					if (empty($this->firstName) && empty($this->lastName)) {
-						$this->namePrefix			= rgpost("input_{$id}_2");
-						$this->firstName			= rgpost("input_{$id}_3");
-						$this->lastName				= rgpost("input_{$id}_6");
+						$this->namePrefix			= trim(rgpost("input_{$id}_2"));
+						$this->firstName			= trim(rgpost("input_{$id}_3"));
+						$this->lastName				= trim(rgpost("input_{$id}_6"));
 					}
 					break;
 
 				case 'email':
 					// only pick up the first email address field (assume later ones are additional info)
-					if (empty($this->email))
-						$this->email = rgpost("input_{$id}");
+					if (empty($this->email)) {
+						$this->email				= trim(rgpost("input_{$id}"));
+					}
 					break;
 
 				case 'phone':
 					// only pick up the first phone number field (assume later ones are additional info)
-					if (empty($this->phone))
-						$this->phone = rgpost("input_{$id}");
+					if (empty($this->phone)) {
+						$this->phone				= trim(rgpost("input_{$id}"));
+					}
 					break;
 
 				case 'address':
@@ -94,13 +96,13 @@ class GFEwayFormData {
 				case 'creditcard':
 					$this->isCcHiddenFlag			= GFFormsModel::is_field_hidden($form, $field, RGForms::post('gform_field_values'));
 					$this->ccField					=& $field;
-					$this->ccName					= rgpost("input_{$id}_5");
-					$this->ccNumber					= self::cleanCcNumber(rgpost("input_{$id}_1"));
+					$this->ccName					= trim(rgpost("input_{$id}_5"));
+					$this->ccNumber					= self::cleanCcNumber(trim(rgpost("input_{$id}_1")));
 					$ccExp							= rgpost("input_{$id}_2");
 					if (is_array($ccExp)) {
 						list($this->ccExpMonth, $this->ccExpYear) = $ccExp;
 					}
-					$this->ccCVN					= rgpost("input_{$id}_3");
+					$this->ccCVN					= trim(rgpost("input_{$id}_3"));
 					break;
 
 				case 'total':
