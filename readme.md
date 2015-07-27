@@ -8,4 +8,4 @@ Integrate [Gravity Forms](http://webaware.com.au/get-gravity-forms) with the eWA
 * [Download](https://wordpress.org/plugins/gravityforms-eway/)
 * [Documentation](https://wordpress.org/plugins/gravityforms-eway/faq/)
 * [Support](https://wordpress.org/support/plugin/gravityforms-eway)
-* [Donate](http://shop.webaware.com.au/downloads/gravity-forms-eway/)
+* [Donate](http://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+eWAY)

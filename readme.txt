@@ -3,10 +3,10 @@ Contributors: webaware
 Plugin Name: Gravity Forms eWAY
 Plugin URI: http://shop.webaware.com.au/downloads/gravity-forms-eway/
 Author URI: http://webaware.com.au/
-Donate link: http://shop.webaware.com.au/downloads/gravity-forms-eway/
+Donate link: http://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+eWAY
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards, australia
 Requires at least: 3.7
-Tested up to: 4.2.2
+Tested up to: 4.3
 Stable tag: 1.8.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html

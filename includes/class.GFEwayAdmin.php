@@ -130,7 +130,7 @@ class GFEwayAdmin {
 		if ($file == GFEWAY_PLUGIN_NAME) {
 			$links[] = '<a href="https://wordpress.org/support/plugin/gravityforms-eway">' . __('Get help') . '</a>';
 			$links[] = '<a href="https://wordpress.org/plugins/gravityforms-eway/">' . __('Rating') . '</a>';
-			$links[] = '<a href="http://shop.webaware.com.au/downloads/gravity-forms-eway/">' . __('Donate') . '</a>';
+			$links[] = '<a href="http://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+eWAY">' . __('Donate') . '</a>';
 		}
 
 		return $links;
