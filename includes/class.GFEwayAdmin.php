@@ -26,6 +26,9 @@ class GFEwayAdmin {
 		if (class_exists('GFCommon')) {
 			$this->settingsURL = admin_url('admin.php?page=gf_settings&subview=eWAY+Payments');
 
+			// let Gravity Forms determine who has access to settings
+			add_filter('option_page_capability_' . GFEWAY_PLUGIN_OPTIONS, array($this, 'optionPageCapability'));
+
 			// add Gravity Forms hooks
 			add_filter('gform_currency_setting_message', array($this, 'gformCurrencySettingMessage'));
 			add_action('gform_payment_status', array($this, 'gformPaymentStatus'), 10, 3);
@@ -134,6 +137,15 @@ class GFEwayAdmin {
 		}
 
 		return $links;
+	}
+
+	/**
+	* let Gravity Forms determine who can save settings
+	* @param string $capability
+	* @return string
+	*/
+	public function optionPageCapability($capability) {
+		return 'gravityforms_edit_settings';
 	}
 
 	/**
