@@ -215,6 +215,9 @@ class GFEwayAdmin {
 		if (empty($output['customerID'])) {
 			add_settings_error(GFEWAY_PLUGIN_OPTIONS, '', 'Please enter the eWAY account number.');
 		}
+		else {
+			add_settings_error(GFEWAY_PLUGIN_OPTIONS, 'settings_updated', 'Settings saved.', 'updated');
+		}
 
 		return $output;
 	}
