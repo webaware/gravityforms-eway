@@ -3,7 +3,7 @@
 Plugin Name: Gravity Forms eWAY
 Plugin URI: http://shop.webaware.com.au/downloads/gravity-forms-eway/
 Description: Integrates Gravity Forms with eWAY payment gateway, enabling end users to purchase goods and services through Gravity Forms.
-Version: 1.8.0
+Version: 1.8.1-dev
 Author: WebAware
 Author URI: http://webaware.com.au/
 */
@@ -30,23 +30,22 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
-if (!defined('GFEWAY_PLUGIN_ROOT')) {
-	define('GFEWAY_PLUGIN_FILE', __FILE__);
-	define('GFEWAY_PLUGIN_ROOT', dirname(__FILE__) . '/');
-	define('GFEWAY_PLUGIN_NAME', basename(dirname(__FILE__)) . '/' . basename(__FILE__));
-	define('GFEWAY_PLUGIN_OPTIONS', 'gfeway_plugin');
-	define('GFEWAY_PLUGIN_VERSION', '1.8.0');
+define('GFEWAY_PLUGIN_FILE', __FILE__);
+define('GFEWAY_PLUGIN_ROOT', dirname(__FILE__) . '/');
+define('GFEWAY_PLUGIN_NAME', basename(dirname(__FILE__)) . '/' . basename(__FILE__));
+define('GFEWAY_PLUGIN_OPTIONS', 'gfeway_plugin');
+define('GFEWAY_PLUGIN_VERSION', '1.8.1-dev');
 
-	// error message names
-	define('GFEWAY_ERROR_ALREADY_SUBMITTED',	'gfeway_err_already');
-	define('GFEWAY_ERROR_NO_AMOUNT',			'gfeway_err_no_amount');
-	define('GFEWAY_ERROR_REQ_CARD_HOLDER',		'gfeway_err_req_card_holder');
-	define('GFEWAY_ERROR_REQ_CARD_NAME',		'gfeway_err_req_card_name');
-	define('GFEWAY_ERROR_EWAY_FAIL',			'gfeway_err_eway_fail');
+// error message names
+define('GFEWAY_ERROR_ALREADY_SUBMITTED',	'gfeway_err_already');
+define('GFEWAY_ERROR_NO_AMOUNT',			'gfeway_err_no_amount');
+define('GFEWAY_ERROR_REQ_CARD_HOLDER',		'gfeway_err_req_card_holder');
+define('GFEWAY_ERROR_REQ_CARD_NAME',		'gfeway_err_req_card_name');
+define('GFEWAY_ERROR_EWAY_FAIL',			'gfeway_err_eway_fail');
 
-	// custom fields
-	define('GFEWAY_FIELD_RECURRING', 'gfewayrecurring');
-}
+// custom fields
+define('GFEWAY_FIELD_RECURRING', 'gfewayrecurring');
+
 
 // instantiate the plug-in
 require GFEWAY_PLUGIN_ROOT . 'includes/class.GFEwayPlugin.php';
