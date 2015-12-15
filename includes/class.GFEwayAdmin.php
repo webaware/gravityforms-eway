@@ -145,7 +145,13 @@ class GFEwayAdmin {
 	* @return string
 	*/
 	public function optionPageCapability($capability) {
-		return 'gravityforms_edit_settings';
+		if (current_user_can('gform_full_access')) {
+			return 'gform_full_access';
+		}
+		if (current_user_can('gravityforms_edit_settings')) {
+			return 'gravityforms_edit_settings';
+		}
+		return $capability;
 	}
 
 	/**
