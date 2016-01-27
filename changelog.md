@@ -2,9 +2,16 @@
 
 ## Changelog
 
-### 1.8.1, soon...
+### 2.0.0, 2016-01-27
 
-* fixed: permission to save settings now only requires 'gravityforms_edit_settings', not 'manage_options'
+* changed: uses eWAY Rapid API if API key and password are set (not applicable for Recurring Payments)
+* changed: minimum Gravity Forms version is now 1.9
+* changed: currency is no longer limited to AUD
+* changed: don't restrict credit cards, let user select; please review your forms after upgrading, and ensure that the correct credit cards are enabled in your forms
+* changed: use WordPress post date format for recurring payments reported dates
+* fixed: don't attempt to use real Customer ID for Recurring Payments sandbox (only 87654321 works)
+* fixed: only need `gravityforms_edit_settings` to save eWAY settings
+* added: strings are localised and ready for [translation](https://translate.wordpress.org/projects/wp-plugins/gravityforms-eway)!
 
 ### 1.8.0, 2015-06-20
 
@@ -107,7 +114,7 @@
 
 ### 1.5.0, 2013-01-26
 
-* added: support for [Beagle (free)](http://www.eway.com.au/developers/resources/beagle-%28free%29-rules) anti-fraud using geo-IP (Direct Payments only)
+* added: support for [Beagle lite](https://eway.io/features/antifraud-beagle-lite) anti-fraud using geo-IP (Direct Payments only)
 * added: record authcode for transactions, and show on entry details screen
 * added: merge tags for authcode and beagle_score, for notification emails
 * changed: use WordPress function wp_remote_post() instead of directly calling curl functions

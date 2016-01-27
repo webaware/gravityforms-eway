@@ -1,6 +1,6 @@
 /*!
-WordPress plugin gravityforms-eway
-copyright (c) 2012-2015 WebAware Pty Ltd, released under LGPL v2.1
+gravityforms-eway
+copyright (c) 2012-2016 WebAware Pty Ltd
 form editor for Recurring Payments field
 */
 

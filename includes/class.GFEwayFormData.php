@@ -1,5 +1,9 @@
 <?php
 
+if (!defined('ABSPATH')) {
+	exit;
+}
+
 /**
 * class for managing form data
 */
@@ -17,8 +21,8 @@ class GFEwayFormData {
 	public $firstName				= '';
 	public $lastName				= '';
 	public $email					= '';
-	public $address					= '';						// simple address, for regular payments
-	public $address_street			= '';						// street address, for recurring payments
+	public $address_street1			= '';						// street address line 1
+	public $address_street2			= '';						// street address line 2
 	public $address_suburb			= '';						// suburb, for recurring payments
 	public $address_state			= '';						// state, for recurring payments
 	public $address_country			= '';						// country, for recurring payments
@@ -37,9 +41,9 @@ class GFEwayFormData {
 	*/
 	public function __construct(&$form) {
 		// check for last page
-        $current_page	= GFFormDisplay::get_source_page($form['id']);
-        $target_page	= GFFormDisplay::get_target_page($form, $current_page, rgpost('gform_field_values'));
-        $this->isLastPageFlag = ($target_page == 0);
+        $current_page	= (int) GFFormDisplay::get_source_page($form['id']);
+        $target_page	= (int) GFFormDisplay::get_target_page($form, $current_page, rgpost('gform_field_values'));
+        $this->isLastPageFlag = ($target_page === 0);
 
 		// load the form data
 		$this->loadForm($form);
@@ -51,7 +55,7 @@ class GFEwayFormData {
 	*/
 	private function loadForm(&$form) {
 		foreach ($form['fields'] as &$field) {
-			$id = $field['id'];
+			$id = $field->id;
 
 			switch(GFFormsModel::get_input_type($field)){
 				case 'name':
@@ -80,16 +84,12 @@ class GFEwayFormData {
 				case 'address':
 					// only pick up the first address field (assume later ones are additional info, e.g. shipping)
 					if (empty($this->address) && empty($this->postcode)) {
-						$parts = array(trim(rgpost("input_{$id}_1")), trim(rgpost("input_{$id}_2")));
-						$this->address_street		= implode(', ', array_filter($parts, 'strlen'));
+						$this->address_street1		= trim(rgpost("input_{$id}_1"));
+						$this->address_street2		= trim(rgpost("input_{$id}_2"));
 						$this->address_suburb		= trim(rgpost("input_{$id}_3"));
 						$this->address_state		= trim(rgpost("input_{$id}_4"));
 						$this->address_country		= trim(rgpost("input_{$id}_6"));
 						$this->postcode				= trim(rgpost("input_{$id}_5"));
-
-						// aggregate street, city, state, country into a single string (for regular one-off payments)
-						$parts = array($this->address_street, $this->address_suburb, $this->address_state, $this->address_country);
-						$this->address = implode(', ', array_filter($parts, 'strlen'));
 					}
 					break;
 
@@ -119,12 +119,12 @@ class GFEwayFormData {
 
 				default:
 					// check for shipping field
-					if ($field['type'] == 'shipping') {
+					if ($field->type === 'shipping') {
 						$this->shipping += self::getShipping($form, $field);
 						$this->hasPurchaseFieldsFlag = true;
 					}
 					// check for product field
-					elseif (in_array($field['type'], array('option', 'donation', 'product', 'calculation'))) {
+					elseif (self::isProductField($field)) {
 						$this->amount += self::getProductPrice($form, $field);
 						$this->hasPurchaseFieldsFlag = true;
 					}
@@ -145,7 +145,7 @@ class GFEwayFormData {
 	private static function getProductPrice($form, $field) {
 		$price = $qty = 0;
 		$isProduct = false;
-		$id = $field['id'];
+		$id = $field->id;
 
 		if (!GFFormsModel::is_field_hidden($form, $field, array())) {
 			$lead_value = rgpost("input_{$id}");
@@ -161,7 +161,7 @@ class GFEwayFormData {
 				$qty = (float) rgpost("input_{$qty_field['id']}");
 			}
 
-			switch ($field["inputType"]) {
+			switch ($field->inputType) {
 				case 'singleproduct':
 				case 'hiddenproduct':
 					$price = GFCommon::to_number(rgpost("input_{$id}_2"));
@@ -223,12 +223,12 @@ class GFEwayFormData {
 	*/
 	private static function getShipping($form, $field) {
 		$shipping = 0;
-		$id = $field['id'];
+		$id = $field->id;
 
 		if (!GFFormsModel::is_field_hidden($form, $field, array())) {
 			$value = rgpost("input_{$id}");
 
-			if (!empty($value) && $field["inputType"] != 'singleshipping') {
+			if (!empty($value) && $field->inputType != 'singleshipping') {
 				// drop-down list / radio buttons
 				list($name, $value) = rgexplode('|', $value, 2);
 			}
@@ -278,6 +278,17 @@ class GFEwayFormData {
 	*/
 	public function hasRecurringPayments() {
 		return !!$this->recurring;
+	}
+
+	/**
+	* test if field is a product field
+	* @param GFField $field
+	* @return bool
+	*/
+	public static function isProductField($field) {
+		static $productTypes = array('option', 'donation', 'product', 'calculation');
+
+		return in_array($field->type, $productTypes);
 	}
 
 }

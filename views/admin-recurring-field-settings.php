@@ -3,7 +3,7 @@
 
 	<input type="checkbox" id="gfeway_initial_setting" />
 	<label for="gfeway_initial_setting" class="inline">
-		Show Initial Amount
+		<?php _ex('Show Initial Amount', 'form editor subfield label', 'gravityforms-eway'); ?>
 		<?php gform_tooltip('gfeway_initial_setting') ?>
 		<?php gform_tooltip('gfeway_initial_setting_html') ?>
 	</label>
@@ -13,7 +13,7 @@
 	<div id="gfeway_initial_fields">
 
 	<label for="gfeway_initial_date_label">
-		Initial Date Label
+		<?php _ex('Initial Date Label', 'form editor subfield label', 'gravityforms-eway'); ?>
 		<?php gform_tooltip('gfeway_initial_date_label') ?>
 		<?php gform_tooltip('gfeway_initial_date_label_html') ?>
 	</label>
@@ -21,7 +21,7 @@
 		data-gfeway-field-label="<?php echo esc_attr(self::$defaults['gfeway_initial_date_label']); ?>" />
 
 	<label for="gfeway_initial_amount_label">
-		Initial Amount Label
+		<?php _ex('Initial Amount Label', 'form editor subfield label', 'gravityforms-eway'); ?>
 		<?php gform_tooltip('gfeway_initial_amount_label') ?>
 		<?php gform_tooltip('gfeway_initial_amount_label_html') ?>
 	</label>
@@ -31,7 +31,7 @@
 	</div>
 
 	<label for="gfeway_recurring_amount_label">
-		Recurring Amount Label
+		<?php _ex('Recurring Amount Label', 'form editor subfield label', 'gravityforms-eway'); ?>
 		<?php gform_tooltip('gfeway_recurring_amount_label') ?>
 		<?php gform_tooltip('gfeway_recurring_amount_label_html') ?>
 	</label>
@@ -41,7 +41,7 @@
 	<p>
 	<input type="checkbox" id="gfeway_recurring_date_start" />
 	<label for="gfeway_recurring_date_start" class="inline">
-		Show Start Date
+		<?php _ex('Show Start Date', 'form editor subfield label', 'gravityforms-eway'); ?>
 		<?php gform_tooltip('gfeway_recurring_date_start') ?>
 		<?php gform_tooltip('gfeway_recurring_date_start_html') ?>
 	</label>
@@ -50,7 +50,7 @@
 	<div id="gfeway_recurring_start_date_fields">
 
 	<label for="gfeway_start_date_label">
-		Start Date Label
+		<?php _ex('Start Date Label', 'form editor subfield label', 'gravityforms-eway'); ?>
 		<?php gform_tooltip('gfeway_start_date_label') ?>
 		<?php gform_tooltip('gfeway_start_date_label_html') ?>
 	</label>
@@ -62,7 +62,7 @@
 	<p>
 	<input type="checkbox" id="gfeway_recurring_date_end" />
 	<label for="gfeway_recurring_date_end" class="inline">
-		Show End Date
+		<?php _ex('Show End Date', 'form editor subfield label', 'gravityforms-eway'); ?>
 		<?php gform_tooltip('gfeway_recurring_date_end') ?>
 		<?php gform_tooltip('gfeway_recurring_date_end_html') ?>
 	</label>
@@ -71,7 +71,7 @@
 	<div id="gfeway_recurring_end_date_fields">
 
 	<label for="gfeway_end_date_label">
-		End Date Label
+		<?php _ex('End Date Label', 'form editor subfield label', 'gravityforms-eway'); ?>
 		<?php gform_tooltip('gfeway_end_date_label') ?>
 		<?php gform_tooltip('gfeway_end_date_label_html') ?>
 	</label>
@@ -81,7 +81,7 @@
 	</div>
 
 	<label for="gfeway_interval_type_label">
-		Interval Type Label
+		<?php _ex('Interval Type Label', 'form editor subfield label', 'gravityforms-eway'); ?>
 		<?php gform_tooltip('gfeway_interval_type_label') ?>
 		<?php gform_tooltip('gfeway_interval_type_label_html') ?>
 	</label>

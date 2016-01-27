@@ -1,11 +1,13 @@
 <?php
 
+if (!defined('ABSPATH')) {
+	exit;
+}
+
 /**
 * class for admin screens
 */
 class GFEwayAdmin {
-
-	public $settingsURL;
 
 	private $plugin;
 
@@ -18,43 +20,26 @@ class GFEwayAdmin {
 		// handle basic plugin actions and filters
 		add_action('admin_init', array($this, 'adminInit'));
 		add_action('admin_notices', array($this, 'checkPrerequisites'));
-		add_action('plugin_action_links_' . GFEWAY_PLUGIN_NAME, array($this, 'addPluginActionLinks'));
 		add_filter('plugin_row_meta', array($this, 'addPluginDetailsLinks'), 10, 2);
 		add_filter('admin_enqueue_scripts', array($this, 'enqueueScripts'));
+		add_action('wp_ajax_gfeway_dismiss', array($this, 'dismissNotice'));
 
-		// only if Gravity Forms is activated
-		if (class_exists('GFCommon')) {
-			$this->settingsURL = admin_url('admin.php?page=gf_settings&subview=eWAY+Payments');
+		// only if Gravity Forms is activated and of minimum version
+		if (GFEwayPlugin::hasMinimumGF()) {
+			// add settings link
+			add_action('plugin_action_links_' . GFEWAY_PLUGIN_NAME, array($this, 'addPluginActionLinks'));
 
 			// let Gravity Forms determine who has access to settings
 			add_filter('option_page_capability_' . GFEWAY_PLUGIN_OPTIONS, array($this, 'optionPageCapability'));
 
 			// add Gravity Forms hooks
-			add_filter('gform_currency_setting_message', array($this, 'gformCurrencySettingMessage'));
 			add_action('gform_payment_status', array($this, 'gformPaymentStatus'), 10, 3);
 			add_action('gform_after_update_entry', array($this, 'gformAfterUpdateEntry'), 10, 2);
 
 			// tell Gravity Forms not to put payment details into info (i.e. do put them into the new payment details box!)
 			add_filter('gform_enable_entry_info_payment_details', '__return_false');
-
-			// handle the new Payment Details box if supported
-			if (version_compare(GFCommon::$version, '1.8.7.99999', '<')) {
-				// pre-v1.8.8 settings
-				add_action('gform_entry_info', array($this, 'gformPaymentDetails'), 10, 2);
-			}
-			else {
-				// post-v1.8.8 settings
-				add_action('gform_payment_details', array($this, 'gformPaymentDetails'), 10, 2);
-			}
+			add_action('gform_payment_details', array($this, 'gformPaymentDetails'), 10, 2);
 		}
-	}
-
-	/**
-	* test whether GravityForms plugin is installed and active
-	* @return boolean
-	*/
-	public static function isGfActive() {
-		return class_exists('GFCommon');
 	}
 
 	/**
@@ -65,27 +50,50 @@ class GFEwayAdmin {
 			switch ($_GET['page']) {
 				case 'gf_settings':
 					// add our settings page to the Gravity Forms settings menu
-					RGForms::add_settings_page('eWAY Payments', array($this, 'settingsPage'));
+					RGForms::add_settings_page(_x('eWAY Payments', 'settings page', 'gravityforms-eway'), array($this, 'settingsPage'));
 					break;
 			}
 		}
 
 		add_settings_section(GFEWAY_PLUGIN_OPTIONS, false, false, GFEWAY_PLUGIN_OPTIONS);
 		register_setting(GFEWAY_PLUGIN_OPTIONS, GFEWAY_PLUGIN_OPTIONS, array($this, 'settingsValidate'));
+
+		// in_plugin_update_message isn't supported on multisite != blog-1, so just add another row
+		if (current_user_can('update_plugins')) {
+			add_action('after_plugin_row_' . GFEWAY_PLUGIN_NAME, array($this, 'upgradeMessage'), 20, 2);
+		}
+
+		// check for non-AJAX dismissable notices from click-through links
+		if (isset($_GET['gfeway_dismiss']) && !(defined('DOING_AJAX') && DOING_AJAX)) {
+			$this->dismissNotice();
+			wp_safe_redirect(remove_query_arg('gfeway_dismiss', wp_get_referer()));
+		}
 	}
 
 	/**
 	* only output our stylesheet if this is our admin page
+	* @param string $hook
 	*/
-	public function enqueueScripts() {
-		$ver = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? time() : GFEWAY_PLUGIN_VERSION;
-		wp_enqueue_style('gfeway-admin', plugins_url('css/admin.css', GFEWAY_PLUGIN_FILE), false, $ver);
+	public function enqueueScripts($hook) {
+		if ($hook === 'forms_page_gf_settings' || $hook === 'toplevel_page_gf_edit_forms') {
+			$ver = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? time() : GFEWAY_PLUGIN_VERSION;
+			wp_enqueue_style('gfeway-admin', plugins_url('css/admin.css', GFEWAY_PLUGIN_FILE), false, $ver);
+		}
 	}
 
 	/**
 	* check for required PHP extensions, tell admin if any are missing
 	*/
 	public function checkPrerequisites() {
+		// only bother admins / plugin installers / option setters with this stuff
+		if (!current_user_can('activate_plugins') && !current_user_can('manage_options')) {
+			return;
+		}
+
+		$options = $this->plugin->options;
+		$gfSettingsURL = admin_url('admin.php?page=gf_settings');
+		$ewaySettingsURL = admin_url('admin.php?page=gf_settings&subview=eWAY+Payments');
+
 		// need at least PHP 5.2.11 for libxml_disable_entity_loader()
 		$php_min = '5.2.11';
 		if (version_compare(PHP_VERSION, $php_min, '<')) {
@@ -105,35 +113,117 @@ class GFEwayAdmin {
 		}
 
 		// and of course, we need Gravity Forms
-		if (!self::isGfActive()) {
+		if (!class_exists('GFCommon')) {
 			include GFEWAY_PLUGIN_ROOT . 'views/requires-gravity-forms.php';
 		}
-		elseif (GFEwayPlugin::versionCompareGF(GFEwayPlugin::MIN_VERSION_GF, '<')) {
+		elseif (!GFEwayPlugin::hasMinimumGF()) {
 			include GFEWAY_PLUGIN_ROOT . 'views/requires-gravity-forms-upgrade.php';
+		}
+
+		$noticeFlags = $this->getNoticeFlags();
+
+		// if we upgraded from 1.x, tell admins about upgrade changes and checks to perform
+		if (!empty($noticeFlags['upgrade_from_v1'])) {
+			include GFEWAY_PLUGIN_ROOT . 'views/notice-upgrade-from-v1.php';
+			add_action('admin_print_footer_scripts', array($this, 'footerDismissableNotices'));
 		}
 	}
 
 	/**
-	* action hook for adding plugin action links
+	* record dismiss for a dismissable notice
+	*/
+	public function dismissNotice() {
+		if (isset($_GET['gfeway_dismiss'])) {
+			$notice = wp_unslash($_GET['gfeway_dismiss']);
+			$notices = $this->getNoticeFlags();
+
+			// only reset notices that exist, and are set
+			if (isset($notices[$notice]) && $notices[$notice]) {
+				$notices[$notice] = false;
+				$this->saveNoticeFlags($notices);
+			}
+		}
+
+		if (defined('DOING_AJAX') && DOING_AJAX) {
+			wp_send_json(array('dismissed' => $notice));
+		}
+
+		// click-through link needs to be redirected with action removed
+		wp_safe_redirect(remove_query_arg('gfeway_dismiss', wp_get_referer()));
+	}
+
+	/**
+	* get flags for notices
+	* @return array
+	*/
+	protected function getNoticeFlags() {
+		$options = get_option(GFEWAY_PLUGIN_OPTIONS);
+		$flags   = get_option('gfeway_notices', array());
+
+		$defaults = array (
+			'upgrade_from_v1'		=> (empty($flags) && !empty($options)),
+		);
+		$flags = wp_parse_args($flags, $defaults);
+
+		return $flags;
+	}
+
+	/**
+	* save flags for notices
+	* @param array $flags
+	*/
+	protected function saveNoticeFlags($flags) {
+		update_option('gfeway_notices', $flags);
+	}
+
+	/**
+	* add footer script for dismissable notices
+	*/
+	public function footerDismissableNotices() {
+		require GFEWAY_PLUGIN_ROOT . 'views/script-dismissable.php';
+	}
+
+	/**
+	* show upgrade messages on Plugins admin page
+	* @param string $file
+	* @param object $current_meta
+	*/
+	public function upgradeMessage($file, $plugin_data) {
+		$current = get_site_transient('update_plugins');
+
+		if (isset($current->response[$file])) {
+			$r = $current->response[$file];
+
+			if (!empty($r->upgrade_notice)) {
+				$wp_list_table = _get_list_table('WP_Plugins_List_Table');
+				$colspan = $wp_list_table->get_column_count();
+				$plugin_name = wp_kses($plugin_data['Name'], 'strip');
+
+				require GFEWAY_PLUGIN_ROOT . 'views/admin-upgrade-message.php';
+			}
+		}
+	}
+
+	/**
+	* add plugin action links
 	*/
 	public function addPluginActionLinks($links) {
-		// add settings link, but only if GravityForms plugin is active
-		if (self::isGfActive()) {
-			$settings_link = sprintf('<a href="%s">%s</a>', esc_url($this->settingsURL), __('Settings'));
-			array_unshift($links, $settings_link);
-		}
+		$url = esc_url(admin_url('admin.php?page=gf_settings&subview=eWAY+Payments'));
+		$settings_link = sprintf('<a href="%s">%s</a>', $url, _x('Settings', 'plugin details links', 'gravityforms-eway'));
+		array_unshift($links, $settings_link);
 
 		return $links;
 	}
 
 	/**
-	* action hook for adding plugin details links
+	* add plugin details links
 	*/
 	public static function addPluginDetailsLinks($links, $file) {
-		if ($file == GFEWAY_PLUGIN_NAME) {
-			$links[] = '<a href="https://wordpress.org/support/plugin/gravityforms-eway">' . __('Get help') . '</a>';
-			$links[] = '<a href="https://wordpress.org/plugins/gravityforms-eway/">' . __('Rating') . '</a>';
-			$links[] = '<a href="http://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+eWAY">' . __('Donate') . '</a>';
+		if ($file === GFEWAY_PLUGIN_NAME) {
+			$links[] = sprintf('<a href="https://wordpress.org/support/plugin/gravityforms-eway" target="_blank">%s</a>', _x('Get help', 'plugin details links', 'gravityforms-eway'));
+			$links[] = sprintf('<a href="https://wordpress.org/plugins/gravityforms-eway/" target="_blank">%s</a>', _x('Rating', 'plugin details links', 'gravityforms-eway'));
+			$links[] = sprintf('<a href="https://translate.wordpress.org/projects/wp-plugins/gravityforms-eway" target="_blank">%s</a>', _x('Translate', 'plugin details links', 'gravityforms-eway'));
+			$links[] = sprintf('<a href="http://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+eWAY" target="_blank">%s</a>', _x('Donate', 'plugin details links', 'gravityforms-eway'));
 		}
 
 		return $links;
@@ -155,30 +245,23 @@ class GFEwayAdmin {
 	}
 
 	/**
-	* action hook for showing currency setting message
-	* @param array $menus
-	* @return array
-	*/
-	public function gformCurrencySettingMessage() {
-		echo "<div class='gform_currency_message'>NB: Gravity Forms eWAY only supports Australian Dollars (AUD).</div>\n";
-	}
-
-	/**
-	* action hook for building the entry details view
+	* build the entry details view
 	* @param int $form_id
 	* @param array $lead
 	*/
 	public function gformPaymentDetails($form_id, $lead) {
 		$payment_gateway = gform_get_meta($lead['id'], 'payment_gateway');
-		if ($payment_gateway == 'gfeway') {
+		if ($payment_gateway === 'gfeway') {
 			$authcode = gform_get_meta($lead['id'], 'authcode');
 			if ($authcode) {
-				echo 'Auth Code: ', esc_html($authcode), "<br /><br />\n";
+				printf(_x('AuthCode: %s', 'entry details', 'gravityforms-eway'), esc_html($authcode));
+				echo "<br /><br />\n";
 			}
 
 			$beagle_score = gform_get_meta($lead['id'], 'beagle_score');
 			if ($beagle_score) {
-				echo 'Beagle Score: ', esc_html($beagle_score), "<br /><br />\n";
+				printf(_x('Beagle Score: %s', 'entry details', 'gravityforms-eway'), esc_html($beagle_score));
+				echo "<br /><br />\n";
 			}
 		}
 	}
@@ -200,6 +283,8 @@ class GFEwayAdmin {
 		$output = array();
 
 		$output['customerID']			= trim(sanitize_text_field($input['customerID']));
+		$output['apiKey']				= trim(strip_tags($input['apiKey']));
+		$output['apiPassword']			= trim(strip_tags($input['apiPassword']));
 		$output['useStored']			= empty($input['useStored']) ? '' : 1;
 		$output['useTest']				= empty($input['useTest']) ? '' : 1;
 		$output['useBeagle']			= empty($input['useBeagle']) ? '' : 1;
@@ -218,11 +303,19 @@ class GFEwayAdmin {
 			$output[$name] = trim(sanitize_text_field($input[$name]));
 		}
 
-		if (empty($output['customerID'])) {
-			add_settings_error(GFEWAY_PLUGIN_OPTIONS, '', 'Please enter the eWAY account number.');
+		$msg = '';
+
+		if (empty($output['apiKey']) xor empty($output['apiPassword'])) {
+			$msg = __('Please enter both your eWAY API key and password', 'gravityforms-eway');
+			add_settings_error(GFEWAY_PLUGIN_OPTIONS, '', $msg);
 		}
-		else {
-			add_settings_error(GFEWAY_PLUGIN_OPTIONS, 'settings_updated', 'Settings saved.', 'updated');
+		elseif (empty($output['customerID']) && empty($output['apiKey']) && empty($output['apiPassword'])) {
+			$msg = __('Please enter your eWAY API key and password, or your customer ID', 'gravityforms-eway');
+			add_settings_error(GFEWAY_PLUGIN_OPTIONS, '', $msg);
+		}
+
+		if (empty($msg)) {
+			add_settings_error(GFEWAY_PLUGIN_OPTIONS, 'settings_updated', __('Settings saved.', 'gravityforms-eway'), 'updated');
 		}
 
 		return $output;
@@ -237,7 +330,7 @@ class GFEwayAdmin {
 	*/
     public function gformPaymentStatus($payment_status, $form, $lead) {
 		// make sure payment is not Approved, and that we're editing the lead
-		if ($payment_status == 'Approved' || strtolower(rgpost('save')) <> 'edit') {
+		if ($payment_status === 'Approved' || strtolower(rgpost('save')) <> 'edit') {
 			return $payment_status;
 		}
 
@@ -289,7 +382,7 @@ class GFEwayAdmin {
 		$lead = GFFormsModel::get_lead($lead_id);
 		$lead['payment_status'] = $payment_status;
 
-		GFFormsModel::update_lead($lead);
+		GFAPI::update_entry($lead);
 	}
 
 }

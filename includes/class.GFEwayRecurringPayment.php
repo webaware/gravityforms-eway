@@ -1,14 +1,21 @@
 <?php
 /**
 * Classes for dealing with eWAY recurring payments
-*
-* NB: for testing, the only account number recognised is '87654321' and the only card number seen as valid is '4444333322221111'
 */
+
+if (!defined('ABSPATH')) {
+	exit;
+}
 
 /**
 * Class for dealing with an eWAY recurring payment request
+*
+* @link https://www.eway.com.au/eway-partner-portal/resources/eway-api/recurring-payments
 */
 class GFEwayRecurringPayment {
+
+	#region members
+
 	// environment / website specific members
 	/**
 	* default FALSE, use eWAY sandbox unless set to TRUE
@@ -54,10 +61,16 @@ class GFEwayRecurringPayment {
 	public $emailAddress;
 
 	/**
-	* customer's address
-	* @var string max. 255 characters
+	* customer's address line 1
+	* @var string (combined max. 255 for line1 + line2)
 	*/
-	public $address;
+	public $address1;
+
+	/**
+	* customer's address line 2
+	* @var string
+	*/
+	public $address2;
 
 	/**
 	* customer's suburb/city/town
@@ -180,19 +193,25 @@ class GFEwayRecurringPayment {
 	*/
 	public $intervalType;
 
+	#endregion
+
+	#region constants
+
 	/** interval type Days */
-	const DAYS = 1;
+	const DAYS   = 1;
 	/** interval type Weeks */
-	const WEEKS = 2;
+	const WEEKS  = 2;
 	/** interval type Months */
 	const MONTHS = 3;
 	/** interval type Years */
-	const YEARS = 4;
+	const YEARS  = 4;
 
 	/** host for the eWAY Real Time API in the developer sandbox environment */
-	const REALTIME_API_SANDBOX = 'https://www.eway.com.au/gateway/rebill/test/Upload_test.aspx';
+	const REALTIME_API_SANDBOX = 'https://www.eway.com.au/gateway/rebill/test/upload_test.aspx';
 	/** host for the eWAY Real Time API in the production environment */
-	const REALTIME_API_LIVE = 'https://www.eway.com.au/gateway/rebill/upload.aspx';
+	const REALTIME_API_LIVE    = 'https://www.eway.com.au/gateway/rebill/upload.aspx';
+
+	#endregion
 
 	/**
 	* populate members with defaults, and set account and environment information
@@ -219,78 +238,101 @@ class GFEwayRecurringPayment {
 	* validate the data members to ensure that sufficient and valid information has been given
 	*/
 	private function validate() {
-		$errmsg = '';
+		$errors = array();
 
-		if (strlen($this->accountID) === 0)
-			$errmsg .= "accountID cannot be empty.\n";
-		if (strlen($this->cardHoldersName) === 0)
-			$errmsg .= "card holder's name cannot be empty.\n";
-		if (strlen($this->cardNumber) === 0)
-			$errmsg .= "card number cannot be empty.\n";
+		if (strlen($this->accountID) === 0) {
+			$errors[] = __('CustomerID cannot be empty', 'gravityforms-eway');
+		}
+		if (strlen($this->cardHoldersName) === 0) {
+			$errors[] = __('cardholder name cannot be empty', 'gravityforms-eway');
+		}
+		if (strlen($this->cardNumber) === 0) {
+			$errors[] = __('card number cannot be empty', 'gravityforms-eway');
+		}
 
 		// make sure that card expiry month is a number from 1 to 12
-		if (gettype($this->cardExpiryMonth) != 'integer') {
-			if (strlen($this->cardExpiryMonth) === 0)
-				$errmsg .= "card expiry month cannot be empty.\n";
-			else if (!is_numeric($this->cardExpiryMonth))
-				$errmsg .= "card expiry month must be a number between 1 and 12.\n";
-			else
+		if (!is_int($this->cardExpiryMonth)) {
+			if (strlen($this->cardExpiryMonth) === 0) {
+				$errors[] = __('card expiry month cannot be empty', 'gravityforms-eway');
+			}
+			elseif (!ctype_digit($this->cardExpiryMonth)) {
+				$errors[] = __('card expiry month must be a number between 1 and 12', 'gravityforms-eway');
+			}
+			else {
 				$this->cardExpiryMonth = intval($this->cardExpiryMonth);
+			}
 		}
-		if (gettype($this->cardExpiryMonth) == 'integer') {
-			if ($this->cardExpiryMonth < 1 || $this->cardExpiryMonth > 12)
-				$errmsg .= "card expiry month must be a number between 1 and 12.\n";
+		if (is_int($this->cardExpiryMonth)) {
+			if ($this->cardExpiryMonth < 1 || $this->cardExpiryMonth > 12) {
+				$errors[] = __('card expiry month must be a number between 1 and 12', 'gravityforms-eway');
+			}
 		}
 
 		// make sure that card expiry year is a 2-digit or 4-digit year >= this year
-		if (gettype($this->cardExpiryYear) != 'integer') {
-			if (strlen($this->cardExpiryYear) === 0)
-				$errmsg .= "card expiry year cannot be empty.\n";
-			else if (!preg_match('/^\d\d(?:\d\d)?$/', $this->cardExpiryYear))
-				$errmsg .= "card expiry year must be a two or four digit year.\n";
-			else
-				$this->cardExpiryYear = intval($this->cardExpiryYear);
-		}
-		if (gettype($this->cardExpiryYear) == 'integer') {
-			$thisYear = intval(date_create()->format('Y'));
-			if ($this->cardExpiryYear < 0 || $this->cardExpiryYear >= 100 && $this->cardExpiryYear < 2000 || $this->cardExpiryYear > $thisYear + 20)
-				$errmsg .= "card expiry year must be a two or four digit year.\n";
+		if (!is_int($this->cardExpiryYear)) {
+			if (strlen($this->cardExpiryYear) === 0) {
+				$errors[] = __('card expiry year cannot be empty', 'gravityforms-eway');
+			}
+			elseif (!ctype_digit($this->cardExpiryYear)) {
+				$errors[] = __('card expiry year must be a two or four digit year', 'gravityforms-eway');
+			}
 			else {
-				if ($this->cardExpiryYear > 100 && $this->cardExpiryYear < $thisYear)
-					$errmsg .= "card expiry year can't be in the past.\n";
-				else if ($this->cardExpiryYear < 100 && $this->cardExpiryYear < ($thisYear - 2000))
-					$errmsg .= "card expiry year can't be in the past.\n";
+				$this->cardExpiryYear = intval($this->cardExpiryYear);
+			}
+		}
+		if (is_int($this->cardExpiryYear)) {
+			$thisYear = intval(date_create()->format('Y'));
+			if ($this->cardExpiryYear < 0 || $this->cardExpiryYear >= 100 && $this->cardExpiryYear < 2000 || $this->cardExpiryYear > $thisYear + 20) {
+				$errors[] = __('card expiry year must be a two or four digit year', 'gravityforms-eway');
+			}
+			else {
+				if ($this->cardExpiryYear > 100 && $this->cardExpiryYear < $thisYear) {
+					$errors[] = __("card expiry can't be in the past", 'gravityforms-eway');
+				}
+				else if ($this->cardExpiryYear < 100 && $this->cardExpiryYear < ($thisYear - 2000)) {
+					$errors[] = __("card expiry can't be in the past", 'gravityforms-eway');
+				}
 			}
 		}
 
 		// ensure that amounts are numeric and positive, and that recurring amount > 0
-		if (!is_numeric($this->amountInit) || $this->amountInit < 0)	// NB: initial amount can be 0
-			$errmsg .= "initial amount must be given as a number in dollars and cents, or 0.\n";
-		else if (!is_float($this->amountInit))
+		if (!is_numeric($this->amountInit) || $this->amountInit < 0) {	// NB: initial amount can be 0
+			$errors[] = __('initial amount must be given as a number in dollars and cents, or 0', 'gravityforms-eway');
+		}
+		elseif (!is_float($this->amountInit)) {
 			$this->amountInit = (float) $this->amountInit;
-		if (!is_numeric($this->amountRecur) || $this->amountRecur <= 0)
-			$errmsg .= "recurring amount must be given as a number in dollars and cents.\n";
-		else if (!is_float($this->amountRecur))
+		}
+		if (!is_numeric($this->amountRecur) || $this->amountRecur <= 0) {
+			$errors[] = __('recurring amount must be given as a number in dollars and cents', 'gravityforms-eway');
+		}
+		elseif (!is_float($this->amountRecur)) {
 			$this->amountRecur = (float) $this->amountRecur;
+		}
 
 		// ensure that interval is numeric and within range, and interval type is valid
-		if (!is_numeric($this->intervalSize) || $this->intervalSize < 1 || $this->intervalSize > 31)
-			$errmsg .= "interval must be numeric and between 1 and 31.\n";
-		if (!is_numeric($this->intervalType) || !in_array(intval($this->intervalType), array(self::DAYS, self::WEEKS, self::MONTHS, self::YEARS)))
-			$errmsg .= "interval type is invalid.\n";
+		if (!is_numeric($this->intervalSize) || $this->intervalSize < 1 || $this->intervalSize > 31) {
+			$errors[] = __('interval must be numeric and between 1 and 31', 'gravityforms-eway');
+		}
+		if (!is_numeric($this->intervalType) || !in_array(intval($this->intervalType), array(self::DAYS, self::WEEKS, self::MONTHS, self::YEARS))) {
+			$errors[] = __('interval type is invalid', 'gravityforms-eway');
+		}
 
 		// ensure that dates are DateTime objects
-		if (empty($this->dateInit))
+		if (empty($this->dateInit)) {
 			$this->dateInit = date_create();
-		if (!(is_object($this->dateInit) && get_class($this->dateInit) == 'DateTime'))
-			$errmsg .= "initial payment date must be a date.\n";
-		if (!(is_object($this->dateStart) && get_class($this->dateStart) == 'DateTime'))
-			$errmsg .= "recurring payment start date must be a date.\n";
-		if (!(is_object($this->dateEnd) && get_class($this->dateEnd) == 'DateTime'))
-			$errmsg .= "recurring payment end date must be a date.\n";
+		}
+		if (!(is_object($this->dateInit) && get_class($this->dateInit) === 'DateTime')) {
+			$errors[] = __('initial payment date must be a date', 'gravityforms-eway');
+		}
+		if (!(is_object($this->dateStart) && get_class($this->dateStart) === 'DateTime')) {
+			$errors[] = __('recurring payment start date must be a date', 'gravityforms-eway');
+		}
+		if (!(is_object($this->dateEnd) && get_class($this->dateEnd) === 'DateTime')) {
+			$errors[] = __('recurring payment end date must be a date', 'gravityforms-eway');
+		}
 
-		if (strlen($errmsg) > 0) {
-			throw new GFEwayException($errmsg);
+		if (count($errors) > 0) {
+			throw new GFEwayException(implode("\n", $errors));
 		}
 	}
 
@@ -300,6 +342,10 @@ class GFEwayRecurringPayment {
 	* @return string
 	*/
 	public function getPaymentXML() {
+		// aggregate street address1 & address2 into one string
+		$parts = array($this->address1, $this->address2);
+		$address = implode(', ', array_filter($parts, 'strlen'));
+
 		$xml = new XMLWriter();
 		$xml->openMemory();
 		$xml->startDocument('1.0', 'UTF-8');
@@ -316,7 +362,7 @@ class GFEwayRecurringPayment {
 		$xml->writeElement('CustomerCompany', '');
 		$xml->writeElement('CustomerJobDesc', '');
 		$xml->writeElement('CustomerEmail', $this->emailAddress);
-		$xml->writeElement('CustomerAddress', $this->address);
+		$xml->writeElement('CustomerAddress', $address);
 		$xml->writeElement('CustomerSuburb', $this->suburb);
 		$xml->writeElement('CustomerState', $this->state);				// req
 		$xml->writeElement('CustomerPostCode', $this->postcode);		// req
@@ -353,7 +399,6 @@ class GFEwayRecurringPayment {
 
 	/**
 	* send the eWAY payment request and retrieve and parse the response
-	*
 	* @return GFEwayRecurringResponse
 	* @param string $xml eWAY payment request as an XML document, per eWAY specifications
 	*/
@@ -366,19 +411,23 @@ class GFEwayRecurringPayment {
 			$responseXML = GFEwayPlugin::curlSendRequest($url, $xml, $this->sslVerifyPeer);
 		}
 		catch (GFEwayCurlException $e) {
-			throw new GFEwayException("Error posting eWAY recurring payment to $url: " . $e->getMessage());
+			throw new GFEwayException(sprintf(__('Error posting eWAY recurring payment to %1$s: %2$s', 'gravityforms-eway'), $url, $e->getMessage()));
 		}
 
 		$response = new GFEwayRecurringResponse();
 		$response->loadResponseXML($responseXML);
 		return $response;
 	}
+
 }
 
 /**
 * Class for dealing with an eWAY recurring payment response
 */
 class GFEwayRecurringResponse {
+
+	#region members
+
 	/**
 	* For a successful transaction "True" is passed and for a failed transaction "False" is passed.
 	* @var boolean
@@ -397,6 +446,8 @@ class GFEwayRecurringResponse {
 	*/
 	public $error;
 
+	#endregion
+
 	/**
 	* load eWAY response data as XML string
 	*
@@ -407,7 +458,7 @@ class GFEwayRecurringResponse {
 
 		// make sure we actually got something from eWAY
 		if (strlen($response) === 0) {
-			throw new GFEwayException('eWAY payment request returned nothing; please check your card details');
+			throw new GFEwayException(__('eWAY payment request returned nothing; please check your card details', 'gravityforms-eway'));
 		}
 
 		// prevent XML injection attacks, and handle errors without warnings
@@ -437,7 +488,8 @@ class GFEwayRecurringResponse {
 			libxml_disable_entity_loader($oldDisableEntityLoader);
 			libxml_use_internal_errors($oldUseInternalErrors);
 
-			throw new GFEwayException('Error parsing eWAY recurring payments response: ' . $e->getMessage());
+			throw new GFEwayException(sprintf(__('Error parsing eWAY recurring payments response: %s', 'gravityforms-eway'), $e->getMessage()));
 		}
 	}
+
 }

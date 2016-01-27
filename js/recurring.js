@@ -1,6 +1,6 @@
 /*!
-WordPress plugin gravityforms-eway
-copyright (c) 2012-2015 WebAware Pty Ltd, released under LGPL v2.1
+gravityforms-eway
+copyright (c) 2012-2016 WebAware Pty Ltd
 Recurring Payments field
 */
 
@@ -9,7 +9,7 @@ Recurring Payments field
 
 	var	thisYear			= (new Date()).getFullYear(),
 		yearRange			= thisYear + ":2099",				// year range for max date settings, mumble mumble jquery-ui mumble
-		reDatePattern		= /^\d{4}-\d\d-\d\d$/,				// regex test for ISO date string
+		reDatePattern		= /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/,	// regex test for ISO date string
 		setPickerOptions	= false;
 
 	// set datepicker minimum date if given

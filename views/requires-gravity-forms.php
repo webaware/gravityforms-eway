@@ -1,4 +1,5 @@
 
 <div class="error">
-	<p>Gravity Forms eWAY requires <a target="_blank" href="http://webaware.com.au/get-gravity-forms">Gravity Forms</a> to be installed and activated.</p>
+	<p><?php printf(__('Gravity Forms eWAY requires <a target="_blank" href="%s">Gravity Forms</a> to be installed and activated.', 'gravityforms-eway'),
+		'http://webaware.com.au/get-gravity-forms'); ?></p>
 </div>

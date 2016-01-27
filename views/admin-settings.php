@@ -1,7 +1,7 @@
 
 <?php settings_errors(GFEWAY_PLUGIN_OPTIONS); ?>
 
-<h3>Gravity Forms eWAY Payments</h3>
+<h3><span><i class="fa fa-credit-card"></i> <?php _ex('eWAY Payments', 'settings page', 'gravityforms-eway'); ?></span></h3>
 
 <form action="<?php echo admin_url('options.php'); ?>" method="POST" id="eway-settings-form">
 	<?php settings_fields(GFEWAY_PLUGIN_OPTIONS); ?>
@@ -9,83 +9,94 @@
 	<table class="form-table">
 
 		<tr>
-			<th>eWAY Customer ID</th>
+			<th><label for="gfeway_plugin_apiKey"><?php _e('eWAY API Key', 'gravityforms-eway'); ?></label></th>
 			<td>
-				<input type="text" class="regular-text" name="gfeway_plugin[customerID]" value="<?php echo esc_attr($options['customerID']); ?>" />
-			</td>
-		</tr>
-
-		<tr valign='top'>
-			<th>Use Stored Payments
-				<span id="gfeway-opt-admin-stored-test">
-					<br />Stored Payments use the Direct Payments sandbox;
-					<br />there is no Stored Payments sandbox.
-				</span>
-			</th>
-			<td>
-				<label><input type="radio" name="gfeway_plugin[useStored]" value="1" <?php checked($options['useStored'], '1'); ?> />&nbsp;yes</label>
-				&nbsp;&nbsp;<label><input type="radio" name="gfeway_plugin[useStored]" value="" <?php checked($options['useStored'], ''); ?> />&nbsp;no</label>
-			</td>
-		</tr>
-
-		<tr valign='top'>
-			<th>Use Sandbox (testing environment)</th>
-			<td>
-				<label><input type="radio" name="gfeway_plugin[useTest]" value="1" <?php checked($options['useTest'], '1'); ?> />&nbsp;yes</label>
-				&nbsp;&nbsp;<label><input type="radio" name="gfeway_plugin[useTest]" value="" <?php checked($options['useTest'], ''); ?> />&nbsp;no</label>
-			</td>
-		</tr>
-
-		<tr valign='top'>
-			<th>Round Amounts for Sandbox</th>
-			<td>
-				<label><input type="radio" name="gfeway_plugin[roundTestAmounts]" value="1" <?php checked($options['roundTestAmounts'], '1'); ?> />&nbsp;yes</label>
-				&nbsp;&nbsp;<label><input type="radio" name="gfeway_plugin[roundTestAmounts]" value="" <?php checked($options['roundTestAmounts'], ''); ?> />&nbsp;no</label>
-			</td>
-		</tr>
-
-		<tr valign='top'>
-			<th>Force Test Customer ID in Sandbox</th>
-			<td>
-				<label><input type="radio" name="gfeway_plugin[forceTestAccount]" value="1" <?php checked($options['forceTestAccount'], '1'); ?> />&nbsp;yes</label>
-				&nbsp;&nbsp;<label><input type="radio" name="gfeway_plugin[forceTestAccount]" value="" <?php checked($options['forceTestAccount'], ''); ?> />&nbsp;no</label>
-			</td>
-		</tr>
-
-		<tr valign='top'>
-			<th>Use <a href="http://www.eway.com.au/developers/resources/beagle-(free)-rules" target="_blank">Beagle</a>
-				<span id="gfeway-opt-admin-stored-beagle">
-					<br />Beagle is not available for Stored Payments.
-				</span>
-			</th>
-			<td>
-				<label><input type="radio" name="gfeway_plugin[useBeagle]" value="1" <?php checked($options['useBeagle'], '1'); ?> />&nbsp;yes</label>
-				&nbsp;&nbsp;<label><input type="radio" name="gfeway_plugin[useBeagle]" value="" <?php checked($options['useBeagle'], ''); ?> />&nbsp;no</label>
-				<span id="gfeway-opt-admin-beagle-address">
-					<br />You will also need to add an Address field to your form, and make it required. Beagle works by comparing
-					the country of the address with the country where the purchaser is using the Internet; if you don't set it to Required,
-					then Beagle won't be used when submitting the form without a country selected.
-				</span>
-			</td>
-		</tr>
-
-		<tr valign='top'>
-			<th>Verify remote SSL certificate<br />
-				(<i>only disable if your website can't be
-				 <a target="_blank" title="Stop turning off CURLOPT_SSL_VERIFYPEER and fix your PHP config"
-				  href="http://snippets.webaware.com.au/howto/stop-turning-off-curlopt_ssl_verifypeer-and-fix-your-php-config/">correctly configured</a>!</i>)
-			</th>
-			<td>
-				<label><input type="radio" name="gfeway_plugin[sslVerifyPeer]" value="Y" <?php checked($options['sslVerifyPeer'], '1'); ?> />&nbsp;yes</label>
-				&nbsp;&nbsp;<label><input type="radio" name="gfeway_plugin[sslVerifyPeer]" value="N" <?php checked($options['sslVerifyPeer'], ''); ?> />&nbsp;no</label>
+				<input type="text" class="large-text" name="gfeway_plugin[apiKey]" id="gfeway_plugin_apiKey" value="<?php echo esc_attr($options['apiKey']); ?>" />
 			</td>
 		</tr>
 
 		<tr>
-			<th colspan="2" style="font-weight: bold">You may customise the error messages below.
-				Leave a message blank to use the default error message.</th>
+			<th><label for="gfeway_plugin_apiPassword"><?php _e('eWAY API Password', 'gravityforms-eway'); ?></label></th>
+			<td>
+				<input type="password" class="regular-text" name="gfeway_plugin[apiPassword]" id="gfeway_plugin_apiPassword" value="<?php echo esc_attr($options['apiPassword']); ?>" />
+			</td>
 		</tr>
 
+		<tr>
+			<th><label for="gfeway_plugin_customerID"><?php _e('eWAY Customer ID', 'gravityforms-eway'); ?></label></th>
+			<td>
+				<input type="text" class="regular-text" name="gfeway_plugin[customerID]" id="gfeway_plugin_customerID" value="<?php echo esc_attr($options['customerID']); ?>" />
+				<p><em><?php _e('required for recurring payments and legacy XML API', 'gravityforms-eway'); ?></em></p>
+			</td>
+		</tr>
+
+		<tr valign='top'>
+			<th><?php _ex('Options', 'settings', 'gravityforms-eway'); ?></th>
+			<td>
+
+				<fieldset>
+					<legend><?php _e('Payment Method', 'gravityforms-eway'); ?></legend>
+					<input type="radio" name="gfeway_plugin[useStored]" id="gfeway_plugin_useStored_no" value="" <?php checked($options['useStored'], ''); ?> />
+					<label for="gfeway_plugin_useStored_no"><?php _ex('Capture', 'payment method', 'gravityforms-eway'); ?></label>
+					<input type="radio" name="gfeway_plugin[useStored]" id="gfeway_plugin_useStored_yes" value="1" <?php checked($options['useStored'], '1'); ?> />
+					<label for="gfeway_plugin_useStored_yes"><?php _ex('Authorize', 'payment method', 'gravityforms-eway'); ?></label>
+					<p id="gfeway-opt-admin-stored-test"><em><?php _e('The Stored Payments legacy XML API has no sandbox, so transactions are simulated via the Direct Payments XML API sandbox. Add your API key and password to use Rapid API and see PreAuth transactions in your sandbox.', 'gravityforms-eway'); ?></em></p>
+				</fieldset>
+
+				<fieldset>
+					<legend><?php _e('Use Sandbox (testing environment)', 'gravityforms-eway'); ?></legend>
+					<input type="radio" name="gfeway_plugin[useTest]" id="gfeway_plugin_useTest_yes" value="1" <?php checked($options['useTest'], '1'); ?> />
+					<label for="gfeway_plugin_useTest_yes"><?php _ex('Yes', 'settings', 'gravityforms-eway'); ?></label>
+					<input type="radio" name="gfeway_plugin[useTest]" id="gfeway_plugin_useTest_no" value="" <?php checked($options['useTest'], ''); ?> />
+					<label for="gfeway_plugin_useTest_no"><?php _ex('No', 'settings', 'gravityforms-eway'); ?></label>
+				</fieldset>
+
+				<fieldset>
+					<legend><?php _e('Round Amounts for Sandbox', 'gravityforms-eway'); ?></legend>
+					<input type="radio" name="gfeway_plugin[roundTestAmounts]" id="gfeway_plugin_roundTestAmounts_yes" value="1" <?php checked($options['roundTestAmounts'], '1'); ?> />
+					<label for="gfeway_plugin_roundTestAmounts_yes"><?php _ex('Yes', 'settings', 'gravityforms-eway'); ?></label>
+					<input type="radio" name="gfeway_plugin[roundTestAmounts]" id="gfeway_plugin_roundTestAmounts_no" value="" <?php checked($options['roundTestAmounts'], ''); ?> />
+					<label for="gfeway_plugin_roundTestAmounts_no"><?php _ex('No', 'settings', 'gravityforms-eway'); ?></label>
+					<p><em><?php _e('ensures successful transactions with transaction response set to "Use Cents Value"', 'gravityforms-eway'); ?></em></p>
+				</fieldset>
+
+				<fieldset>
+					<legend><?php _e('Force Test Customer ID in Sandbox', 'gravityforms-eway'); ?></legend>
+					<input type="radio" name="gfeway_plugin[forceTestAccount]" id="gfeway_plugin_forceTestAccount_yes" value="1" <?php checked($options['forceTestAccount'], '1'); ?> />
+					<label for="gfeway_plugin_forceTestAccount_yes"><?php _ex('Yes', 'settings', 'gravityforms-eway'); ?></label>
+					<input type="radio" name="gfeway_plugin[forceTestAccount]" id="gfeway_plugin_forceTestAccount_no" value="" <?php checked($options['forceTestAccount'], ''); ?> />
+					<label for="gfeway_plugin_forceTestAccount_no"><?php _ex('No', 'settings', 'gravityforms-eway'); ?></label>
+				</fieldset>
+
+				<fieldset>
+					<legend><?php printf(__('Use <a href="%s" target="_blank">Beagle</a>', 'gravityforms-eway'), 'https://eway.io/features/antifraud-beagle-lite'); ?></legend>
+					<input type="radio" name="gfeway_plugin[useBeagle]" id="gfeway_plugin_useBeagle_yes" value="1" <?php checked($options['useBeagle'], '1'); ?> />
+					<label for="gfeway_plugin_useBeagle_yes"><?php _ex('Yes', 'settings', 'gravityforms-eway'); ?></label>
+					<input type="radio" name="gfeway_plugin[useBeagle]" id="gfeway_plugin_useBeagle_no" value="" <?php checked($options['useBeagle'], ''); ?> />
+					<label for="gfeway_plugin_useBeagle_no"><?php _ex('No', 'settings', 'gravityforms-eway'); ?></label>
+					<p id="gfeway-opt-admin-stored-beagle"><?php _e('Beagle is not available for the Stored Payments legacy XML API.', 'gravityforms-eway'); ?></p>
+					<p id="gfeway-opt-admin-beagle-address"><em><?php _e('Beagle fraud detection requires an address for each transaction. Be sure to add an Address field to your forms, and make it a required field.', 'gravityforms-eway'); ?></em></p>
+				</fieldset>
+
+				<fieldset>
+					<legend><?php _e('Verify remote SSL certificate', 'gravityforms-eway'); ?></legend>
+					<input type="radio" name="gfeway_plugin[sslVerifyPeer]" id="gfeway_plugin_sslVerifyPeer_yes" value="Y" <?php checked($options['sslVerifyPeer'], '1'); ?> />
+					<label for="gfeway_plugin_sslVerifyPeer_yes"><?php _ex('Yes', 'settings', 'gravityforms-eway'); ?></label>
+					<input type="radio" name="gfeway_plugin[sslVerifyPeer]" id="gfeway_plugin_sslVerifyPeer_no" value="N" <?php checked($options['sslVerifyPeer'], ''); ?> />
+					<label for="gfeway_plugin_sslVerifyPeer_no"><?php _ex('No', 'settings', 'gravityforms-eway'); ?></label>
+					<p><em><?php printf(__("only choose 'no' if you can't <a target='_blank' href='%s'>fix your website SSL configuration</a> due to a technical reason", 'gravityforms-eway'),
+						'http://snippets.webaware.com.au/howto/stop-turning-off-curlopt_ssl_verifypeer-and-fix-your-php-config/'); ?></em></p>
+				</fieldset>
+
+			</td>
+		</tr>
+
+		<tr>
+			<th colspan="2"><?php _e('You may customize the error messages below. Leave a message blank to use the default error message.', 'gravityforms-eway'); ?></th>
+		</tr>
+
+		<tr colspan="2">
+			<td colspan="2">
 		<?php
 		$errNames = array (
 			GFEWAY_ERROR_ALREADY_SUBMITTED,
@@ -99,15 +110,16 @@
 			$msg    = isset($options[$errName]) ? $options[$errName] : get_option($errName);
 			?>
 
-			<tr>
-				<th><?php echo esc_html($defmsg); ?></th>
-				<td><input type="text" name="gfeway_plugin[<?php echo esc_attr($errName); ?>]" class="large-text" value="<?php echo esc_attr($msg); ?>" /></td>
-			</tr>
+				<label for="<?php echo esc_attr($errName); ?>"><?php echo esc_html($defmsg); ?></label>
+				<input type="text" class="large-text" id="<?php echo esc_attr($errName); ?>" name="gfeway_plugin[<?php echo esc_attr($errName); ?>]"
+					value="<?php echo esc_attr($msg); ?>" placeholder="<?php echo esc_attr($defmsg); ?>" />
 
 			<?php
 		}
-
 		?>
+			</td>
+		</tr>
+
 	</table>
 
 	<?php submit_button(); ?>
@@ -117,24 +129,21 @@
 <script>
 (function($) {
 
-	/**
-	* check whether both the sandbox (test) mode and Stored Payments are selected,
-	* show warning message if they are
-	*/
 	function setVisibility() {
 		var	useTest   = ($("input[name='gfeway_plugin[useTest]']:checked").val()   === "1"),
 			useBeagle = ($("input[name='gfeway_plugin[useBeagle]']:checked").val() === "1"),
-			useStored = ($("input[name='gfeway_plugin[useStored]']:checked").val() === "1");
+			useStored = ($("input[name='gfeway_plugin[useStored]']:checked").val() === "1"),
+			useAPI    = ($("input[name='gfeway_plugin[apiKey]']").val() !== "" && $("input[name='gfeway_plugin[apiPassword]']").val() !== "");
 
 		function display(element, visible) {
 			if (visible)
-				element.css({display: "none"}).show(750);
+				element.show();
 			else
 				element.hide();
 		}
 
-		display($("#gfeway-opt-admin-stored-test"), (useTest && useStored));
-		display($("#gfeway-opt-admin-stored-beagle"), (useBeagle && useStored));
+		display($("#gfeway-opt-admin-stored-test"), (useTest && useStored && !useAPI));
+		display($("#gfeway-opt-admin-stored-beagle"), (useBeagle && useStored && !useAPI));
 		display($("#gfeway-opt-admin-beagle-address"), useBeagle);
 	}
 

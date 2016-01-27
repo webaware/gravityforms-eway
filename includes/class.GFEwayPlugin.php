@@ -1,5 +1,9 @@
 <?php
 
+if (!defined('ABSPATH')) {
+	exit;
+}
+
 /**
 * custom exception types
 */
@@ -12,12 +16,11 @@ class GFEwayCurlException extends Exception {}
 class GFEwayPlugin {
 	public $options;                                    // array of plugin options
 
-	protected $acceptedCards;                           // hash map of accepted credit cards
 	protected $txResult = null;                         // results from credit card payment transaction
 	protected $formHasCcField = false;                  // true if current form has credit card field
 
 	// minimum versions required
-	const MIN_VERSION_GF	= '1.7';
+	const MIN_VERSION_GF	= '1.9';
 
 	/**
 	* static method for getting the instance of this singleton object
@@ -39,53 +42,34 @@ class GFEwayPlugin {
 	private function __construct() {
 		spl_autoload_register(array(__CLASS__, 'autoload'));
 
-		// grab options, setting new defaults for any that are missing
-		$this->initOptions();
-
-		// filter the cards array to just Visa, MasterCard and Amex
-		$this->acceptedCards = array('amex' => 1, 'mastercard' => 1, 'visa' => 1);
-
-		add_action('init', array($this, 'init'));
+		add_action('plugins_loaded', array($this, 'load'));
+		add_action('init', array($this, 'loadTextDomain'));
 	}
 
 	/**
-	* initialise plug-in options, handling undefined options by setting defaults
+	* handle the plugins_loaded action
 	*/
-	protected function initOptions() {
+	public function load() {
+		// grab options, setting new defaults for any that are missing
 		$defaults = array (
 			'customerID'			=> '87654321',
-			'useStored'				=> false,
+			'apiKey'				=> '',
+			'apiPassword'			=> '',
 			'useTest'				=> true,
 			'useBeagle'				=> false,
 			'roundTestAmounts'		=> true,
 			'forceTestAccount'		=> true,
 			'sslVerifyPeer'			=> true,
 		);
+		$this->options = wp_parse_args(get_option(GFEWAY_PLUGIN_OPTIONS, array()), $defaults);
 
-		$this->options = get_option(GFEWAY_PLUGIN_OPTIONS);
-		if (!is_array($this->options)) {
-			$this->options = array();
-		}
-
-		if (count(array_diff_assoc($defaults, $this->options)) > 0) {
-			$this->options = array_merge($defaults, $this->options);
-			update_option(GFEWAY_PLUGIN_OPTIONS, $this->options);
-		}
-	}
-
-	/**
-	* handle the plugin's init action
-	*/
-	public function init() {
 		// do nothing if Gravity Forms isn't enabled or doesn't meet required minimum version
-		if (self::versionCompareGF(self::MIN_VERSION_GF, '>=')) {
+		if (self::hasMinimumGF()) {
 			// hook into Gravity Forms to enable credit cards and trap form submissions
 			add_filter('gform_logging_supported', array($this, 'enableLogging'));
 			add_filter('gform_pre_render', array($this, 'gformPreRenderSniff'));
 			add_filter('gform_admin_pre_render', array($this, 'gformPreRenderSniff'));
 			add_action('gform_enable_credit_card_field', '__return_true');
-			add_filter('gform_creditcard_types', array($this, 'gformCCTypes'));
-			add_filter('gform_currency', array($this, 'gformCurrency'));
 			add_filter('gform_validation', array($this, 'gformValidation'));
 			add_action('gform_entry_post_save', array($this, 'gformEntryPostSave'), 10, 2);
 			add_filter('gform_custom_merge_tags', array($this, 'gformCustomMergeTags'), 10, 4);
@@ -102,6 +86,13 @@ class GFEwayPlugin {
 			require GFEWAY_PLUGIN_ROOT . 'includes/class.GFEwayAdmin.php';
 			new GFEwayAdmin($this);
 		}
+	}
+
+	/**
+	* load text translations
+	*/
+	public function loadTextDomain() {
+		load_plugin_textdomain('gravityforms-eway-pro', false, plugin_basename(dirname(GFEWAY_PLUGIN_FILE)) . '/languages/');
 	}
 
 	/**
@@ -201,15 +192,46 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* get customer ID to use with payment gateway
-	* @return string
+	* get payment object
+	* @param string $type either 'single' or 'recurring'
+	* @return object
+	* @throws GFEwayException
 	*/
-	protected function getCustomerID() {
-		if ($this->options['useTest'] && $this->options['forceTestAccount']) {
-			return '87654321';
+	protected function getPaymentRequestor($type) {
+		$eway = null;
+		$isLiveSite = !$this->options['useTest'];
+
+		if ($type === 'recurring') {
+			// Recurring XML API
+			$customerID = $this->options['useTest'] ? '87654321' : $this->options['customerID'];
+			if (empty($customerID)) {
+				throw new GFEwayException(__("Can't request recurring payment; no eWAY customer ID.", 'gravityforms-eway'));
+			}
+			$eway = new GFEwayRecurringPayment($customerID, $isLiveSite);
+		}
+		else {
+			// single payments
+			if (!empty($this->options['apiKey']) && !empty($this->options['apiPassword'])) {
+				// Rapid API
+				$capture = !$this->options['useStored'];
+				$eway = new GFEwayRapidAPI($this->options['apiKey'], $this->options['apiPassword'], $this->options['useTest'], $capture, $this->options['useBeagle']);
+			}
+			else {
+				// legacy XML APIs
+				$customerID = ($this->options['useTest'] && $this->options['forceTestAccount']) ? '87654321' : $this->options['customerID'];
+				if (empty($customerID)) {
+					throw new GFEwayException(__("Can't request payment; no eWAY credentials.", 'gravityforms-eway'));
+				}
+				if ($this->options['useStored']) {
+					$eway = new GFEwayStoredPayment($customerID, $isLiveSite);
+				}
+				else {
+					$eway = new GFEwayPayment($customerID, $isLiveSite, $this->options['useBeagle']);
+				}
+			}
 		}
 
-		return $this->options['customerID'];
+		return $eway;
 	}
 
 	/**
@@ -220,16 +242,13 @@ class GFEwayPlugin {
 	*/
 	protected function processSinglePayment($data, $formData) {
 		try {
-			if ($this->options['useStored']) {
-				$eway = new GFEwayStoredPayment($this->getCustomerID(), !$this->options['useTest']);
-			}
-			else {
-				$eway = new GFEwayPayment($this->getCustomerID(), !$this->options['useTest']);
-			}
+			$eway = $this->getPaymentRequestor('single');
 
 			$eway->sslVerifyPeer			= $this->options['sslVerifyPeer'];
+			$eway->customerIP				= self::getCustomerIP();
 			$eway->invoiceDescription		= get_bloginfo('name') . " -- {$data['form']['title']}";
 			$eway->invoiceReference			= $data['form']['id'];
+			$eway->currencyCode				= GFCommon::get_currency();
 			if (empty($formData->firstName) && empty($formData->lastName)) {
 				$eway->lastName				= $formData->ccName;                // pick up card holder's name for last name
 			}
@@ -242,22 +261,28 @@ class GFEwayPlugin {
 			$eway->cardExpiryMonth			= $formData->ccExpMonth;
 			$eway->cardExpiryYear			= $formData->ccExpYear;
 			$eway->emailAddress				= $formData->email;
-			$eway->address					= $formData->address;
+			$eway->address1					= $formData->address_street1;
+			$eway->address2					= $formData->address_street2;
+			$eway->suburb					= $formData->address_suburb;
+			$eway->state					= $formData->address_state;
 			$eway->postcode					= $formData->postcode;
+			$eway->countryName				= $formData->address_country;
+			$eway->country					= $formData->address_country ? GFCommon::get_country_code($formData->address_country) : '';
 			$eway->cardVerificationNumber	= $formData->ccCVN;
 
-			// if Beagle is enabled, get the country code
-			if ($this->options['useBeagle']) {
-				$eway->customerCountryCode	= GFCommon::get_country_code($formData->address_country);
-			}
+			// generate a unique transaction ID to avoid collisions, e.g. between different installations using the same eWAY account
+			// uniqid() generates 13-character string, trim back to last 12 characters which is max for field
+			$eway->transactionNumber = substr(uniqid(), -12);
 
 			// allow plugins/themes to modify invoice description and reference, and set option fields
-			$eway->invoiceDescription	= apply_filters('gfeway_invoice_desc', $eway->invoiceDescription, $data['form']);
-			$eway->invoiceReference		= apply_filters('gfeway_invoice_ref', $eway->invoiceReference, $data['form']);
-			$eway->transactionNumber	= apply_filters('gfeway_invoice_trans_number', $eway->transactionNumber, $data['form']);
-			$eway->option1				= apply_filters('gfeway_invoice_option1', '', $data['form']);
-			$eway->option2				= apply_filters('gfeway_invoice_option2', '', $data['form']);
-			$eway->option3				= apply_filters('gfeway_invoice_option3', '', $data['form']);
+			$eway->invoiceDescription		= apply_filters('gfeway_invoice_desc', $eway->invoiceDescription, $data['form']);
+			$eway->invoiceReference			= apply_filters('gfeway_invoice_ref', $eway->invoiceReference, $data['form']);
+			$eway->transactionNumber		= apply_filters('gfeway_invoice_trans_number', $eway->transactionNumber, $data['form']);
+			$eway->options					= array_filter(array(
+												apply_filters('gfeway_invoice_option1', '', $data['form']),
+												apply_filters('gfeway_invoice_option2', '', $data['form']),
+												apply_filters('gfeway_invoice_option3', '', $data['form']),
+											), 'strlen');
 
 			// if live, pass through amount exactly, but if using test site, round up to whole dollars or eWAY will fail
 			if ($this->options['useTest'] && $this->options['roundTestAmounts']) {
@@ -271,9 +296,9 @@ class GFEwayPlugin {
 				$eway->amount = $formData->total;
 			}
 
-			self::log_debug(sprintf('%s: %s gateway, invoice ref: %s, transaction: %s, amount: %s, cc: %s',
-				__FUNCTION__, $eway->isLiveSite ? 'live' : 'test', $eway->invoiceReference, $eway->transactionNumber,
-				$eway->amount, $eway->cardNumber));
+			self::log_debug(sprintf('%s: %s gateway, invoice ref: %s, transaction: %s, amount: %s, currency: %s, cc: %s',
+				__FUNCTION__, $this->options['useTest'] ? 'test' : 'live', $eway->invoiceReference, $eway->transactionNumber,
+				$eway->amount, $eway->currencyCode, $eway->cardNumber));
 
 			// record basic transaction data, for updating the entry with later
 			$this->txResult = array (
@@ -282,34 +307,47 @@ class GFEwayPlugin {
 			);
 
 			$response = $eway->processPayment();
-			if ($response->status) {
+			if ($response->TransactionStatus) {
 				// transaction was successful, so record details and continue
 				$this->txResult['payment_status']	= $this->options['useStored'] ? 'Pending' : 'Approved';
 				$this->txResult['payment_date']		= date('Y-m-d H:i:s');
-				$this->txResult['payment_amount']	= $response->amount;
-				$this->txResult['transaction_id']	= $response->transactionNumber;
+				$this->txResult['payment_amount']	= $response->Payment->TotalAmount;
+				$this->txResult['transaction_id']	= $response->TransactionID;
 				$this->txResult['transaction_type']	= 1;
-				$this->txResult['authcode']			= $response->authCode;
-				$this->txResult['beagle_score']		= $response->beagleScore;
+				$this->txResult['authcode']			= $response->AuthorisationCode;
+				$this->txResult['beagle_score']		= $response->BeagleScore >= 0 ? $response->BeagleScore : '';
 
 				self::log_debug(sprintf('%s: success, date = %s, id = %s, status = %s, amount = %s, authcode = %s, Beagle = %s',
-					__FUNCTION__, $this->txResult['payment_date'], $response->transactionNumber, $this->txResult['payment_status'],
-					$response->amount, $response->authCode, $response->beagleScore));
+					__FUNCTION__, $this->txResult['payment_date'], $response->TransactionID, $this->txResult['payment_status'],
+					$response->Payment->TotalAmount, $response->AuthorisationCode, $response->BeagleScore));
+				if (!empty($response->ResponseMessage)) {
+					self::log_debug(sprintf('%s: %s', __FUNCTION__, implode('; ', $response->ResponseMessage)));
+				}
 			}
 			else {
 				$data['is_valid'] = false;
 				$formData->ccField['failed_validation']		= true;
-				$formData->ccField['validation_message']	= nl2br($this->getErrMsg(GFEWAY_ERROR_EWAY_FAIL) . ":\n{$response->error}");
+				$formData->ccField['validation_message']	= $this->getErrMsg(GFEWAY_ERROR_EWAY_FAIL);
 				$this->txResult['payment_status']			= 'Failed';
 				$this->txResult['authcode']					= '';			// empty bank authcode, for conditional logic
 
-				self::log_debug(sprintf('%s: failed; %s', __FUNCTION__, $response->error));
+				if (!empty($response->Errors)) {
+					$formData->ccField['validation_message'] .= ':<br/>' . nl2br(esc_html(implode("\n", $response->Errors)));
+				}
+				elseif (!empty($response->ResponseMessage)) {
+					$formData->ccField['validation_message'] .= ' (' . esc_html(implode(',', array_keys($response->ResponseMessage))) . ')';
+				}
+
+				self::log_debug(sprintf('%s: failed; %s', __FUNCTION__, implode('; ', array_merge($response->Errors, $response->ResponseMessage))));
+				if ($response->BeagleScore > 0) {
+					self::log_debug(sprintf('%s: BeagleScore = %s', __FUNCTION__, $response->BeagleScore));
+				}
 			}
 		}
 		catch (GFEwayException $e) {
 			$data['is_valid'] = false;
 			$formData->ccField['failed_validation']			= true;
-			$formData->ccField['validation_message']		= nl2br($this->getErrMsg(GFEWAY_ERROR_EWAY_FAIL) . ":\n{$e->getMessage()}");
+			$formData->ccField['validation_message']		= nl2br($this->getErrMsg(GFEWAY_ERROR_EWAY_FAIL) . esc_html(":\n{$e->getMessage()}"));
 			$this->txResult['payment_status']				= 'Failed';
 			$this->txResult['authcode']						= '';			// empty bank authcode, for conditional logic
 
@@ -327,7 +365,8 @@ class GFEwayPlugin {
 	*/
 	protected function processRecurringPayment($data, $formData) {
 		try {
-			$eway = new GFEwayRecurringPayment($this->getCustomerID(), !$this->options['useTest']);
+			$eway = $this->getPaymentRequestor('recurring');
+
 			$eway->sslVerifyPeer		= $this->options['sslVerifyPeer'];
 			if (empty($formData->firstName) && empty($formData->lastName)) {
 				$eway->firstName		= '-';                             // no first name,
@@ -339,7 +378,8 @@ class GFEwayPlugin {
 				$eway->lastName			= $formData->lastName;
 			}
 			$eway->emailAddress			= $formData->email;
-			$eway->address				= $formData->address_street;
+			$eway->address1				= $formData->address_street1;
+			$eway->address2				= $formData->address_street2;
 			$eway->suburb				= $formData->address_suburb;
 			$eway->state				= $formData->address_state;
 			$eway->postcode				= $formData->postcode;
@@ -390,8 +430,12 @@ class GFEwayPlugin {
 			else {
 				$data['is_valid'] = false;
 				$formData->ccField['failed_validation']		= true;
-				$formData->ccField['validation_message']	= nl2br($this->getErrMsg(GFEWAY_ERROR_EWAY_FAIL) . ":\n{$response->error}");
+				$formData->ccField['validation_message']	= $this->getErrMsg(GFEWAY_ERROR_EWAY_FAIL);
 				$this->txResult['payment_status']			= 'Failed';
+
+				if (!empty($response->error)) {
+					$formData->ccField['validation_message'] .= ':<br/>' . nl2br(esc_html($response->error));
+				}
 
 				self::log_debug(sprintf('%s: failed; %s', __FUNCTION__, $response->error));
 			}
@@ -399,7 +443,7 @@ class GFEwayPlugin {
 		catch (GFEwayException $e) {
 			$data['is_valid'] = false;
 			$formData->ccField['failed_validation']			= true;
-			$formData->ccField['validation_message']		= nl2br($this->getErrMsg(GFEWAY_ERROR_EWAY_FAIL) . ":\n{$e->getMessage()}");
+			$formData->ccField['validation_message']		= nl2br($this->getErrMsg(GFEWAY_ERROR_EWAY_FAIL) . esc_html(":\n{$e->getMessage()}"));
 			$this->txResult['payment_status']				= 'Failed';
 
 			self::log_error(__METHOD__ . ": " . $e->getMessage());
@@ -437,13 +481,7 @@ class GFEwayPlugin {
 				}
 			}
 
-			// update the entry
-			if (class_exists('GFAPI')) {
-				GFAPI::update_entry($entry);
-			}
-			else {
-				GFFormsModel::update_lead($entry);
-			}
+			GFAPI::update_entry($entry);
 
 		}
 
@@ -460,11 +498,11 @@ class GFEwayPlugin {
 	*/
 	public function gformCustomMergeTags($merge_tags, $form_id, $fields, $element_id) {
 		if ($fields && self::isEwayForm($form_id, $fields)) {
-			$merge_tags[] = array('label' => 'Transaction ID', 'tag' => '{transaction_id}');
-			$merge_tags[] = array('label' => 'Auth Code',      'tag' => '{authcode}');
-			$merge_tags[] = array('label' => 'Payment Amount', 'tag' => '{payment_amount}');
-			$merge_tags[] = array('label' => 'Payment Status', 'tag' => '{payment_status}');
-			$merge_tags[] = array('label' => 'Beagle Score',   'tag' => '{beagle_score}');
+			$merge_tags[] = array('label' => _x('Transaction ID', 'merge tag label', 'gravityforms-eway'), 'tag' => '{transaction_id}');
+			$merge_tags[] = array('label' => _x('AuthCode',       'merge tag label', 'gravityforms-eway'), 'tag' => '{authcode}');
+			$merge_tags[] = array('label' => _x('Payment Amount', 'merge tag label', 'gravityforms-eway'), 'tag' => '{payment_amount}');
+			$merge_tags[] = array('label' => _x('Payment Status', 'merge tag label', 'gravityforms-eway'), 'tag' => '{payment_status}');
+			$merge_tags[] = array('label' => _x('Beagle Score',   'merge tag label', 'gravityforms-eway'), 'tag' => '{beagle_score}');
 		}
 
 		return $merge_tags;
@@ -533,7 +571,7 @@ class GFEwayPlugin {
 	public function gformEntryMeta($entry_meta, $form_id) {
 
 		$entry_meta['payment_gateway'] = array(
-			'label'					=> 'Payment Gateway',
+			'label'					=> _x('Payment Gateway', 'entry meta label', 'gravityforms-eway'),
 			'is_numeric'			=> false,
 			'is_default_column'		=> false,
 			'filter'				=> array(
@@ -542,7 +580,7 @@ class GFEwayPlugin {
 		);
 
 		$entry_meta['authcode'] = array(
-			'label'					=> 'AuthCode',
+			'label'					=> _x('AuthCode', 'entry meta label', 'gravityforms-eway'),
 			'is_numeric'			=> false,
 			'is_default_column'		=> false,
 			'filter'				=> array(
@@ -551,35 +589,6 @@ class GFEwayPlugin {
 		);
 
 		return $entry_meta;
-	}
-
-	/**
-	* tell Gravity Forms what credit cards we can process
-	* @param array $cards
-	* @return array
-	*/
-	public function gformCCTypes($cards) {
-		$new_cards = array();
-		foreach ($cards as $card) {
-			if (isset($this->acceptedCards[$card['slug']])) {
-				$new_cards[] = $card;
-			}
-		}
-		return $new_cards;
-	}
-
-	/**
-	* tell Gravity Forms what currencies we can process
-	* @param string $currency
-	* @return string
-	*/
-	public function gformCurrency($currency) {
-		// only force currency to AUD if current form has a CC field
-		if ($this->formHasCcField) {
-			$currency = 'AUD';
-		}
-
-		return $currency;
 	}
 
 	/**
@@ -615,7 +624,7 @@ class GFEwayPlugin {
 	public static function hasFieldType($fields, $type) {
 		if (is_array($fields)) {
 			foreach ($fields as $field) {
-				if (RGFormsModel::get_input_type($field) == $type) {
+				if (RGFormsModel::get_input_type($field) === $type) {
 					return true;
 				}
 			}
@@ -630,16 +639,20 @@ class GFEwayPlugin {
 	* @return string
 	*/
 	public function getErrMsg($errName, $useDefault = false) {
-		static $messages = array (
-			GFEWAY_ERROR_ALREADY_SUBMITTED      => 'Payment already submitted and processed - please close your browser window',
-			GFEWAY_ERROR_NO_AMOUNT              => 'This form has credit card fields, but no products or totals',
-			GFEWAY_ERROR_REQ_CARD_HOLDER        => 'Card holder name is required for credit card processing',
-			GFEWAY_ERROR_REQ_CARD_NAME          => 'Card number is required for credit card processing',
-			GFEWAY_ERROR_EWAY_FAIL              => 'Error processing card transaction',
-		);
+		static $messages = false;
+
+		if ($messages === false) {
+			$messages = array (
+				GFEWAY_ERROR_ALREADY_SUBMITTED  => __('Payment already submitted and processed - please close your browser window', 'gravityforms-eway'),
+				GFEWAY_ERROR_NO_AMOUNT          => __('This form has credit card fields, but no products or totals', 'gravityforms-eway'),
+				GFEWAY_ERROR_REQ_CARD_HOLDER    => __('Card holder name is required for credit card processing', 'gravityforms-eway'),
+				GFEWAY_ERROR_REQ_CARD_NAME      => __('Card number is required for credit card processing', 'gravityforms-eway'),
+				GFEWAY_ERROR_EWAY_FAIL          => __('Transaction failed', 'gravityforms-eway'),
+			);
+		}
 
 		// default
-		$msg = isset($messages[$errName]) ? $messages[$errName] : 'Unknown error';
+		$msg = isset($messages[$errName]) ? $messages[$errName] : __('Unknown error', 'gravityforms-eway');
 
 		// check for custom message
 		if (!$useDefault) {
@@ -664,7 +677,7 @@ class GFEwayPlugin {
 	* @return array
 	*/
 	public function enableLogging($plugins){
-		$plugins['gfeway'] = 'Gravity Forms eWAY';
+		$plugins['gfeway'] = __('Gravity Forms eWAY', 'gravityforms-eway');
 
 		return $plugins;
 	}
@@ -718,7 +731,16 @@ class GFEwayPlugin {
 	}
 
 	/**
+	* compare Gravity Forms version against minimum required version
+	* @return bool
+	*/
+	public static function hasMinimumGF() {
+		return self::versionCompareGF(self::MIN_VERSION_GF, '>=');
+	}
+
+	/**
 	* send data via HTTP and return response
+	* @deprecated only used now for legacy Direct API and its friends
 	* @param string $url
 	* @param string $data
 	* @param bool $sslVerifyPeer whether to validate the SSL certificate
@@ -749,7 +771,7 @@ class GFEwayPlugin {
 	public static function getCustomerIP() {
 		// if test mode and running on localhost, then kludge to an Aussie IP address
 		$plugin = self::getInstance();
-		if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] == '127.0.0.1' && $plugin->options['useTest']) {
+		if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] === '127.0.0.1' && $plugin->options['useTest']) {
 			return '210.1.199.10';
 		}
 
@@ -784,6 +806,8 @@ class GFEwayPlugin {
 	public static function autoload($class_name) {
 		static $classMap = array (
 			'GFEwayPayment'						=> 'includes/class.GFEwayPayment.php',
+			'GFEwayRapidAPI'					=> 'includes/class.GFEwayRapidAPI.php',
+			'GFEwayRapidAPIResponse'			=> 'includes/class.GFEwayRapidAPIResponse.php',
 			'GFEwayRecurringPayment'			=> 'includes/class.GFEwayRecurringPayment.php',
 			'GFEwayStoredPayment'				=> 'includes/class.GFEwayStoredPayment.php',
 		);
