@@ -115,7 +115,25 @@ class GFEwayPlugin {
 	public function gformEnqueueScripts($form, $ajax) {
 		if ($this->canEncryptCardDetails($form)) {
 			wp_enqueue_script('eway-ecrypt');
+			add_action('gform_register_init_scripts', array($this, 'ecryptInitScript'), 10, 3);
 		}
+	}
+
+	/**
+	* register inline scripts for client-side encryption if form posts with AJAX
+	* @param array $form
+	* @param array $field_values
+	* @param bool $is_ajax
+	*/
+	public function ecryptInitScript($form, $field_values, $is_ajax) {
+		if (!$is_ajax) {
+			return;
+		}
+
+		$min = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
+		$script = file_get_contents(GFEWAY_PLUGIN_ROOT . "js/gfeway_ecrypt$min.js");
+
+		GFFormDisplay::add_init_script($form['id'], 'gfeway_ecrypt', GFFormDisplay::ON_PAGE_RENDER, $script);
 	}
 
 	/**
@@ -127,11 +145,27 @@ class GFEwayPlugin {
 		// test whether form has a credit card field
 		$this->formHasCcField = self::isEwayForm($form['id'], $form['fields']);
 
-		if ($this->canEncryptCardDetails($form) && !is_admin()) {
+		if ($this->canEncryptCardDetails($form)) {
 			// inject eWAY Client Side Encryption
 			add_filter('gform_form_tag', array($this, 'ecryptFormTag'), 10, 2);
 			add_filter('gform_field_content', array($this, 'ecryptCcField'), 10, 5);
 			add_filter('gform_get_form_filter_' . $form['id'], array($this, 'ecryptEndRender'), 10, 2);
+
+			// clear any previously set credit card data set for fooling GF validation
+			foreach ($form['fields'] as $field) {
+				if (GFFormsModel::get_input_type($field) === 'creditcard') {
+					$field_name    = "input_{$field['id']}";
+					$ccnumber_name = $field_name . '_1';
+					$cvn_name      = $field_name . '_3';
+
+					// clear faked credit card details
+					$_POST[$ccnumber_name] = '';
+					$_POST[$cvn_name]      = '';
+
+					// exit loop
+					break;
+				}
+			}
 		}
 
 		return $form;
@@ -195,7 +229,7 @@ class GFEwayPlugin {
 
 			if (!empty($_POST['EWAY_CARDNUMBER']) && !empty($_POST['EWAY_CARDCVN'])) {
 				foreach ($form['fields'] as $field) {
-					if (RGFormsModel::get_input_type($field) === 'creditcard') {
+					if (GFFormsModel::get_input_type($field) === 'creditcard') {
 						$field_name    = "input_{$field['id']}";
 						$ccnumber_name = $field_name . '_1';
 						$cvn_name      = $field_name . '_3';
@@ -205,6 +239,9 @@ class GFEwayPlugin {
 						$_POST[$cvn_name]      = '***';
 
 						add_action("gform_save_field_value_{$form['id']}_{$field['id']}", array($this, 'ecryptSaveCreditCard'), 10, 5);
+
+						// exit loop
+						break;
 					}
 				}
 			}
