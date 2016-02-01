@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gravityforms-eway 2.0.0\n"
 "Report-Msgid-Bugs-To: translate@webaware.com.au\n"
-"POT-Creation-Date: 2016-02-01 18:31+1100\n"
-"PO-Revision-Date: 2016-02-01 18:31+1100\n"
+"POT-Creation-Date: 2016-02-01 21:47+1100\n"
+"PO-Revision-Date: 2016-02-01 21:47+1100\n"
 "Last-Translator: Ross McKay <rmckay@webaware.com.au>\n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -148,80 +148,80 @@ msgid "Error parsing eWAY response: %s"
 msgstr ""
 
 #. translators: credit card type reported when card type is unknown due to client-side encryption
-#: includes/class.GFEwayPlugin.php:237
+#: includes/class.GFEwayPlugin.php:274
 msgctxt "credit card type"
 msgid "Card"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:366
+#: includes/class.GFEwayPlugin.php:403
 msgid "Can't request recurring payment; no eWAY customer ID."
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:381
+#: includes/class.GFEwayPlugin.php:418
 msgid "Can't request payment; no eWAY credentials."
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:659
+#: includes/class.GFEwayPlugin.php:696
 msgctxt "merge tag label"
 msgid "Transaction ID"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:660
+#: includes/class.GFEwayPlugin.php:697
 msgctxt "merge tag label"
 msgid "AuthCode"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:661
+#: includes/class.GFEwayPlugin.php:698
 msgctxt "merge tag label"
 msgid "Payment Amount"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:662
+#: includes/class.GFEwayPlugin.php:699
 msgctxt "merge tag label"
 msgid "Payment Status"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:663
+#: includes/class.GFEwayPlugin.php:700
 msgctxt "merge tag label"
 msgid "Beagle Score"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:732
+#: includes/class.GFEwayPlugin.php:769
 msgctxt "entry meta label"
 msgid "Payment Gateway"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:741
+#: includes/class.GFEwayPlugin.php:778
 msgctxt "entry meta label"
 msgid "AuthCode"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:828
+#: includes/class.GFEwayPlugin.php:865
 msgid ""
 "Payment already submitted and processed - please close your browser window"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:829
+#: includes/class.GFEwayPlugin.php:866
 msgid "This form has credit card fields, but no products or totals"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:830
+#: includes/class.GFEwayPlugin.php:867
 msgid "Card holder name is required for credit card processing"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:831
+#: includes/class.GFEwayPlugin.php:868
 msgid "Card number is required for credit card processing"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:832
+#: includes/class.GFEwayPlugin.php:869
 msgid "Transaction failed"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:837
+#: includes/class.GFEwayPlugin.php:874
 msgid "Unknown error"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:862
+#: includes/class.GFEwayPlugin.php:899
 msgid "Gravity Forms eWAY"
 msgstr ""
 
