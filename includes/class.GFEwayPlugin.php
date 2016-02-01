@@ -113,7 +113,7 @@ class GFEwayPlugin {
 	* @param boolean $ajax
 	*/
 	public function gformEnqueueScripts($form, $ajax) {
-		if (self::isEwayForm($form['id'], $form['fields'])) {
+		if ($this->canEncryptCardDetails($form)) {
 			wp_enqueue_script('eway-ecrypt');
 		}
 	}
@@ -127,7 +127,7 @@ class GFEwayPlugin {
 		// test whether form has a credit card field
 		$this->formHasCcField = self::isEwayForm($form['id'], $form['fields']);
 
-		if ($this->formHasCcField && !is_admin() && !empty($this->options['ecryptKey'])) {
+		if ($this->canEncryptCardDetails($form) && !is_admin()) {
 			// inject eWAY Client Side Encryption
 			add_filter('gform_form_tag', array($this, 'ecryptFormTag'), 10, 2);
 			add_filter('gform_field_content', array($this, 'ecryptCcField'), 10, 5);
@@ -191,7 +191,7 @@ class GFEwayPlugin {
 	* @return array
 	*/
 	public function ecryptPreValidation($form) {
-		if (self::isEwayForm($form['id'], $form['fields'])) {
+		if ($this->canEncryptCardDetails($form)) {
 
 			if (!empty($_POST['EWAY_CARDNUMBER']) && !empty($_POST['EWAY_CARDCVN'])) {
 				foreach ($form['fields'] as $field) {
@@ -200,7 +200,7 @@ class GFEwayPlugin {
 						$ccnumber_name = $field_name . '_1';
 						$cvn_name      = $field_name . '_3';
 
-						// FIXME: need a better dummy than just stuffing card number with a fake Visa number...
+						// fake some credit card details for Gravity Forms to validate
 						$_POST[$ccnumber_name] = $this->getTestCardNumber($field->creditCards);
 						$_POST[$cvn_name]      = '***';
 
@@ -747,6 +747,30 @@ class GFEwayPlugin {
 		);
 
 		return $entry_meta;
+	}
+
+	/**
+	* look at config to see whether client-side encryption is possible
+	* @param array $form
+	* @return bool
+	*/
+	protected function canEncryptCardDetails($form) {
+		// must have Rapid API key/password and Client Side Encryption key
+		if (empty($this->options['ecryptKey']) || empty($this->options['apiKey']) || empty($this->options['apiPassword'])) {
+			return false;
+		}
+
+		// must have a credit card field, and not disabled by another plugin
+		if (!self::isEwayForm($form['id'], $form['fields'])) {
+			return false;
+		}
+
+		// not supported by Recurring Payments XML API
+		if (self::hasFieldType($form['fields'], GFEWAY_FIELD_RECURRING)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
