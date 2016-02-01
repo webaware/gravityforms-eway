@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gravityforms-eway 2.0.0\n"
 "Report-Msgid-Bugs-To: translate@webaware.com.au\n"
-"POT-Creation-Date: 2016-01-27 16:31+1100\n"
-"PO-Revision-Date: 2016-01-27 16:31+1100\n"
+"POT-Creation-Date: 2016-02-01 18:31+1100\n"
+"PO-Revision-Date: 2016-02-01 18:31+1100\n"
 "Last-Translator: Ross McKay <rmckay@webaware.com.au>\n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -57,15 +57,15 @@ msgctxt "entry details"
 msgid "Beagle Score: %s"
 msgstr ""
 
-#: includes/class.GFEwayAdmin.php:309
+#: includes/class.GFEwayAdmin.php:310
 msgid "Please enter both your eWAY API key and password"
 msgstr ""
 
-#: includes/class.GFEwayAdmin.php:313
+#: includes/class.GFEwayAdmin.php:314
 msgid "Please enter your eWAY API key and password, or your customer ID"
 msgstr ""
 
-#: includes/class.GFEwayAdmin.php:318
+#: includes/class.GFEwayAdmin.php:319
 msgid "Settings saved."
 msgstr ""
 
@@ -147,79 +147,85 @@ msgstr ""
 msgid "Error parsing eWAY response: %s"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:208
+#. translators: credit card type reported when card type is unknown due to client-side encryption
+#: includes/class.GFEwayPlugin.php:237
+msgctxt "credit card type"
+msgid "Card"
+msgstr ""
+
+#: includes/class.GFEwayPlugin.php:366
 msgid "Can't request recurring payment; no eWAY customer ID."
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:223
+#: includes/class.GFEwayPlugin.php:381
 msgid "Can't request payment; no eWAY credentials."
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:501
+#: includes/class.GFEwayPlugin.php:659
 msgctxt "merge tag label"
 msgid "Transaction ID"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:502
+#: includes/class.GFEwayPlugin.php:660
 msgctxt "merge tag label"
 msgid "AuthCode"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:503
+#: includes/class.GFEwayPlugin.php:661
 msgctxt "merge tag label"
 msgid "Payment Amount"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:504
+#: includes/class.GFEwayPlugin.php:662
 msgctxt "merge tag label"
 msgid "Payment Status"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:505
+#: includes/class.GFEwayPlugin.php:663
 msgctxt "merge tag label"
 msgid "Beagle Score"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:574
+#: includes/class.GFEwayPlugin.php:732
 msgctxt "entry meta label"
 msgid "Payment Gateway"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:583
+#: includes/class.GFEwayPlugin.php:741
 msgctxt "entry meta label"
 msgid "AuthCode"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:646
+#: includes/class.GFEwayPlugin.php:828
 msgid ""
 "Payment already submitted and processed - please close your browser window"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:647
+#: includes/class.GFEwayPlugin.php:829
 msgid "This form has credit card fields, but no products or totals"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:648
+#: includes/class.GFEwayPlugin.php:830
 msgid "Card holder name is required for credit card processing"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:649
+#: includes/class.GFEwayPlugin.php:831
 msgid "Card number is required for credit card processing"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:650
+#: includes/class.GFEwayPlugin.php:832
 msgid "Transaction failed"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:655
+#: includes/class.GFEwayPlugin.php:837
 msgid "Unknown error"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:680
+#: includes/class.GFEwayPlugin.php:862
 msgid "Gravity Forms eWAY"
 msgstr ""
 
-#: includes/class.GFEwayRapidAPI.php:548 includes/class.GFEwayRapidAPI.php:553
+#: includes/class.GFEwayRapidAPI.php:549 includes/class.GFEwayRapidAPI.php:554
 #, php-format
 msgid "Error posting eWAY request: %s"
 msgstr ""
@@ -1861,90 +1867,101 @@ msgid "required for recurring payments and legacy XML API"
 msgstr ""
 
 #: views/admin-settings.php:34
+msgid "Client Side Encryption Key"
+msgstr ""
+
+#: views/admin-settings.php:37
+msgid ""
+"securely encrypts sensitive credit card information in the customer's "
+"browser, so that a non-PCI compliant merchant can accept the form data on "
+"their system"
+msgstr ""
+
+#: views/admin-settings.php:42
 msgctxt "settings"
 msgid "Options"
 msgstr ""
 
-#: views/admin-settings.php:38
+#: views/admin-settings.php:46
 msgid "Payment Method"
 msgstr ""
 
-#: views/admin-settings.php:40
+#: views/admin-settings.php:48
 msgctxt "payment method"
 msgid "Capture"
 msgstr ""
 
-#: views/admin-settings.php:42
+#: views/admin-settings.php:50
 msgctxt "payment method"
 msgid "Authorize"
 msgstr ""
 
-#: views/admin-settings.php:43
+#: views/admin-settings.php:51
 msgid ""
 "The Stored Payments legacy XML API has no sandbox, so transactions are "
 "simulated via the Direct Payments XML API sandbox. Add your API key and "
 "password to use Rapid API and see PreAuth transactions in your sandbox."
 msgstr ""
 
-#: views/admin-settings.php:47
+#: views/admin-settings.php:55
 msgid "Use Sandbox (testing environment)"
 msgstr ""
 
-#: views/admin-settings.php:49 views/admin-settings.php:57
-#: views/admin-settings.php:66 views/admin-settings.php:74
-#: views/admin-settings.php:84
+#: views/admin-settings.php:57 views/admin-settings.php:65
+#: views/admin-settings.php:74 views/admin-settings.php:82
+#: views/admin-settings.php:92
 msgctxt "settings"
 msgid "Yes"
 msgstr ""
 
-#: views/admin-settings.php:51 views/admin-settings.php:59
-#: views/admin-settings.php:68 views/admin-settings.php:76
-#: views/admin-settings.php:86
+#: views/admin-settings.php:59 views/admin-settings.php:67
+#: views/admin-settings.php:76 views/admin-settings.php:84
+#: views/admin-settings.php:94
 msgctxt "settings"
 msgid "No"
 msgstr ""
 
-#: views/admin-settings.php:55
+#: views/admin-settings.php:63
 msgid "Round Amounts for Sandbox"
 msgstr ""
 
-#: views/admin-settings.php:60
+#: views/admin-settings.php:68
 msgid ""
 "ensures successful transactions with transaction response set to \"Use Cents "
 "Value\""
 msgstr ""
 
-#: views/admin-settings.php:64
+#: views/admin-settings.php:72
 msgid "Force Test Customer ID in Sandbox"
 msgstr ""
 
-#: views/admin-settings.php:72
+#: views/admin-settings.php:80
 #, php-format
 msgid "Use <a href=\"%s\" target=\"_blank\">Beagle</a>"
 msgstr ""
 
-#: views/admin-settings.php:77
+#: views/admin-settings.php:85
 msgid "Beagle is not available for the Stored Payments legacy XML API."
 msgstr ""
 
-#: views/admin-settings.php:78
+#: views/admin-settings.php:86
 msgid ""
 "Beagle fraud detection requires an address for each transaction. Be sure to "
 "add an Address field to your forms, and make it a required field."
 msgstr ""
 
-#: views/admin-settings.php:82
+#: views/admin-settings.php:90
 msgid "Verify remote SSL certificate"
 msgstr ""
 
-#: views/admin-settings.php:87
+#: views/admin-settings.php:95
 #, php-format
 msgid ""
 "only choose 'no' if you can't <a target='_blank' href='%s'>fix your website "
 "SSL configuration</a> due to a technical reason"
 msgstr ""
 
-#: views/admin-settings.php:95
+#: views/admin-settings.php:103
 msgid ""
 "You may customize the error messages below. Leave a message blank to use the "
 "default error message."
