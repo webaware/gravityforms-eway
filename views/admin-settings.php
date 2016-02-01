@@ -30,6 +30,14 @@
 			</td>
 		</tr>
 
+		<tr>
+			<th><label for="gfeway_plugin_ecryptKey"><?php _e('Client Side Encryption Key', 'gravityforms-eway'); ?></label></th>
+			<td>
+				<textarea name="gfeway_plugin[ecryptKey]" id="gfeway_plugin_ecryptKey" rows="5" class="large-text"><?php echo esc_attr($options['ecryptKey']); ?></textarea>
+				<p><em><?php _e("securely encrypts sensitive credit card information in the customer's browser, so that a non-PCI compliant merchant can accept the form data on their system", 'gravityforms-eway'); ?></em></p>
+			</td>
+		</tr>
+
 		<tr valign='top'>
 			<th><?php _ex('Options', 'settings', 'gravityforms-eway'); ?></th>
 			<td>

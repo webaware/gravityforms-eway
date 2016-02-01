@@ -103,6 +103,12 @@ class GFEwayFormData {
 						list($this->ccExpMonth, $this->ccExpYear) = $ccExp;
 					}
 					$this->ccCVN					= trim(rgpost("input_{$id}_3"));
+
+					// handle eWAY Client Side Encryption
+					if (!empty($_POST['EWAY_CARDNUMBER']) && !empty($_POST['EWAY_CARDCVN'])) {
+						$this->ccNumber				= wp_unslash($_POST['EWAY_CARDNUMBER']);
+						$this->ccCVN				= wp_unslash($_POST['EWAY_CARDCVN']);
+					}
 					break;
 
 				case 'total':

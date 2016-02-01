@@ -65,11 +65,15 @@ class GFEwayPlugin {
 
 		// do nothing if Gravity Forms isn't enabled or doesn't meet required minimum version
 		if (self::hasMinimumGF()) {
+			add_action('wp_enqueue_scripts', array($this, 'registerScripts'), 20);
+
 			// hook into Gravity Forms to enable credit cards and trap form submissions
+			add_action('gform_enqueue_scripts', array($this, 'gformEnqueueScripts'), 20, 2);
 			add_filter('gform_logging_supported', array($this, 'enableLogging'));
 			add_filter('gform_pre_render', array($this, 'gformPreRenderSniff'));
 			add_filter('gform_admin_pre_render', array($this, 'gformPreRenderSniff'));
 			add_action('gform_enable_credit_card_field', '__return_true');
+			add_filter('gform_pre_validation', array($this, 'ecryptPreValidation'));
 			add_filter('gform_validation', array($this, 'gformValidation'));
 			add_action('gform_entry_post_save', array($this, 'gformEntryPostSave'), 10, 2);
 			add_filter('gform_custom_merge_tags', array($this, 'gformCustomMergeTags'), 10, 4);
@@ -96,6 +100,25 @@ class GFEwayPlugin {
 	}
 
 	/**
+	* register and enqueue required scripts
+	* NB: must happen after Gravity Forms registers scripts
+	*/
+	public function registerScripts() {
+		wp_register_script('eway-ecrypt', 'https://secure.ewaypayments.com/scripts/eCrypt.js', false, null, true);
+	}
+
+	/**
+	* enqueue additional scripts if required by form
+	* @param array $form
+	* @param boolean $ajax
+	*/
+	public function gformEnqueueScripts($form, $ajax) {
+		if (self::isEwayForm($form['id'], $form['fields'])) {
+			wp_enqueue_script('eway-ecrypt');
+		}
+	}
+
+	/**
 	* check current form for information
 	* @param array $form
 	* @return array
@@ -104,7 +127,142 @@ class GFEwayPlugin {
 		// test whether form has a credit card field
 		$this->formHasCcField = self::isEwayForm($form['id'], $form['fields']);
 
+		if ($this->formHasCcField && !is_admin() && !empty($this->options['ecryptKey'])) {
+			// inject eWAY Client Side Encryption
+			add_filter('gform_form_tag', array($this, 'ecryptFormTag'), 10, 2);
+			add_filter('gform_field_content', array($this, 'ecryptCcField'), 10, 5);
+			add_filter('gform_get_form_filter_' . $form['id'], array($this, 'ecryptEndRender'), 10, 2);
+		}
+
 		return $form;
+	}
+
+	/**
+	* stop injecting eWAY Client Side Encryption
+	* @param string $html form html
+	* @param array $form
+	* @return string
+	*/
+	public function ecryptEndRender($html, $form) {
+		remove_filter('gform_form_tag', array($this, 'ecryptFormTag'), 10, 2);
+		remove_filter('gform_field_content', array($this, 'ecryptCcField'), 10, 5);
+
+		return $html;
+	}
+
+	/**
+	* inject eWAY Client Side Encryption into form tag
+	* @param string $tag
+	* @param array $form
+	* @return string
+	*/
+	public function ecryptFormTag($tag, $form) {
+		$attr = sprintf('data-eway-encrypt-key="%s"', esc_attr($this->options['ecryptKey']));
+		$tag = str_replace('<form ', "<form $attr ", $tag);
+
+		return $tag;
+	}
+
+	/**
+	* inject eWAY Client Side Encryption into credit card field
+	* @param string $field_content
+	* @param GF_Field $field
+	* @param string $value
+	* @param int $zero
+	* @param int $form_id
+	* @return string
+	*/
+	public function ecryptCcField($field_content, $field, $value, $zero, $form_id) {
+		if (RGFormsModel::get_input_type($field) === 'creditcard') {
+			$field_id    = "input_{$form_id}_{$field['id']}";
+			$ccnumber_id = $field_id . '_1';
+			$cvn_id      = $field_id . '_3';
+
+			$field_content = preg_replace("#<input[^>]+id='$ccnumber_id'\K#", ' data-eway-encrypt-name="EWAY_CARDNUMBER"', $field_content);
+			$field_content = preg_replace("#<input[^>]+id='$cvn_id'\K#",      ' data-eway-encrypt-name="EWAY_CARDCVN"', $field_content);
+		}
+
+		return $field_content;
+	}
+
+	/**
+	* put something back into Credit Card field inputs, to enable validation when using eWAY Client Side Encryption
+	* @param array $form
+	* @return array
+	*/
+	public function ecryptPreValidation($form) {
+		if (self::isEwayForm($form['id'], $form['fields'])) {
+
+			if (!empty($_POST['EWAY_CARDNUMBER']) && !empty($_POST['EWAY_CARDCVN'])) {
+				foreach ($form['fields'] as $field) {
+					if (RGFormsModel::get_input_type($field) === 'creditcard') {
+						$field_name    = "input_{$field['id']}";
+						$ccnumber_name = $field_name . '_1';
+						$cvn_name      = $field_name . '_3';
+
+						// FIXME: need a better dummy than just stuffing card number with a fake Visa number...
+						$_POST[$ccnumber_name] = $this->getTestCardNumber($field->creditCards);
+						$_POST[$cvn_name]      = '***';
+
+						add_action("gform_save_field_value_{$form['id']}_{$field['id']}", array($this, 'ecryptSaveCreditCard'), 10, 5);
+					}
+				}
+			}
+
+		}
+
+		return $form;
+	}
+
+	/**
+	* change the credit card field value so that it doesn't imply an incorrect card type when using Client Side Encryption
+	* @param string $value
+	* @param array $lead
+	* @param GF_Field $field
+	* @param array $form
+	* @param string $input_id
+	* @return string
+	*/
+	public function ecryptSaveCreditCard($value, $lead, $field, $form, $input_id) {
+		switch (substr($input_id, -2, 2)) {
+
+			case '.1':
+				// card number
+				$value = 'XXXXXXXXXXXXXXXX';
+				break;
+
+			case '.4':
+				// card type
+				// translators: credit card type reported when card type is unknown due to client-side encryption
+				$value = _x('Card', 'credit card type', 'gravityforms-eway');
+				break;
+
+		}
+
+		return $value;
+	}
+
+	/**
+	* find a test card number for a supported credit card, for faking card number validation when encrypting card details
+	* @param array $supportedCards
+	* @return string
+	*/
+	protected function getTestCardNumber($supportedCards) {
+		if (empty($supportedCards)) {
+			$cardType = 'visa';
+		}
+		else {
+			$cardType = $supportedCards[0];
+		}
+
+		$testNumbers = array(
+			'amex'			=> '378282246310005',
+			'discover'		=> '6011111111111117',
+			'mastercard'	=> '5105105105105100',
+			'visa'			=> '4444333322221111',
+		);
+
+		return isset($testNumbers[$cardType]) ? $testNumbers[$cardType] : $testNumbers['visa'];
 	}
 
 	/**

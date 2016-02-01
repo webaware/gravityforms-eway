@@ -285,6 +285,7 @@ class GFEwayAdmin {
 		$output['customerID']			= trim(sanitize_text_field($input['customerID']));
 		$output['apiKey']				= trim(strip_tags($input['apiKey']));
 		$output['apiPassword']			= trim(strip_tags($input['apiPassword']));
+		$output['ecryptKey']			= trim($input['ecryptKey']);
 		$output['useStored']			= empty($input['useStored']) ? '' : 1;
 		$output['useTest']				= empty($input['useTest']) ? '' : 1;
 		$output['useBeagle']			= empty($input['useBeagle']) ? '' : 1;

@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 2.1.0, soon...
+
+* added: support for eWAY Client Side Encryption, allow sites without PCI compliance to use Rapid 3.1 API
+
 ### 2.0.0, 2016-01-27
 
 * changed: uses eWAY Rapid API if API key and password are set (not applicable for Recurring Payments)

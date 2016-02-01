@@ -473,16 +473,17 @@ class GFEwayRapidAPI {
 	/**
 	* build CardDetails record for request
 	* NB: TODO: does not currently handle StartMonth, StartYear, IssueNumber (used in UK)
+	* NB: card number and CVN can be very lengthy encrypted values
 	* @return stdClass
 	*/
 	protected function getCardDetailsRecord() {
 		$record = new stdClass;
 
 		$record->Name				= $this->cardHoldersName ? substr($this->cardHoldersName, 0, 50) : '';
-		$record->Number				= $this->cardNumber ? substr($this->cardNumber, 0, 50) : '';
+		$record->Number				= $this->cardNumber ? $this->cardNumber : '';
 		$record->ExpiryMonth		= sprintf('%02d', $this->cardExpiryMonth);
 		$record->ExpiryYear			= sprintf('%02d', $this->cardExpiryYear % 100);
-		$record->CVN				= $this->cardVerificationNumber ? substr($this->cardVerificationNumber, 0, 4) : '';
+		$record->CVN				= $this->cardVerificationNumber ? $this->cardVerificationNumber : '';
 
 		return $record;
 	}
