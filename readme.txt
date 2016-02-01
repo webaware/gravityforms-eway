@@ -46,7 +46,7 @@ If you'd like to help out by translating this plugin, please [sign up for an acc
 1. Either install automatically through the WordPress admin, or download the .zip file, unzip to a folder, and upload the folder to your /wp-content/plugins/ directory. Read [Installing Plugins](http://codex.wordpress.org/Managing_Plugins#Installing_Plugins) in the WordPress Codex for details.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 3. Install and activate the [Gravity Forms](http://webaware.com.au/get-gravity-forms) plugin.
-4. Edit the eWAY Payments settings to set your eWAY API key, API password, Customer ID, and options.
+4. Edit the eWAY Payments settings to set your eWAY API key, API password, Customer ID, Client-Side Encryption Key, and options.
 
 Gravity Forms will now display the Credit Card and Recurring fields under Pricing Fields when you edit a form.
 
@@ -89,6 +89,10 @@ Authorize checks to see that the transaction would be approved, but does not pro
 You need to add your eWAY API key and password to see PreAuth transactions in the sandbox, so that the Rapid API is used. The old Stored Payments XML API does not have a sandbox.
 
 NB: PreAuth is currently only available for Australian, Singapore, Malaysian & Hong Kong merchants.
+
+= Do I need to set the Client-Side Encryption Key? =
+
+Client-Side Encryption is required for websites that are certified PCI compliant. It encrypts sensitive credit card details in the browser, so that only eWAY can see them. All websites are encouraged to set the Client-Side Encryption Key for improved security of credit card details.
 
 = What is Beagle? =
 
