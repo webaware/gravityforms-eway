@@ -7,7 +7,7 @@ Donate link: http://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+e
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards, australia
 Requires at least: 4.2
 Tested up to: 4.4.1
-Stable tag: 2.0.0
+Stable tag: 2.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -169,13 +169,17 @@ Developers can use these filter hooks to modify some eWAY invoice properties. Ea
 
 == Upgrade Notice ==
 
-= 2.0.0 =
+= 2.1.0 =
 
-This is a major upgrade. The minimum supported versions are now WordPress 4.2, Gravity Forms 1.9. After upgrading, please check your forms to ensure that the correct credit cards are enabled.
+Added support for eWAY Client Side Encryption, allowing sites without PCI compliance to use Rapid 3.1 API. Version 2 is a major upgrade, requiring WordPress 4.2+, Gravity Forms 1.9+. After upgrading, please check your forms to ensure that the correct credit cards are enabled.
 
 == Changelog ==
 
 The full changelog can be found [on GitHub](https://github.com/webaware/gravityforms-eway/blob/master/changelog.md). Recent entries:
+
+### 2.1.0, 2016-02-01
+
+* added: [support for eWAY Client Side Encryption](http://shop.webaware.com.au/gravity-forms-eway-client-side-encryption), allowing sites without PCI compliance to use Rapid 3.1 API
 
 ### 2.0.0, 2016-01-27
 
