@@ -55,6 +55,7 @@ class GFEwayPlugin {
 			'customerID'			=> '87654321',
 			'apiKey'				=> '',
 			'apiPassword'			=> '',
+			'ecryptKey'				=> '',
 			'useTest'				=> true,
 			'useBeagle'				=> false,
 			'roundTestAmounts'		=> true,
