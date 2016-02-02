@@ -28,6 +28,8 @@ class GFEwayRapidAPI {
 	const TRANS_RECURRING					= 'Recurring';
 	const TRANS_MOTO						= 'MOTO';
 
+	const PARTNER_ID						= '4577fd8eb9014c7188d7be672c0e0d88';
+
 	#endregion // constants
 
 	#region "members"
@@ -81,12 +83,6 @@ class GFEwayRapidAPI {
 	* @var string max. 50 characters
 	*/
 	public $deviceID;
-
-	/**
-	* partner ID from partner agreement
-	* @var string max. 50 characters
-	*/
-	public $partnerID;
 
 	#endregion // "connection specific members"
 
@@ -397,6 +393,7 @@ class GFEwayRapidAPI {
 		$request->Customer				= $this->getCustomerRecord();
 		$request->Payment				= $this->getPaymentRecord();
 		$request->TransactionType		= self::TRANS_PURCHASE;
+		$request->PartnerID				= self::PARTNER_ID;
 		$request->Method				= $this->capture ? self::METHOD_PAYMENT : self::METHOD_AUTHORISE;
 
 		// Beagle data
@@ -410,10 +407,6 @@ class GFEwayRapidAPI {
 
 		if (!empty($this->deviceID)) {
 			$request->DeviceID 			= substr($this->deviceID, 0, 50);
-		}
-
-		if (!empty($this->partnerID)) {
-			$request->PartnerID			= substr($this->partnerID, 0, 50);
 		}
 
 		return wp_json_encode($request);
