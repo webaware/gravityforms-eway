@@ -185,9 +185,9 @@ Developers can use these filter hooks to modify some eWAY invoice properties. Ea
 
 == Upgrade Notice ==
 
-= 2.1.0 =
+= 2.1.1 =
 
-Added support for eWAY Client Side Encryption, allowing sites without PCI compliance to use Rapid 3.1 API. Version 2 is a major upgrade, requiring WordPress 4.2+, Gravity Forms 1.9+. After upgrading, please check your forms to ensure that the correct credit cards are enabled.
+Partner ID sent to eWAY with payment requests (improved traceability). Version 2 is a major upgrade, requiring WordPress 4.2+, Gravity Forms 1.9+. After upgrading, please check your forms to ensure that the correct credit cards are enabled.
 
 == Changelog ==
 
