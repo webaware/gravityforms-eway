@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gravityforms-eway 2.0.0\n"
 "Report-Msgid-Bugs-To: translate@webaware.com.au\n"
-"POT-Creation-Date: 2016-02-01 21:47+1100\n"
-"PO-Revision-Date: 2016-02-01 21:47+1100\n"
+"POT-Creation-Date: 2016-02-02 19:37+1100\n"
+"PO-Revision-Date: 2016-02-02 19:37+1100\n"
 "Last-Translator: Ross McKay <rmckay@webaware.com.au>\n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -75,31 +75,31 @@ msgstr ""
 msgid "CustomerID cannot be empty"
 msgstr ""
 
-#: includes/class.GFEwayPayment.php:228 includes/class.GFEwayRapidAPI.php:328
+#: includes/class.GFEwayPayment.php:228 includes/class.GFEwayRapidAPI.php:324
 #: includes/class.GFEwayStoredPayment.php:200
 msgid "amount must be given as a number in dollars and cents"
 msgstr ""
 
-#: includes/class.GFEwayPayment.php:234 includes/class.GFEwayRapidAPI.php:334
+#: includes/class.GFEwayPayment.php:234 includes/class.GFEwayRapidAPI.php:330
 #: includes/class.GFEwayRecurringPayment.php:247
 #: includes/class.GFEwayStoredPayment.php:206
 msgid "cardholder name cannot be empty"
 msgstr ""
 
-#: includes/class.GFEwayPayment.php:237 includes/class.GFEwayRapidAPI.php:337
+#: includes/class.GFEwayPayment.php:237 includes/class.GFEwayRapidAPI.php:333
 #: includes/class.GFEwayRecurringPayment.php:250
 #: includes/class.GFEwayStoredPayment.php:209
 msgid "card number cannot be empty"
 msgstr ""
 
-#: includes/class.GFEwayPayment.php:243 includes/class.GFEwayRapidAPI.php:343
+#: includes/class.GFEwayPayment.php:243 includes/class.GFEwayRapidAPI.php:339
 #: includes/class.GFEwayRecurringPayment.php:256
 #: includes/class.GFEwayStoredPayment.php:215
 msgid "card expiry month cannot be empty"
 msgstr ""
 
 #: includes/class.GFEwayPayment.php:246 includes/class.GFEwayPayment.php:254
-#: includes/class.GFEwayRapidAPI.php:346 includes/class.GFEwayRapidAPI.php:354
+#: includes/class.GFEwayRapidAPI.php:342 includes/class.GFEwayRapidAPI.php:350
 #: includes/class.GFEwayRecurringPayment.php:259
 #: includes/class.GFEwayRecurringPayment.php:267
 #: includes/class.GFEwayStoredPayment.php:218
@@ -107,14 +107,14 @@ msgstr ""
 msgid "card expiry month must be a number between 1 and 12"
 msgstr ""
 
-#: includes/class.GFEwayPayment.php:261 includes/class.GFEwayRapidAPI.php:361
+#: includes/class.GFEwayPayment.php:261 includes/class.GFEwayRapidAPI.php:357
 #: includes/class.GFEwayRecurringPayment.php:274
 #: includes/class.GFEwayStoredPayment.php:233
 msgid "card expiry year cannot be empty"
 msgstr ""
 
 #: includes/class.GFEwayPayment.php:264 includes/class.GFEwayPayment.php:273
-#: includes/class.GFEwayRapidAPI.php:364 includes/class.GFEwayRapidAPI.php:373
+#: includes/class.GFEwayRapidAPI.php:360 includes/class.GFEwayRapidAPI.php:369
 #: includes/class.GFEwayRecurringPayment.php:277
 #: includes/class.GFEwayRecurringPayment.php:286
 #: includes/class.GFEwayStoredPayment.php:236
@@ -123,7 +123,7 @@ msgid "card expiry year must be a two or four digit year"
 msgstr ""
 
 #: includes/class.GFEwayPayment.php:277 includes/class.GFEwayPayment.php:280
-#: includes/class.GFEwayRapidAPI.php:377 includes/class.GFEwayRapidAPI.php:380
+#: includes/class.GFEwayRapidAPI.php:373 includes/class.GFEwayRapidAPI.php:376
 #: includes/class.GFEwayRecurringPayment.php:290
 #: includes/class.GFEwayRecurringPayment.php:293
 #: includes/class.GFEwayStoredPayment.php:249
@@ -148,84 +148,84 @@ msgid "Error parsing eWAY response: %s"
 msgstr ""
 
 #. translators: credit card type reported when card type is unknown due to client-side encryption
-#: includes/class.GFEwayPlugin.php:274
+#: includes/class.GFEwayPlugin.php:275
 msgctxt "credit card type"
 msgid "Card"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:403
+#: includes/class.GFEwayPlugin.php:404
 msgid "Can't request recurring payment; no eWAY customer ID."
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:418
+#: includes/class.GFEwayPlugin.php:419
 msgid "Can't request payment; no eWAY credentials."
-msgstr ""
-
-#: includes/class.GFEwayPlugin.php:696
-msgctxt "merge tag label"
-msgid "Transaction ID"
 msgstr ""
 
 #: includes/class.GFEwayPlugin.php:697
 msgctxt "merge tag label"
-msgid "AuthCode"
+msgid "Transaction ID"
 msgstr ""
 
 #: includes/class.GFEwayPlugin.php:698
 msgctxt "merge tag label"
-msgid "Payment Amount"
+msgid "AuthCode"
 msgstr ""
 
 #: includes/class.GFEwayPlugin.php:699
 msgctxt "merge tag label"
-msgid "Payment Status"
+msgid "Payment Amount"
 msgstr ""
 
 #: includes/class.GFEwayPlugin.php:700
 msgctxt "merge tag label"
+msgid "Payment Status"
+msgstr ""
+
+#: includes/class.GFEwayPlugin.php:701
+msgctxt "merge tag label"
 msgid "Beagle Score"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:769
+#: includes/class.GFEwayPlugin.php:770
 msgctxt "entry meta label"
 msgid "Payment Gateway"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:778
+#: includes/class.GFEwayPlugin.php:779
 msgctxt "entry meta label"
 msgid "AuthCode"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:865
+#: includes/class.GFEwayPlugin.php:866
 msgid ""
 "Payment already submitted and processed - please close your browser window"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:866
+#: includes/class.GFEwayPlugin.php:867
 msgid "This form has credit card fields, but no products or totals"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:867
+#: includes/class.GFEwayPlugin.php:868
 msgid "Card holder name is required for credit card processing"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:868
+#: includes/class.GFEwayPlugin.php:869
 msgid "Card number is required for credit card processing"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:869
+#: includes/class.GFEwayPlugin.php:870
 msgid "Transaction failed"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:874
+#: includes/class.GFEwayPlugin.php:875
 msgid "Unknown error"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:899
+#: includes/class.GFEwayPlugin.php:900
 msgid "Gravity Forms eWAY"
 msgstr ""
 
-#: includes/class.GFEwayRapidAPI.php:549 includes/class.GFEwayRapidAPI.php:554
+#: includes/class.GFEwayRapidAPI.php:542 includes/class.GFEwayRapidAPI.php:547
 #, php-format
 msgid "Error posting eWAY request: %s"
 msgstr ""
@@ -1973,15 +1973,14 @@ msgid "There is a new version of %s available."
 msgstr ""
 
 #: views/notice-upgrade-from-v1.php:3
-msgid ""
-"Gravity Forms eWAY has been upgraded. Please ensure check your settings."
+msgid "Gravity Forms eWAY has been upgraded. Please check your settings."
 msgstr ""
 
 #: views/notice-upgrade-from-v1.php:7
 #, php-format
 msgid ""
-"please enter your eWAY API key and password in <a href=\"%s\">eWAY Payments "
-"settings</a> to upgrade to Rapid API"
+"upgrade to Rapid API by entering your eWAY API key and password, and Client "
+"Side Encryption Key, at <a href=\"%s\">eWAY Payments settings</a>"
 msgstr ""
 
 #: views/notice-upgrade-from-v1.php:9
