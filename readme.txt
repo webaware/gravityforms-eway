@@ -92,7 +92,13 @@ NB: PreAuth is currently only available for Australian, Singapore, Malaysian & H
 
 = Do I need to set the Client-Side Encryption Key? =
 
-Client-Side Encryption is required for websites that are certified PCI compliant. It encrypts sensitive credit card details in the browser, so that only eWAY can see them. All websites are encouraged to set the Client-Side Encryption Key for improved security of credit card details.
+Client-Side Encryption is required for websites that are not certified PCI compliant. It encrypts sensitive credit card details in the browser, so that only eWAY can see them. All websites are encouraged to set the Client-Side Encryption Key for improved security of credit card details.
+
+If you get the following error, you *must* add your Client-Side Encryption key:
+
+> V6111: Unauthorised API Access, Account Not PCI Certified
+
+You will find your Client-Side Encryption key in MYeWAY where you created your API key and password. Copy it from MYeWAY and paste into the eWAY Payments settings page.
 
 = What is Beagle? =
 

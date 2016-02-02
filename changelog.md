@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 2.1.1, soon...
+
+* added: partner ID sent to eWAY with payment requests (improved traceability)
+
 ### 2.1.0, 2016-02-01
 
 * added: [support for eWAY Client Side Encryption](http://shop.webaware.com.au/gravity-forms-eway-client-side-encryption), allowing sites without PCI compliance to use Rapid 3.1 API
