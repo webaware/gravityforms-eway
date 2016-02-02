@@ -100,6 +100,12 @@ If you get the following error, you *must* add your Client-Side Encryption key:
 
 You will find your Client-Side Encryption key in MYeWAY where you created your API key and password. Copy it from MYeWAY and paste into the eWAY Payments settings page.
 
+= Where has the credit card type gone? =
+
+Gravity Forms normally logs the card type with a partial card number when you have a credit card form. With Client-Side Encryption, Gravity Forms no longer sees the credit card number so it cannot detect the card type. When that happens, the card type is listed simply as "Card".
+
+You can still see the card type and partial card number in MYeWAY transaction details.
+
 = What is Beagle? =
 
 [Beagle](https://eway.io/features/antifraud-beagle-lite) is a service from eWAY that provides fraud protection for your transactions. It uses information about the purchaser to suggest whether there is a risk of fraud. You must configure Beagle rules in your MYeWAY console before enabling Beagle in this plugin.
