@@ -2,9 +2,10 @@
 
 ## Changelog
 
-### 2.1.1, soon...
+### 2.1.1, 2016-02-02
 
 * added: partner ID sent to eWAY with payment requests (improved traceability)
+* changed: some words on upgrade notices
 
 ### 2.1.0, 2016-02-01
 

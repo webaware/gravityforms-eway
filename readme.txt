@@ -7,7 +7,7 @@ Donate link: http://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+e
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards, australia
 Requires at least: 4.2
 Tested up to: 4.4.1
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -192,6 +192,11 @@ Added support for eWAY Client Side Encryption, allowing sites without PCI compli
 == Changelog ==
 
 The full changelog can be found [on GitHub](https://github.com/webaware/gravityforms-eway/blob/master/changelog.md). Recent entries:
+
+### 2.1.1, 2016-02-02
+
+* added: partner ID sent to eWAY with payment requests (improved traceability)
+* changed: some words on upgrade notices
 
 ### 2.1.0, 2016-02-01
 
