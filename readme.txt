@@ -15,7 +15,7 @@ Integrate Gravity Forms with eWAY payment gateway, enabling end users to purchas
 
 == Description ==
 
-Gravity Forms eWAY adds a credit card payment gateway for [eWAY](https://eway.io/) to the [Gravity Forms](http://webaware.com.au/get-gravity-forms) plugin, using eWAY's [Rapid API Direct Payments](https://eway.io/features/api-rapid-api) and [Recurring Payments XML API](https://www.eway.com.au/eway-partner-portal/resources/eway-api/recurring-payments).
+Gravity Forms eWAY adds a credit card payment gateway for [eWAY](https://eway.io/) to the [Gravity Forms](http://webaware.com.au/get-gravity-forms) plugin, using eWAY's [Rapid API Direct Payments](https://eway.io/features/api-rapid-api) and [Recurring Payments XML API](https://www.eway.com.au/features/payments-recurring-payments).
 
 * build online donation forms
 * build online booking forms
@@ -39,7 +39,7 @@ If you'd like to help out by translating this plugin, please [sign up for an acc
 * you need to install the [Gravity Forms](http://webaware.com.au/get-gravity-forms) plugin
 * you need an SSL/TLS certificate for your hosting account
 * you need an account with eWAY
-* this plugin uses eWAY's [Rapid API Direct Payments](https://eway.io/features/api-rapid-api) and [Recurring Payments XML API](https://www.eway.com.au/eway-partner-portal/resources/eway-api/recurring-payments), and does not support eWAY's hosted payment form
+* this plugin uses eWAY's [Rapid API Direct Payments](https://eway.io/features/api-rapid-api) and [Recurring Payments XML API](https://www.eway.com.au/features/payments-recurring-payments), and does not support eWAY's hosted payment form
 
 == Installation ==
 
