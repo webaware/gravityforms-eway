@@ -71,6 +71,7 @@ class GFEwayPlugin {
 			// hook into Gravity Forms to enable credit cards and trap form submissions
 			add_action('gform_enqueue_scripts', array($this, 'gformEnqueueScripts'), 20, 2);
 			add_filter('gform_logging_supported', array($this, 'enableLogging'));
+			add_filter('gform_pre_render', array($this, 'ecryptModifyForm'));
 			add_filter('gform_pre_render', array($this, 'gformPreRenderSniff'));
 			add_filter('gform_admin_pre_render', array($this, 'gformPreRenderSniff'));
 			add_action('gform_enable_credit_card_field', '__return_true');
@@ -138,7 +139,7 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* check current form for information
+	* check current form for information (front-end and admin)
 	* @param array $form
 	* @return array
 	*/
@@ -146,6 +147,15 @@ class GFEwayPlugin {
 		// test whether form has a credit card field
 		$this->formHasCcField = self::isEwayForm($form['id'], $form['fields']);
 
+		return $form;
+	}
+
+	/**
+	* set form modifiers for eWAY client side encryption
+	* @param array $form
+	* @return array
+	*/
+	public function ecryptModifyForm($form) {
 		if ($this->canEncryptCardDetails($form)) {
 			// inject eWAY Client Side Encryption
 			add_filter('gform_form_tag', array($this, 'ecryptFormTag'), 10, 2);
@@ -159,9 +169,11 @@ class GFEwayPlugin {
 					$ccnumber_name = $field_name . '_1';
 					$cvn_name      = $field_name . '_3';
 
-					// clear faked credit card details
-					$_POST[$ccnumber_name] = '';
-					$_POST[$cvn_name]      = '';
+					// clear dummy credit card details used for Gravity Forms validation
+					if (!empty($_POST[$ccnumber_name]) || !empty($_POST[$cvn_name])) {
+						$_POST[$ccnumber_name] = '';
+						$_POST[$cvn_name]      = '';
+					}
 
 					// exit loop
 					break;
