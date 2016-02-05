@@ -7,7 +7,7 @@ Donate link: http://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+e
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards, australia, new zealand, uk, singapore, malaysia, hong kong
 Requires at least: 4.2
 Tested up to: 4.4.2
-Stable tag: 2.1.1
+Stable tag: 2.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -185,13 +185,17 @@ Developers can use these filter hooks to modify some eWAY invoice properties. Ea
 
 == Upgrade Notice ==
 
-= 2.1.1 =
+= 2.1.2 =
 
-Partner ID sent to eWAY with payment requests (improved traceability). Version 2 is a major upgrade, requiring WordPress 4.2+, Gravity Forms 1.9+. After upgrading, please check your forms to ensure that the correct credit cards are enabled.
+Fixed a bug showing a security message when trying to save a form confirmation. Version 2 is a major upgrade, requiring WordPress 4.2+, Gravity Forms 1.9+. After upgrading, please check your forms to ensure that the correct credit cards are enabled.
 
 == Changelog ==
 
 The full changelog can be found [on GitHub](https://github.com/webaware/gravityforms-eway/blob/master/changelog.md). Recent entries:
+
+### 2.1.2, 2016-02-05
+
+* fixed: "Are you sure you want to do this?" security message when trying to save a form confirmation
 
 ### 2.1.1, 2016-02-02
 

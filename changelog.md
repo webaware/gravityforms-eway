@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 2.1.2, 2016-02-05
+
+* fixed: "Are you sure you want to do this?" security message when trying to save a form confirmation
+
 ### 2.1.1, 2016-02-02
 
 * added: partner ID sent to eWAY with payment requests (improved traceability)
