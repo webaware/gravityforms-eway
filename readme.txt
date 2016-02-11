@@ -100,6 +100,18 @@ If you get the following error, you *must* add your Client-Side Encryption key:
 
 You will find your Client-Side Encryption key in MYeWAY where you created your API key and password. Copy it from MYeWAY and paste into the eWAY Payments settings page.
 
+= Why do I get and error "Invalid TransactionType"? =
+
+> V6111: Unauthorized API Access, Account Not PCI Certified
+> V6010: Invalid TransactionType, account not certified for eCome only MOTO or Recurring available
+
+If you get that error with the sandbox, then you need to tick the PCI checkbox to enable Direct Connections. See [screenshots](https://wordpress.org/plugins/gravityforms-eway/screenshots/)
+
+Settings > Sandbox > Direction Connection > PCI
+
+If you get that with live transactions, your eWAY account is not PCI certified for Direct Connections and you must contact eWAY.
+
+
 = Where has the credit card type gone? =
 
 Gravity Forms normally logs the card type with a partial card number when you have a credit card form. With Client-Side Encryption, Gravity Forms no longer sees the credit card number so it cannot detect the card type. When that happens, the card type is listed simply as "Card".
@@ -163,6 +175,7 @@ The plugin will run in shared hosting environments, but requires PHP 5 with the 
 5. A successful entry in Gravity Forms admin
 6. Example with recurring payments
 7. Forcing SSL on a page with a credit card form
+8. Enabling PCI for Direct Connections in the Sandbox
 
 == Filter hooks ==
 
