@@ -106,7 +106,7 @@ class GFEwayPlugin {
 	* NB: must happen after Gravity Forms registers scripts
 	*/
 	public function registerScripts() {
-		wp_register_script('eway-ecrypt', 'https://secure.ewaypayments.com/scripts/eCrypt.js', false, null, true);
+		wp_register_script('eway-ecrypt', 'https://secure.ewaypayments.com/scripts/eCrypt.js', array('jquery'), null, true);
 	}
 
 	/**
@@ -117,25 +117,19 @@ class GFEwayPlugin {
 	public function gformEnqueueScripts($form, $ajax) {
 		if ($this->canEncryptCardDetails($form)) {
 			wp_enqueue_script('eway-ecrypt');
-			add_action('gform_register_init_scripts', array($this, 'ecryptInitScript'), 10, 3);
+			add_action('wp_print_footer_scripts', array($this, 'ecryptInitScript'));
 		}
 	}
 
 	/**
 	* register inline scripts for client-side encryption if form posts with AJAX
-	* @param array $form
-	* @param array $field_values
-	* @param bool $is_ajax
 	*/
-	public function ecryptInitScript($form, $field_values, $is_ajax) {
-		if (!$is_ajax) {
-			return;
-		}
-
+	public function ecryptInitScript() {
 		$min = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
-		$script = file_get_contents(GFEWAY_PLUGIN_ROOT . "js/gfeway_ecrypt$min.js");
 
-		GFFormDisplay::add_init_script($form['id'], 'gfeway_ecrypt', GFFormDisplay::ON_PAGE_RENDER, $script);
+		echo '<script>';
+		readfile(GFEWAY_PLUGIN_ROOT . "js/gfeway_ecrypt$min.js");
+		echo '</script>';
 	}
 
 	/**
@@ -225,8 +219,8 @@ class GFEwayPlugin {
 			$ccnumber_id = $field_id . '_1';
 			$cvn_id      = $field_id . '_3';
 
-			$field_content = preg_replace("#<input[^>]+id='$ccnumber_id'\K#", ' data-eway-encrypt-name="EWAY_CARDNUMBER"', $field_content);
-			$field_content = preg_replace("#<input[^>]+id='$cvn_id'\K#",      ' data-eway-encrypt-name="EWAY_CARDCVN"', $field_content);
+			$field_content = preg_replace("#<input[^>]+id='$ccnumber_id'\K#", ' data-gfeway-encrypt-name="EWAY_CARDNUMBER"', $field_content);
+			$field_content = preg_replace("#<input[^>]+id='$cvn_id'\K#",      ' data-gfeway-encrypt-name="EWAY_CARDCVN"', $field_content);
 		}
 
 		return $field_content;
@@ -812,11 +806,6 @@ class GFEwayPlugin {
 
 		// must have a credit card field, and not disabled by another plugin
 		if (!self::isEwayForm($form['id'], $form['fields'])) {
-			return false;
-		}
-
-		// not supported by Recurring Payments XML API
-		if (self::hasFieldType($form['fields'], GFEWAY_FIELD_RECURRING)) {
 			return false;
 		}
 

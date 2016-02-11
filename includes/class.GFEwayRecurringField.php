@@ -31,6 +31,7 @@ class GFEwayRecurringField {
 		add_action('gform_editor_js', array($this, 'gformEditorJS'));
 		add_action('gform_field_standard_settings', array($this, 'gformFieldStandardSettings'), 10, 2);
 		add_filter('gform_add_field_buttons', array($this, 'gformAddFieldButtons'));
+		add_filter('gform_field_css_class', array($this, 'gformFieldClasses'), 10, 2);
 		add_filter('gform_field_type_title', array($this, 'gformFieldTypeTitle'), 10, 2);
 		add_filter('gform_field_input', array($this, 'gformFieldInput'), 10, 5);
 		add_filter('gform_pre_validation', array($this, 'gformPreValidation'));
@@ -306,6 +307,20 @@ class GFEwayRecurringField {
 		return $validation_result;
 	}
 
+
+	/**
+	* add custom classes to field container
+	* @param string $classes
+	* @param array $field
+	* @return string
+	*/
+	public function gformFieldClasses($classes, $field) {
+		if ($field->type === GFEWAY_FIELD_RECURRING) {
+			$classes .= ' gfeway-contains-recurring';
+		}
+
+		return $classes;
+	}
 
 	/**
 	* watch the field type so that we can use hooks that don't pass enough information

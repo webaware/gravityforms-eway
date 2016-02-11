@@ -46,16 +46,21 @@ Recurring Payments field
 		$("#ui-datepicker-div").hide();
 	}
 
-	// watch for conditional logic changes, reset fields to initial values on show
+	// watch for conditional logic changes
 	gform.addAction("gform_post_conditional_logic_field_action", function(formId, action, targetId, defaultValues, isInit) {
-		// only on show action
-		if (action === "show") {
-			// only recurring payment fields
-			var target = $(targetId);
-			if (target.hasClass("recurring-payment-details")) {
+		var target = $(targetId);
+
+		if (target.hasClass("gfeway-contains-recurring")) {
+			if (action === "show") {
+				target.addClass("gfeway-recurring-active").removeClass("gfeway-recurring-inactive");
+
+				// reset fields to initial values
 				target.find("input.datepicker").each(function() {
 					this.value = this.getAttribute("value");
 				});
+			}
+			else {
+				target.addClass("gfeway-recurring-inactive").removeClass("gfeway-recurring-active");
 			}
 		}
 	});
