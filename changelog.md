@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 2.1.3, soon...
+
+* fixed: Client-Side Encryption used for one-off transactions on forms that conditionally use Recurring Payments
+
 ### 2.1.2, 2016-02-05
 
 * fixed: "Are you sure you want to do this?" security message when trying to save a form confirmation

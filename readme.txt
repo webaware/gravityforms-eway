@@ -104,12 +104,11 @@ You will find your Client-Side Encryption key in MYeWAY where you created your A
 
 > V6010: Invalid TransactionType, account not certified for eCome only MOTO or Recurring available
 
-If you get that error with the sandbox, then you need to tick the PCI checkbox to enable Direct Connections. See [screenshots](https://wordpress.org/plugins/gravityforms-eway/screenshots/)
+It probably means you need to set your Client-Side Encryption key; see above.
+
+If your website is PCI Certified and you don't want to use Client-Side Encryption for some reason, then you will still get this error in the sandbox until you enable PCI for Direct Connections. See [screenshots](https://wordpress.org/plugins/gravityforms-eway/screenshots/)
 
 Settings > Sandbox > Direction Connection > PCI
-
-If you get that with live transactions, your eWAY account is not PCI certified for Direct Connections and you must contact eWAY.
-
 
 = Where has the credit card type gone? =
 
