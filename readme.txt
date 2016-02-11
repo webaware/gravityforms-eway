@@ -100,9 +100,8 @@ If you get the following error, you *must* add your Client-Side Encryption key:
 
 You will find your Client-Side Encryption key in MYeWAY where you created your API key and password. Copy it from MYeWAY and paste into the eWAY Payments settings page.
 
-= Why do I get and error "Invalid TransactionType"? =
+= Why do I get an error "Invalid TransactionType"? =
 
-> V6111: Unauthorized API Access, Account Not PCI Certified
 > V6010: Invalid TransactionType, account not certified for eCome only MOTO or Recurring available
 
 If you get that error with the sandbox, then you need to tick the PCI checkbox to enable Direct Connections. See [screenshots](https://wordpress.org/plugins/gravityforms-eway/screenshots/)
