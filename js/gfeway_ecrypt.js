@@ -1,6 +1,20 @@
 (function($) {
 
-	$("form[data-eway-encrypt-key]").on("submit", function() {
+	$(document).bind("gform_post_render", maybeEncryptFormHook);
+
+	/**
+	* if form has Client Side Encryption key, hook its submit action for maybe encrypting
+	* @param {jQuery.Event} event
+	* @param {Number} form_id int ID of Gravity Forms form
+	*/
+	function maybeEncryptFormHook(event, form_id) {
+		$("#gform_" + form_id + "[data-eway-encrypt-key]").on("submit", maybeEncryptForm);
+	}
+
+	/**
+	* check form for conditions to encrypt sensitive fields
+	*/
+	function maybeEncryptForm() {
 
 		var frm = $(this);
 
@@ -9,22 +23,24 @@
 			return true;
 		}
 
-		var ccnumber = frm.find("input[data-gfeway-encrypt-name='EWAY_CARDNUMBER']");
-		var cvn = frm.find("input[data-gfeway-encrypt-name='EWAY_CARDCVN']");
+		var key = frm.data("eway-encrypt-key");
 
-		if (ccnumber.length && cvn.length && ccnumber.val().length) {
-			var encNumber = eCrypt.encryptValue(ccnumber.val());
-			$("<input type='hidden'>").attr("name", ccnumber.data("gfeway-encrypt-name")).val(encNumber).appendTo(frm);
-			ccnumber.val("").removeAttr("data-gfeway-encrypt-name");
+		function maybeEncryptField(field_selector) {
+			var field = $(field_selector);
 
-			var encCvn = eCrypt.encryptValue(cvn.val());
-			$("<input type='hidden'>").attr("name", cvn.data("gfeway-encrypt-name")).val(encCvn).appendTo(frm);
-			cvn.val("").removeAttr("data-gfeway-encrypt-name");
+			if (field.length && field.val().length) {
+				var encrypted = eCrypt.encryptValue(field.val(), key);
+				$("<input type='hidden'>").attr("name", field.data("gfeway-encrypt-name")).val(encrypted).appendTo(frm);
+				field.val("");
+			}
 		}
+
+		maybeEncryptField("input[data-gfeway-encrypt-name='EWAY_CARDNUMBER']");
+		maybeEncryptField("input[data-gfeway-encrypt-name='EWAY_CARDCVN']");
 
 		return true;
 
-	});
+	}
 
 })(jQuery);
 
