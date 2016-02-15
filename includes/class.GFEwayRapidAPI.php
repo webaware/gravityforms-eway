@@ -55,12 +55,6 @@ class GFEwayRapidAPI {
 	public $sslVerifyPeer;
 
 	/**
-	* default FALSE, whether to use free Beagle fraud detection
-	* @var boolean
-	*/
-	public $useBeagle;
-
-	/**
 	* API key
 	* @var string
 	*/
@@ -294,13 +288,11 @@ class GFEwayRapidAPI {
 	* @param string $apiPassword eWAY API password
 	* @param boolean $useSandbox use eWAY sandbox
 	* @param boolean $capture capture payment now, or authorise for later capture
-	* @param boolean $useBeagle
 	*/
-	public function __construct($apiKey, $apiPassword, $useSandbox = true, $capture = true, $useBeagle = false) {
+	public function __construct($apiKey, $apiPassword, $useSandbox = true, $capture = true) {
 		$this->apiKey		= $apiKey;
 		$this->apiPassword	= $apiPassword;
 		$this->useSandbox	= $useSandbox;
-		$this->useBeagle	= $useBeagle;
 		$this->capture		= $capture;
 	}
 

@@ -416,7 +416,7 @@ class GFEwayPlugin {
 			if (!empty($this->options['apiKey']) && !empty($this->options['apiPassword'])) {
 				// Rapid API
 				$capture = !$this->options['useStored'];
-				$eway = new GFEwayRapidAPI($this->options['apiKey'], $this->options['apiPassword'], $this->options['useTest'], $capture, $this->options['useBeagle']);
+				$eway = new GFEwayRapidAPI($this->options['apiKey'], $this->options['apiPassword'], $this->options['useTest'], $capture);
 			}
 			else {
 				// legacy XML APIs
