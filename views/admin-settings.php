@@ -26,7 +26,7 @@
 			<th><label for="gfeway_plugin_customerID"><?php _e('eWAY Customer ID', 'gravityforms-eway'); ?></label></th>
 			<td>
 				<input type="text" class="regular-text" name="gfeway_plugin[customerID]" id="gfeway_plugin_customerID" value="<?php echo esc_attr($options['customerID']); ?>" />
-				<p><em><?php _e('required for recurring payments and legacy XML API', 'gravityforms-eway'); ?></em></p>
+				<p><em><?php _e('Required for recurring payments and legacy XML API.', 'gravityforms-eway'); ?></em></p>
 			</td>
 		</tr>
 
@@ -34,7 +34,7 @@
 			<th><label for="gfeway_plugin_ecryptKey"><?php _e('Client Side Encryption Key', 'gravityforms-eway'); ?></label></th>
 			<td>
 				<textarea name="gfeway_plugin[ecryptKey]" id="gfeway_plugin_ecryptKey" rows="5" class="large-text"><?php echo esc_attr($options['ecryptKey']); ?></textarea>
-				<p><em><?php _e("securely encrypts sensitive credit card information in the customer's browser, so that a non-PCI compliant merchant can accept the form data on their system", 'gravityforms-eway'); ?></em></p>
+				<p><em><?php _e("Securely encrypts sensitive credit card information in the customer's browser, so that a non-PCI certified merchant can accept the form data on their system.", 'gravityforms-eway'); ?></em></p>
 			</td>
 		</tr>
 
@@ -65,7 +65,7 @@
 					<label for="gfeway_plugin_roundTestAmounts_yes"><?php _ex('Yes', 'settings', 'gravityforms-eway'); ?></label>
 					<input type="radio" name="gfeway_plugin[roundTestAmounts]" id="gfeway_plugin_roundTestAmounts_no" value="" <?php checked($options['roundTestAmounts'], ''); ?> />
 					<label for="gfeway_plugin_roundTestAmounts_no"><?php _ex('No', 'settings', 'gravityforms-eway'); ?></label>
-					<p><em><?php _e('ensures successful transactions with transaction response set to "Use Cents Value"', 'gravityforms-eway'); ?></em></p>
+					<p><em><?php _e('Ensures successful transactions when the sandbox behaviour is set to "Use Cents Value".', 'gravityforms-eway'); ?></em></p>
 				</fieldset>
 
 				<fieldset>
@@ -82,8 +82,8 @@
 					<label for="gfeway_plugin_useBeagle_yes"><?php _ex('Yes', 'settings', 'gravityforms-eway'); ?></label>
 					<input type="radio" name="gfeway_plugin[useBeagle]" id="gfeway_plugin_useBeagle_no" value="" <?php checked($options['useBeagle'], ''); ?> />
 					<label for="gfeway_plugin_useBeagle_no"><?php _ex('No', 'settings', 'gravityforms-eway'); ?></label>
-					<p id="gfeway-opt-admin-stored-beagle"><?php _e('Beagle is not available for the Stored Payments legacy XML API.', 'gravityforms-eway'); ?></p>
-					<p id="gfeway-opt-admin-beagle-address"><em><?php _e('Beagle fraud detection requires an address for each transaction. Be sure to add an Address field to your forms, and make it a required field.', 'gravityforms-eway'); ?></em></p>
+					<p id="gfeway-opt-admin-stored-beagle"><em><?php _e('Beagle Lite is not available for the Stored Payments legacy XML API.', 'gravityforms-eway'); ?></em></p>
+					<p id="gfeway-opt-admin-beagle-address"><em><?php _e('Beagle Lite fraud detection requires an address for each transaction. Be sure to add an Address field to your forms, and make it a required field.', 'gravityforms-eway'); ?></em></p>
 				</fieldset>
 
 				<fieldset>
@@ -92,7 +92,7 @@
 					<label for="gfeway_plugin_sslVerifyPeer_yes"><?php _ex('Yes', 'settings', 'gravityforms-eway'); ?></label>
 					<input type="radio" name="gfeway_plugin[sslVerifyPeer]" id="gfeway_plugin_sslVerifyPeer_no" value="N" <?php checked($options['sslVerifyPeer'], ''); ?> />
 					<label for="gfeway_plugin_sslVerifyPeer_no"><?php _ex('No', 'settings', 'gravityforms-eway'); ?></label>
-					<p><em><?php printf(__("only choose 'no' if you can't <a target='_blank' href='%s'>fix your website SSL configuration</a> due to a technical reason", 'gravityforms-eway'),
+					<p><em><?php printf(__("Only choose 'no' if you can't <a target='_blank' href='%s'>fix your website SSL configuration</a> due to a technical reason.", 'gravityforms-eway'),
 						'http://snippets.webaware.com.au/howto/stop-turning-off-curlopt_ssl_verifypeer-and-fix-your-php-config/'); ?></em></p>
 				</fieldset>
 
