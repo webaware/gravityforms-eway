@@ -4,7 +4,9 @@
 
 ### 2.1.3, soon...
 
-* fixed: Client-Side Encryption used for one-off transactions on forms that conditionally use Recurring Payments
+* fixed: Client-Side Encryption is now used for one-off transactions on forms that conditionally use Recurring Payments
+* changed: always send the customer IP in Rapid API transactions, for Beagle Lite support
+* changed: only allow turning off Beagle Lite when using the legacy XML API (can't be disabled externally for Rapid API)
 
 ### 2.1.2, 2016-02-05
 

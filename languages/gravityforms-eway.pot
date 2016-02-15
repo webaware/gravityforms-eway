@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gravityforms-eway 2.0.0\n"
 "Report-Msgid-Bugs-To: translate@webaware.com.au\n"
-"POT-Creation-Date: 2016-02-05 16:50+1100\n"
-"PO-Revision-Date: 2016-02-05 16:50+1100\n"
+"POT-Creation-Date: 2016-02-15 16:41+1100\n"
+"PO-Revision-Date: 2016-02-15 16:41+1100\n"
 "Last-Translator: Ross McKay <rmckay@webaware.com.au>\n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -148,84 +148,84 @@ msgid "Error parsing eWAY response: %s"
 msgstr ""
 
 #. translators: credit card type reported when card type is unknown due to client-side encryption
-#: includes/class.GFEwayPlugin.php:287
+#: includes/class.GFEwayPlugin.php:281
 msgctxt "credit card type"
 msgid "Card"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:416
+#: includes/class.GFEwayPlugin.php:410
 msgid "Can't request recurring payment; no eWAY customer ID."
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:431
+#: includes/class.GFEwayPlugin.php:425
 msgid "Can't request payment; no eWAY credentials."
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:709
+#: includes/class.GFEwayPlugin.php:703
 msgctxt "merge tag label"
 msgid "Transaction ID"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:710
+#: includes/class.GFEwayPlugin.php:704
 msgctxt "merge tag label"
 msgid "AuthCode"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:711
+#: includes/class.GFEwayPlugin.php:705
 msgctxt "merge tag label"
 msgid "Payment Amount"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:712
+#: includes/class.GFEwayPlugin.php:706
 msgctxt "merge tag label"
 msgid "Payment Status"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:713
+#: includes/class.GFEwayPlugin.php:707
 msgctxt "merge tag label"
 msgid "Beagle Score"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:782
+#: includes/class.GFEwayPlugin.php:776
 msgctxt "entry meta label"
 msgid "Payment Gateway"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:791
+#: includes/class.GFEwayPlugin.php:785
 msgctxt "entry meta label"
 msgid "AuthCode"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:878
+#: includes/class.GFEwayPlugin.php:867
 msgid ""
 "Payment already submitted and processed - please close your browser window"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:879
+#: includes/class.GFEwayPlugin.php:868
 msgid "This form has credit card fields, but no products or totals"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:880
+#: includes/class.GFEwayPlugin.php:869
 msgid "Card holder name is required for credit card processing"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:881
+#: includes/class.GFEwayPlugin.php:870
 msgid "Card number is required for credit card processing"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:882
+#: includes/class.GFEwayPlugin.php:871
 msgid "Transaction failed"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:887
+#: includes/class.GFEwayPlugin.php:876
 msgid "Unknown error"
 msgstr ""
 
-#: includes/class.GFEwayPlugin.php:912
+#: includes/class.GFEwayPlugin.php:901
 msgid "Gravity Forms eWAY"
 msgstr ""
 
-#: includes/class.GFEwayRapidAPI.php:542 includes/class.GFEwayRapidAPI.php:547
+#: includes/class.GFEwayRapidAPI.php:538 includes/class.GFEwayRapidAPI.php:543
 #, php-format
 msgid "Error posting eWAY request: %s"
 msgstr ""
@@ -1574,190 +1574,190 @@ msgctxt "eWAY coded response"
 msgid "%s: Invalid TransactionSearch, Invoice Number not found"
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:51
-msgctxt "recurring field"
-msgid "Initial Amount"
-msgstr ""
-
 #: includes/class.GFEwayRecurringField.php:52
 msgctxt "recurring field"
-msgid "Recurring Amount"
+msgid "Initial Amount"
 msgstr ""
 
 #: includes/class.GFEwayRecurringField.php:53
 msgctxt "recurring field"
-msgid "Initial Date"
+msgid "Recurring Amount"
 msgstr ""
 
 #: includes/class.GFEwayRecurringField.php:54
 msgctxt "recurring field"
-msgid "Start Date"
+msgid "Initial Date"
 msgstr ""
 
 #: includes/class.GFEwayRecurringField.php:55
 msgctxt "recurring field"
-msgid "End Date"
+msgid "Start Date"
 msgstr ""
 
 #: includes/class.GFEwayRecurringField.php:56
 msgctxt "recurring field"
+msgid "End Date"
+msgstr ""
+
+#: includes/class.GFEwayRecurringField.php:57
+msgctxt "recurring field"
 msgid "Interval Type"
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:113
+#: includes/class.GFEwayRecurringField.php:114
 msgctxt "form editor button label"
 msgid "Recurring"
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:131
+#: includes/class.GFEwayRecurringField.php:132
 msgctxt "form editor field label"
 msgid "Recurring Payments"
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:156
+#: includes/class.GFEwayRecurringField.php:157
 msgctxt "form editor tooltip heading"
 msgid "Show Initial Amount"
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:157
+#: includes/class.GFEwayRecurringField.php:158
 msgid "Select this option to show Initial Amount and Initial Date fields."
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:159
+#: includes/class.GFEwayRecurringField.php:160
 msgctxt "form editor tooltip heading"
 msgid "Initial Amount"
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:160
+#: includes/class.GFEwayRecurringField.php:161
 msgid "The label shown for the Initial Amount field."
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:162
+#: includes/class.GFEwayRecurringField.php:163
 msgctxt "form editor tooltip heading"
 msgid "Initial Date"
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:163
+#: includes/class.GFEwayRecurringField.php:164
 msgid "The label shown for the Initial Date field."
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:165
+#: includes/class.GFEwayRecurringField.php:166
 msgctxt "form editor tooltip heading"
 msgid "Recurring Amount"
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:166
+#: includes/class.GFEwayRecurringField.php:167
 msgid "The label shown for the Recurring Amount field."
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:168
+#: includes/class.GFEwayRecurringField.php:169
 msgctxt "form editor tooltip heading"
 msgid "Show Start Date"
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:169
+#: includes/class.GFEwayRecurringField.php:170
 msgid "Select this option to show the Start Date field."
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:171
+#: includes/class.GFEwayRecurringField.php:172
 msgctxt "form editor tooltip heading"
 msgid "Show End Date"
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:172
+#: includes/class.GFEwayRecurringField.php:173
 msgid "Select this option to show the End Date field."
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:174
+#: includes/class.GFEwayRecurringField.php:175
 msgctxt "form editor tooltip heading"
 msgid "Start Date"
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:175
+#: includes/class.GFEwayRecurringField.php:176
 msgid "The label shown for the Start Date field."
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:177
+#: includes/class.GFEwayRecurringField.php:178
 msgctxt "form editor tooltip heading"
 msgid "End Date"
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:178
+#: includes/class.GFEwayRecurringField.php:179
 msgid "The label shown for the End Date field."
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:180
+#: includes/class.GFEwayRecurringField.php:181
 msgctxt "form editor tooltip heading"
 msgid "Interval Type"
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:181
+#: includes/class.GFEwayRecurringField.php:182
 msgid "The label shown for the Interval Type field."
 msgstr ""
 
 #. translators: %1$s = amount; %2$s = interval; %3$s = start date
-#: includes/class.GFEwayRecurringField.php:239
+#: includes/class.GFEwayRecurringField.php:240
 #, php-format
 msgctxt "recurring payment description"
 msgid "%1$s %2$s from %3$s"
 msgstr ""
 
 #. translators: %1$s = amount; %2$s = interval; %3$s = start date; %4$s = end date
-#: includes/class.GFEwayRecurringField.php:245
+#: includes/class.GFEwayRecurringField.php:246
 #, php-format
 msgctxt "recurring payment description"
 msgid "%1$s %2$s from %3$s until %4$s"
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:268
+#: includes/class.GFEwayRecurringField.php:269
 msgid "This field is required"
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:275
+#: includes/class.GFEwayRecurringField.php:276
 msgid "Please enter a valid initial amount."
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:279
+#: includes/class.GFEwayRecurringField.php:280
 msgid "Please enter a valid initial date in the format dd/mm/yyyy"
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:283
+#: includes/class.GFEwayRecurringField.php:284
 msgid "Please enter a valid recurring amount"
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:287
+#: includes/class.GFEwayRecurringField.php:288
 msgid "Please enter a valid start date in the format dd/mm/yyyy"
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:291
+#: includes/class.GFEwayRecurringField.php:292
 msgid "Please enter a valid end date in the format dd/mm/yyyy"
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:295
+#: includes/class.GFEwayRecurringField.php:296
 msgid "Please select a valid interval type"
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:604
+#: includes/class.GFEwayRecurringField.php:619
 msgctxt "recurring interval label"
 msgid "weekly"
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:605
+#: includes/class.GFEwayRecurringField.php:620
 msgctxt "recurring interval label"
 msgid "fortnightly"
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:606
+#: includes/class.GFEwayRecurringField.php:621
 msgctxt "recurring interval label"
 msgid "monthly"
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:607
+#: includes/class.GFEwayRecurringField.php:622
 msgctxt "recurring interval label"
 msgid "quarterly"
 msgstr ""
 
-#: includes/class.GFEwayRecurringField.php:608
+#: includes/class.GFEwayRecurringField.php:623
 msgctxt "recurring interval label"
 msgid "yearly"
 msgstr ""
@@ -1863,7 +1863,7 @@ msgid "eWAY Customer ID"
 msgstr ""
 
 #: views/admin-settings.php:29
-msgid "required for recurring payments and legacy XML API"
+msgid "Required for recurring payments and legacy XML API."
 msgstr ""
 
 #: views/admin-settings.php:34
@@ -1872,9 +1872,9 @@ msgstr ""
 
 #: views/admin-settings.php:37
 msgid ""
-"securely encrypts sensitive credit card information in the customer's "
-"browser, so that a non-PCI compliant merchant can accept the form data on "
-"their system"
+"Securely encrypts sensitive credit card information in the customer's "
+"browser, so that a non-PCI certified merchant can accept the form data on "
+"their system."
 msgstr ""
 
 #: views/admin-settings.php:42
@@ -1927,8 +1927,8 @@ msgstr ""
 
 #: views/admin-settings.php:68
 msgid ""
-"ensures successful transactions with transaction response set to \"Use Cents "
-"Value\""
+"Ensures successful transactions when the sandbox behaviour is set to \"Use "
+"Cents Value\"."
 msgstr ""
 
 #: views/admin-settings.php:72
@@ -1937,17 +1937,17 @@ msgstr ""
 
 #: views/admin-settings.php:80
 #, php-format
-msgid "Use <a href=\"%s\" target=\"_blank\">Beagle</a>"
+msgid "Use <a href=\"%s\" target=\"_blank\">Beagle Lite</a> for legacy XML API"
 msgstr ""
 
 #: views/admin-settings.php:85
-msgid "Beagle is not available for the Stored Payments legacy XML API."
+msgid "Beagle Lite is not available for the Stored Payments legacy XML API."
 msgstr ""
 
 #: views/admin-settings.php:86
 msgid ""
-"Beagle fraud detection requires an address for each transaction. Be sure to "
-"add an Address field to your forms, and make it a required field."
+"Beagle Lite fraud detection requires an address for each transaction. Be "
+"sure to add an Address field to your forms, and make it a required field."
 msgstr ""
 
 #: views/admin-settings.php:90
@@ -1957,8 +1957,8 @@ msgstr ""
 #: views/admin-settings.php:95
 #, php-format
 msgid ""
-"only choose 'no' if you can't <a target='_blank' href='%s'>fix your website "
-"SSL configuration</a> due to a technical reason"
+"Only choose 'no' if you can't <a target='_blank' href='%s'>fix your website "
+"SSL configuration</a> due to a technical reason."
 msgstr ""
 
 #: views/admin-settings.php:103
