@@ -76,8 +76,8 @@
 					<label for="gfeway_plugin_forceTestAccount_no"><?php _ex('No', 'settings', 'gravityforms-eway'); ?></label>
 				</fieldset>
 
-				<fieldset>
-					<legend><?php printf(__('Use <a href="%s" target="_blank">Beagle</a>', 'gravityforms-eway'), 'https://eway.io/features/antifraud-beagle-lite'); ?></legend>
+				<fieldset id="gfeway-opt-admin-beagle">
+					<legend><?php printf(__('Use <a href="%s" target="_blank">Beagle Lite</a> for legacy XML API', 'gravityforms-eway'), 'https://eway.io/features/antifraud-beagle-lite'); ?></legend>
 					<input type="radio" name="gfeway_plugin[useBeagle]" id="gfeway_plugin_useBeagle_yes" value="1" <?php checked($options['useBeagle'], '1'); ?> />
 					<label for="gfeway_plugin_useBeagle_yes"><?php _ex('Yes', 'settings', 'gravityforms-eway'); ?></label>
 					<input type="radio" name="gfeway_plugin[useBeagle]" id="gfeway_plugin_useBeagle_no" value="" <?php checked($options['useBeagle'], ''); ?> />
@@ -152,10 +152,11 @@
 
 		display($("#gfeway-opt-admin-stored-test"), (useTest && useStored && !useAPI));
 		display($("#gfeway-opt-admin-stored-beagle"), (useBeagle && useStored && !useAPI));
+		display($("#gfeway-opt-admin-beagle"), !useAPI);
 		display($("#gfeway-opt-admin-beagle-address"), useBeagle);
 	}
 
-	$("#eway-settings-form").on("change", "input[name='gfeway_plugin[useTest]'],input[name='gfeway_plugin[useBeagle]'],input[name='gfeway_plugin[useStored]']", setVisibility);
+	$("#eway-settings-form").on("change", "input[name='gfeway_plugin[apiKey]'],input[name='gfeway_plugin[apiPassword]'],input[name='gfeway_plugin[useTest]'],input[name='gfeway_plugin[useBeagle]'],input[name='gfeway_plugin[useStored]']", setVisibility);
 
 	setVisibility();
 

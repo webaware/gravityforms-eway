@@ -322,7 +322,7 @@ class GFEwayPayment {
 		$xml->writeElement('ewayCVN', $this->cardVerificationNumber);
 
 		// Beagle data
-		if ($this->useBeagle && !empty($this->country)) {
+		if ($this->useBeagle) {
 			$xml->writeElement('ewayCustomerIPAddress', $this->customerIP);
 			$xml->writeElement('ewayCustomerBillingCountry', $this->country);
 		}

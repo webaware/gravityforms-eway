@@ -395,11 +395,7 @@ class GFEwayRapidAPI {
 		$request->TransactionType		= self::TRANS_PURCHASE;
 		$request->PartnerID				= self::PARTNER_ID;
 		$request->Method				= $this->capture ? self::METHOD_PAYMENT : self::METHOD_AUTHORISE;
-
-		// Beagle data
-		if ($this->useBeagle && !empty($this->country)) {
-			$request->CustomerIP		= $this->customerIP;
-		}
+		$request->CustomerIP			= $this->customerIP;
 
 		if (!empty($this->options)) {
 			$request->Options			= $this->getOptionsRecord();
