@@ -65,7 +65,7 @@
 					<label for="gfeway_plugin_roundTestAmounts_yes"><?php _ex('Yes', 'settings', 'gravityforms-eway'); ?></label>
 					<input type="radio" name="gfeway_plugin[roundTestAmounts]" id="gfeway_plugin_roundTestAmounts_no" value="" <?php checked($options['roundTestAmounts'], ''); ?> />
 					<label for="gfeway_plugin_roundTestAmounts_no"><?php _ex('No', 'settings', 'gravityforms-eway'); ?></label>
-					<p><em><?php _e('Ensures successful transactions when the sandbox behaviour is set to "Use Cents Value".', 'gravityforms-eway'); ?></em></p>
+					<p><em><?php _e('Ensures successful transactions when the sandbox behavior is set to "Use Cents Value".', 'gravityforms-eway'); ?></em></p>
 				</fieldset>
 
 				<fieldset>
