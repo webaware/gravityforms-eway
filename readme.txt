@@ -7,7 +7,7 @@ Donate link: http://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+e
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards, australia, new zealand, uk, singapore, malaysia, hong kong
 Requires at least: 4.2
 Tested up to: 4.4.2
-Stable tag: 2.1.2
+Stable tag: 2.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -196,13 +196,19 @@ Developers can use these filter hooks to modify some eWAY invoice properties. Ea
 
 == Upgrade Notice ==
 
-= 2.1.2 =
+= 2.1.3 =
 
-Fixed a bug showing a security message when trying to save a form confirmation. Version 2 is a major upgrade, requiring WordPress 4.2+, Gravity Forms 1.9+. After upgrading, please check your forms to ensure that the correct credit cards are enabled.
+Fixed a bug with Client-Side Encryption on forms that conditionally use Recurring Payments. Version 2 is a major upgrade, requiring WordPress 4.2+, Gravity Forms 1.9+. After upgrading, please check your forms to ensure that the correct credit cards are enabled.
 
 == Changelog ==
 
 The full changelog can be found [on GitHub](https://github.com/webaware/gravityforms-eway/blob/master/changelog.md). Recent entries:
+
+### 2.1.3, 2016-02-15
+
+* fixed: Client-Side Encryption is now used for one-off transactions on forms that conditionally use Recurring Payments
+* changed: always send the customer IP in Rapid API transactions, for Beagle Lite support
+* changed: only allow turning off Beagle Lite when using the legacy XML API (can't be disabled externally for Rapid API)
 
 ### 2.1.2, 2016-02-05
 

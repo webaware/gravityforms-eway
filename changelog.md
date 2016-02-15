@@ -2,7 +2,7 @@
 
 ## Changelog
 
-### 2.1.3, soon...
+### 2.1.3, 2016-02-15
 
 * fixed: Client-Side Encryption is now used for one-off transactions on forms that conditionally use Recurring Payments
 * changed: always send the customer IP in Rapid API transactions, for Beagle Lite support
@@ -30,7 +30,7 @@
 * changed: use WordPress post date format for recurring payments reported dates
 * fixed: don't attempt to use real Customer ID for Recurring Payments sandbox (only 87654321 works)
 * fixed: only need `gravityforms_edit_settings` to save eWAY settings
-* added: strings are localised and ready for [translation](https://translate.wordpress.org/projects/wp-plugins/gravityforms-eway)!
+* added: strings are localized and ready for [translation](https://translate.wordpress.org/projects/wp-plugins/gravityforms-eway)!
 
 ### 1.8.0, 2015-06-20
 
