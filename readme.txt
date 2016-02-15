@@ -92,11 +92,11 @@ NB: PreAuth is currently only available for Australian, Singapore, Malaysian & H
 
 = Do I need to set the Client-Side Encryption Key? =
 
-Client-Side Encryption is required for websites that are not certified PCI compliant. It encrypts sensitive credit card details in the browser, so that only eWAY can see them. All websites are encouraged to set the Client-Side Encryption Key for improved security of credit card details.
+Client-Side Encryption is required for websites that are not PCI certified. It encrypts sensitive credit card details in the browser, so that only eWAY can see them. All websites are encouraged to set the Client-Side Encryption Key for improved security of credit card details.
 
 If you get the following error, you *must* add your Client-Side Encryption key:
 
-> V6111: Unauthorised API Access, Account Not PCI Certified
+> V6111: Unauthorized API Access, Account Not PCI Certified
 
 You will find your Client-Side Encryption key in MYeWAY where you created your API key and password. Copy it from MYeWAY and paste into the eWAY Payments settings page.
 
@@ -116,11 +116,11 @@ Gravity Forms normally logs the card type with a partial card number when you ha
 
 You can still see the card type and partial card number in MYeWAY transaction details.
 
-= What is Beagle? =
+= What is Beagle Lite? =
 
-[Beagle](https://eway.io/features/antifraud-beagle-lite) is a service from eWAY that provides fraud protection for your transactions. It uses information about the purchaser to suggest whether there is a risk of fraud. You must configure Beagle rules in your MYeWAY console before enabling Beagle in this plugin.
+[Beagle Lite](https://eway.io/features/antifraud-beagle-lite) is a service from eWAY that provides fraud protection for your transactions. It uses information about the purchaser to suggest whether there is a risk of fraud. Configure Beagle Lite rules in your MYeWAY console.
 
-**NB**: Beagle fraud detection requires an address for each transaction. Be sure to add an Address field to your forms, and make it a required field.
+**NB**: Beagle Lite fraud detection requires an address for each transaction. Be sure to add an Address field to your forms, and make it a required field. The minimum address part required is the Country, so you can just enable that subfield if you don't need a full address.
 
 = What Gravity Forms license do I need? =
 
@@ -226,4 +226,4 @@ The full changelog can be found [on GitHub](https://github.com/webaware/gravityf
 * changed: use WordPress post date format for recurring payments reported dates
 * fixed: don't attempt to use real Customer ID for Recurring Payments sandbox (only 87654321 works)
 * fixed: only need `gravityforms_edit_settings` to save eWAY settings
-* added: strings are localised and ready for [translation](https://translate.wordpress.org/projects/wp-plugins/gravityforms-eway)!
+* added: strings are localized and ready for [translation](https://translate.wordpress.org/projects/wp-plugins/gravityforms-eway)!
