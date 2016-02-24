@@ -18,7 +18,7 @@
 		<tr>
 			<th><label for="gfeway_plugin_apiPassword"><?php _e('eWAY API Password', 'gravityforms-eway'); ?></label></th>
 			<td>
-				<input type="password" class="regular-text" name="gfeway_plugin[apiPassword]" id="gfeway_plugin_apiPassword" value="<?php echo esc_attr($options['apiPassword']); ?>" />
+				<input type="text" class="regular-text" name="gfeway_plugin[apiPassword]" id="gfeway_plugin_apiPassword" value="<?php echo esc_attr($options['apiPassword']); ?>" />
 			</td>
 		</tr>
 

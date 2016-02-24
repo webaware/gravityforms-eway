@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 2.1.4, soon...
+
+* changed: use normal text field for API password in settings (stop browsers hassling to remember the password)
+
 ### 2.1.3, 2016-02-15
 
 * fixed: Client-Side Encryption is now used for one-off transactions on forms that conditionally use Recurring Payments
