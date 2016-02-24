@@ -48,13 +48,13 @@ class GFEwayRecurringField {
 	* set default strings; run this after load_plugin_textdomain()
 	*/
 	public function setDefaults() {
-		$this->defaults = array (
-			'gfeway_initial_amount_label'		=> _x('Initial Amount', 'recurring field', 'gravityforms-eway'),
+		self::$defaults = array (
+			'gfeway_initial_amount_label'		=> _x('Initial Amount',   'recurring field', 'gravityforms-eway'),
 			'gfeway_recurring_amount_label'		=> _x('Recurring Amount', 'recurring field', 'gravityforms-eway'),
-			'gfeway_initial_date_label'			=> _x('Initial Date', 'recurring field', 'gravityforms-eway'),
-			'gfeway_start_date_label'			=> _x('Start Date', 'recurring field', 'gravityforms-eway'),
-			'gfeway_end_date_label'				=> _x('End Date', 'recurring field', 'gravityforms-eway'),
-			'gfeway_interval_type_label'		=> _x('Interval Type', 'recurring field', 'gravityforms-eway'),
+			'gfeway_initial_date_label'			=> _x('Initial Date',     'recurring field', 'gravityforms-eway'),
+			'gfeway_start_date_label'			=> _x('Start Date',       'recurring field', 'gravityforms-eway'),
+			'gfeway_end_date_label'				=> _x('End Date',         'recurring field', 'gravityforms-eway'),
+			'gfeway_interval_type_label'		=> _x('Interval Type',    'recurring field', 'gravityforms-eway'),
 		);
 	}
 
