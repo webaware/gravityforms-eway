@@ -1,15 +1,13 @@
 (function($) {
 
-	$(document).bind("gform_post_render", maybeEncryptFormHook);
-
 	/**
 	* if form has Client Side Encryption key, hook its submit action for maybe encrypting
 	* @param {jQuery.Event} event
 	* @param {Number} form_id int ID of Gravity Forms form
 	*/
-	function maybeEncryptFormHook(event, form_id) {
+	$(document).on("gform_post_render", function(event, form_id) {
 		$("#gform_" + form_id + "[data-eway-encrypt-key]").on("submit", maybeEncryptForm);
-	}
+	});
 
 	/**
 	* check form for conditions to encrypt sensitive fields
@@ -26,7 +24,7 @@
 		var key = frm.data("eway-encrypt-key");
 
 		function maybeEncryptField(field_selector) {
-			var field = $(field_selector);
+			var field = frm.find(field_selector);
 
 			if (field.length && field.val().length) {
 				var encrypted = eCrypt.encryptValue(field.val(), key);
