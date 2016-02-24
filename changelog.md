@@ -2,7 +2,7 @@
 
 ## Changelog
 
-### 2.1.4, soon...
+### 2.1.4, 2016-02-24
 
 * fixed: don't use Client-Side Encryption on Recurring Payments (even when not used conditionally!)
 * changed: use normal text field for API password in settings (stop browsers hassling to remember the password)
