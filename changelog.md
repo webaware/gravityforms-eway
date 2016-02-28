@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 2.1.5, soon...
+
+* fixed: PHP warning on static member access
+
 ### 2.1.4, 2016-02-24
 
 * fixed: don't use Client-Side Encryption on Recurring Payments (even when not used conditionally!)
