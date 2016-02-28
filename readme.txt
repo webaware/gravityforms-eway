@@ -24,6 +24,16 @@ Gravity Forms eWAY adds a credit card payment gateway for [eWAY](https://eway.io
 
 > NB: this plugin extends [Gravity Forms](http://webaware.com.au/get-gravity-forms); you still need to install and activate Gravity Forms!
 
+[Go Pro](https://gfeway.webaware.net.au/) and access these additional features:
+
+* record entry even when transaction fails
+* use Responsive Shared Page, no need for SSL certificate on standard payments
+* more complex forms with feeds mapping fields to eWAY
+* support for shipping addresses
+* more conditional logic support
+* mix multiple currencies on one website
+* mix multiple eWAY accounts on one website
+
 = Sponsorships =
 
 * recurring payments generously sponsored by [Castle Design](http://castledesign.com.au/)
@@ -39,7 +49,7 @@ If you'd like to help out by translating this plugin, please [sign up for an acc
 * you need to install the [Gravity Forms](http://webaware.com.au/get-gravity-forms) plugin
 * you need an SSL/TLS certificate for your hosting account
 * you need an account with eWAY
-* this plugin uses eWAY's [Rapid API Direct Payments](https://eway.io/features/api-rapid-api) and [Recurring Payments XML API](https://www.eway.com.au/features/payments-recurring-payments), and does not support eWAY's hosted payment form
+* this plugin uses eWAY's [Rapid API Direct Payments](https://eway.io/features/api-rapid-api) and [Recurring Payments XML API](https://www.eway.com.au/features/payments-recurring-payments), and does not support eWAY's Responsive Shared Page (available with [Pro](https://gfeway.webaware.net.au/))
 
 == Installation ==
 
@@ -74,11 +84,13 @@ No. This plugin integrates eWAY with Gravity Forms so that you can add online pa
 
 Yes, for standard card payments. See the [eWAY website](https://eway.io/) for details.
 
-Recurring Payments is only available for Australian merchants. PreAuth is only available for Australian, Singapore, Malaysian & Hong Kong merchants.
+Recurring Payments is only available for Australian merchants. PreAuth is only available for Australian, Singapore, Malaysian, & Hong Kong merchants.
 
 = Do I need an SSL/TLS certificate for my website? =
 
 Yes. This plugin uses the Direction Connection method to process transactions, so you must have HTTPS encryption for your website.
+
+[Go Pro](https://gfeway.webaware.net.au/) to use eWAY's Responsive Shared Page without requiring an SSL/TLS certificate on your website with standard payments. Recurring payments requires an SSL/TLS certificate with the Free and the Pro add-ons.
 
 = What's the difference between the Capture and Authorize payment methods? =
 
@@ -88,7 +100,7 @@ Authorize checks to see that the transaction would be approved, but does not pro
 
 You need to add your eWAY API key and password to see PreAuth transactions in the sandbox, so that the Rapid API is used. The old Stored Payments XML API does not have a sandbox.
 
-NB: PreAuth is currently only available for Australian, Singapore, Malaysian & Hong Kong merchants.
+NB: PreAuth is currently only available for Australian, Singapore, Malaysian, & Hong Kong merchants.
 
 = Do I need to set the Client-Side Encryption Key? =
 
