@@ -98,7 +98,7 @@ class GFEwayPlugin {
 	* load text translations
 	*/
 	public function loadTextDomain() {
-		load_plugin_textdomain('gravityforms-eway-pro', false, plugin_basename(dirname(GFEWAY_PLUGIN_FILE)) . '/languages/');
+		load_plugin_textdomain('gravityforms-eway', false, plugin_basename(dirname(GFEWAY_PLUGIN_FILE)) . '/languages/');
 	}
 
 	/**
