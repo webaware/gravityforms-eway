@@ -7,15 +7,15 @@ Donate link: http://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+e
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards, australia, new zealand, uk, singapore, malaysia, hong kong
 Requires at least: 4.2
 Tested up to: 4.4.2
-Stable tag: 2.1.4
+Stable tag: 2.1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Integrate Gravity Forms with eWAY payment gateway, enabling end users to purchase goods and services through Gravity Forms.
+Easily create online payment forms with Gravity Forms and eWAY.
 
 == Description ==
 
-Gravity Forms eWAY adds a credit card payment gateway for [eWAY](https://eway.io/) to the [Gravity Forms](http://webaware.com.au/get-gravity-forms) plugin, using eWAY's [Rapid API Direct Payments](https://eway.io/features/api-rapid-api) and [Recurring Payments XML API](https://www.eway.com.au/features/payments-recurring-payments).
+Gravity Forms eWAY integrates the [eWAY credit card payment gateway](https://eway.io/) with [Gravity Forms](http://webaware.com.au/get-gravity-forms) advanced form builder, using eWAY's [Rapid API Direct Payments](https://eway.io/features/api-rapid-api) and [Recurring Payments XML API](https://www.eway.com.au/features/payments-recurring-payments).
 
 * build online donation forms
 * build online booking forms
@@ -208,13 +208,21 @@ Developers can use these filter hooks to modify some eWAY invoice properties. Ea
 
 == Upgrade Notice ==
 
-= 2.1.4 =
+= 2.1.5 =
 
-Fixed a bug with Client-Side Encryption on forms that use Recurring Payments UNconditionally. Version 2 is a major upgrade, requiring WordPress 4.2+, Gravity Forms 1.9+. After upgrading, please check your forms to ensure that the correct credit cards are enabled.
+Client Side Encryption works on form previews now too, and translations work correctly again. Version 2 is a major upgrade, requiring WordPress 4.2+, Gravity Forms 1.9+. After upgrading, please check your forms to ensure that the correct credit cards are enabled.
 
 == Changelog ==
 
-The full changelog can be found [on GitHub](https://github.com/webaware/gravityforms-eway/blob/master/changelog.md). Recent entries:
+[Gravity Forms eWAY Pro is now available!](https://gfeway.webaware.net.au/)
+
+The full changelog for Gravity Forms eWAY can be found [on GitHub](https://github.com/webaware/gravityforms-eway/blob/master/changelog.md). Recent entries:
+
+### 2.1.5, 2016-03-14
+
+* fixed: PHP warning on static member access
+* fixed: use correct textdomain slug for loading translation strings
+* fixed: Client Side Encryption works on form previews now too
 
 ### 2.1.4, 2016-02-24
 

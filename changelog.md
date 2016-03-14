@@ -2,7 +2,7 @@
 
 ## Changelog
 
-### 2.1.5, soon...
+### 2.1.5, 2016-03-14
 
 * fixed: PHP warning on static member access
 * fixed: use correct textdomain slug for loading translation strings
