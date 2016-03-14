@@ -6,6 +6,7 @@
 
 * fixed: PHP warning on static member access
 * fixed: use correct textdomain slug for loading translation strings
+* fixed: Client Side Encryption works on form previews now too
 
 ### 2.1.4, 2016-02-24
 

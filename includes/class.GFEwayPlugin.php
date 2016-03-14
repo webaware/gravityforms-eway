@@ -67,6 +67,7 @@ class GFEwayPlugin {
 		// do nothing if Gravity Forms isn't enabled or doesn't meet required minimum version
 		if (self::hasMinimumGF()) {
 			add_action('wp_enqueue_scripts', array($this, 'registerScripts'), 20);
+			add_action('gform_preview_footer', array($this, 'registerScripts'), 5);
 
 			// hook into Gravity Forms to enable credit cards and trap form submissions
 			add_action('gform_enqueue_scripts', array($this, 'gformEnqueueScripts'), 20, 2);
@@ -118,6 +119,7 @@ class GFEwayPlugin {
 		if ($this->canEncryptCardDetails($form)) {
 			wp_enqueue_script('eway-ecrypt');
 			add_action('wp_print_footer_scripts', array($this, 'ecryptInitScript'));
+			add_action('gform_preview_footer', array($this, 'ecryptInitScript'));
 		}
 	}
 
@@ -125,6 +127,11 @@ class GFEwayPlugin {
 	* register inline scripts for client-side encryption if form posts with AJAX
 	*/
 	public function ecryptInitScript() {
+		// when previewing form, will not have printed footer scripts
+		if (!wp_script_is('eway-ecrypt', 'done')) {
+			wp_print_scripts(array('eway-ecrypt'));
+		}
+
 		$min = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
 
 		echo '<script>';
