@@ -347,7 +347,7 @@ class GFEwayRapidAPIResponse {
 				'V6121' => _x('%s: Invalid TransactionSearch, Filter Match Type', 'eWAY coded response', 'gravityforms-eway'),
 				'V6122' => _x('%s: Invalid TransactionSearch, Non numeric Transaction ID', 'eWAY coded response', 'gravityforms-eway'),
 				'V6123' => _x('%s: Invalid TransactionSearch,no TransactionID or AccessCode specified', 'eWAY coded response', 'gravityforms-eway'),
-				'V6124' => _x('%s: Invalid Line Items. The line items have been provided however the totals do not match the TotalAmount field', 'eWAY coded response', 'gravityforms-eway'),
+				'V6124' => _x('%s: Invalid Line Items. The line items have been provided, however the totals do not match the TotalAmount field', 'eWAY coded response', 'gravityforms-eway'),
 				'V6125' => _x('%s: Selected Payment Type not enabled', 'eWAY coded response', 'gravityforms-eway'),
 				'V6126' => _x('%s: Invalid encrypted card number, decryption failed', 'eWAY coded response', 'gravityforms-eway'),
 				'V6127' => _x('%s: Invalid encrypted cvn, decryption failed', 'eWAY coded response', 'gravityforms-eway'),
