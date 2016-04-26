@@ -4,6 +4,7 @@
 
 ### 2.2.0, soon...
 
+* changed: minimum required version of Gravity Forms is 1.9.15
 * added: separate sandbox configuration, making it easier to switch between Live and Sandbox modes
 
 ### 2.1.5, 2016-03-14

@@ -21,7 +21,7 @@ class GFEwayPlugin {
 	protected $ecryptKey;								// active ecrypt key
 
 	// minimum versions required
-	const MIN_VERSION_GF	= '1.9';
+	const MIN_VERSION_GF	= '1.9.15';
 
 	/**
 	* static method for getting the instance of this singleton object
