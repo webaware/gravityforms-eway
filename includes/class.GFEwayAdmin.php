@@ -26,8 +26,10 @@ class GFEwayAdmin {
 
 		// only if Gravity Forms is activated and of minimum version
 		if (GFEwayPlugin::hasMinimumGF()) {
-			// add settings link
-			add_action('plugin_action_links_' . GFEWAY_PLUGIN_NAME, array($this, 'addPluginActionLinks'));
+			// add settings link to Plugins page
+			if (current_user_can('gform_full_access') || current_user_can('gravityforms_edit_settings')) {
+				add_action('plugin_action_links_' . GFEWAY_PLUGIN_NAME, array($this, 'addPluginActionLinks'));
+			}
 
 			// let Gravity Forms determine who has access to settings
 			add_filter('option_page_capability_' . GFEWAY_PLUGIN_OPTIONS, array($this, 'optionPageCapability'));
