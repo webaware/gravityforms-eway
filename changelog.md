@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 2.2.0, soon...
+
+* added: separate sandbox configuration, making it easier to switch between Live and Sandbox modes
+
 ### 2.1.5, 2016-03-14
 
 * fixed: PHP warning on static member access

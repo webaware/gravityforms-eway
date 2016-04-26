@@ -1,97 +1,161 @@
 
 <?php settings_errors(GFEWAY_PLUGIN_OPTIONS); ?>
 
-<h3><span><i class="fa fa-credit-card"></i> <?php _ex('eWAY Payments', 'settings page', 'gravityforms-eway'); ?></span></h3>
+<h3><span><i class="fa fa-credit-card"></i> <?php echo esc_html_x('eWAY Payments', 'settings page', 'gravityforms-eway'); ?></span></h3>
 
 <form action="<?php echo admin_url('options.php'); ?>" method="POST" id="eway-settings-form">
 	<?php settings_fields(GFEWAY_PLUGIN_OPTIONS); ?>
 
-	<table class="form-table">
+	<h4 class="gaddon-section-title gf_settings_subgroup_title"><?php esc_html_e('Live settings', 'gravityforms-eway'); ?></h4>
+
+	<table class="form-table gforms_form_settings">
 
 		<tr>
-			<th scope="row"><label for="gfeway_plugin_apiKey"><?php _e('eWAY API Key', 'gravityforms-eway'); ?></label></th>
+			<th scope="row">
+				<label for="gfeway_plugin_apiKey"><?php echo esc_html_x('API Key', 'settings field', 'gravityforms-eway'); ?></label>
+				<?php gform_tooltip(esc_html__('eWAY Rapid API key, from your MYeWAY console.', 'gravityforms-eway')); ?>
+			</th>
 			<td>
 				<input type="text" class="large-text" name="gfeway_plugin[apiKey]" id="gfeway_plugin_apiKey" value="<?php echo esc_attr($options['apiKey']); ?>" />
 			</td>
 		</tr>
 
 		<tr>
-			<th scope="row"><label for="gfeway_plugin_apiPassword"><?php _e('eWAY API Password', 'gravityforms-eway'); ?></label></th>
+			<th scope="row">
+				<label for="gfeway_plugin_apiPassword"><?php echo esc_html_x('API Password', 'settings field', 'gravityforms-eway'); ?></label>
+				<?php gform_tooltip(esc_html__('eWAY Rapid API password, from your MYeWAY console.', 'gravityforms-eway')); ?>
+			</th>
 			<td>
 				<input type="text" class="regular-text" name="gfeway_plugin[apiPassword]" id="gfeway_plugin_apiPassword" value="<?php echo esc_attr($options['apiPassword']); ?>" />
 			</td>
 		</tr>
 
 		<tr>
-			<th scope="row"><label for="gfeway_plugin_customerID"><?php _e('eWAY Customer ID', 'gravityforms-eway'); ?></label></th>
+			<th scope="row">
+				<label for="gfeway_plugin_customerID"><?php echo esc_html_x('Customer ID', 'settings field', 'gravityforms-eway'); ?></label>
+				<?php gform_tooltip(esc_html__('eWAY customer ID, required for Recurring Payments and legacy XML API; from your MYeWAY console.', 'gravityforms-eway')); ?>
+			</th>
 			<td>
 				<input type="text" class="regular-text" name="gfeway_plugin[customerID]" id="gfeway_plugin_customerID" value="<?php echo esc_attr($options['customerID']); ?>" />
-				<p><em><?php _e('Required for recurring payments and legacy XML API.', 'gravityforms-eway'); ?></em></p>
 			</td>
 		</tr>
 
 		<tr>
-			<th scope="row"><label for="gfeway_plugin_ecryptKey"><?php _e('Client Side Encryption Key', 'gravityforms-eway'); ?></label></th>
+			<th scope="row">
+				<label for="gfeway_plugin_ecryptKey"><?php echo esc_html_x('Client Side Encryption Key', 'settings field', 'gravityforms-eway'); ?></label>
+				<?php gform_tooltip(esc_html__("Securely encrypts sensitive credit card information in the customer's browser, so that a non-PCI certified merchant can accept the form data on their system.", 'gravityforms-eway')); ?>
+			</th>
 			<td>
 				<textarea name="gfeway_plugin[ecryptKey]" id="gfeway_plugin_ecryptKey" rows="5" class="large-text"><?php echo esc_attr($options['ecryptKey']); ?></textarea>
-				<p><em><?php _e("Securely encrypts sensitive credit card information in the customer's browser, so that a non-PCI certified merchant can accept the form data on their system.", 'gravityforms-eway'); ?></em></p>
 			</td>
 		</tr>
 
+	</table>
+
+	<h4 class="gf_settings_subgroup_title"><?php esc_html_e('Sandbox settings', 'gravityforms-eway'); ?></h4>
+
+	<table class="form-table gforms_form_settings">
+
+		<tr>
+			<th scope="row">
+				<label for="gfeway_plugin_sandboxApiKey"><?php echo esc_html_x('API Key', 'settings field', 'gravityforms-eway'); ?></label>
+				<?php gform_tooltip(esc_html__('eWAY Rapid API key, from your MYeWAY console.', 'gravityforms-eway')); ?>
+			</th>
+			<td>
+				<input type="text" class="large-text" name="gfeway_plugin[sandboxApiKey]" id="gfeway_plugin_sandboxApiKey" value="<?php echo esc_attr($options['sandboxApiKey']); ?>" />
+			</td>
+		</tr>
+
+		<tr>
+			<th scope="row">
+				<label for="gfeway_plugin_sandboxPassword"><?php echo esc_html_x('API Password', 'settings field', 'gravityforms-eway'); ?></label>
+				<?php gform_tooltip(esc_html__('eWAY Rapid API password, from your MYeWAY console.', 'gravityforms-eway')); ?>
+			</th>
+			<td>
+				<input type="text" class="regular-text" name="gfeway_plugin[sandboxPassword]" id="gfeway_plugin_sandboxPassword" value="<?php echo esc_attr($options['sandboxPassword']); ?>" />
+			</td>
+		</tr>
+
+		<tr>
+			<th scope="row">
+				<label for="gfeway_plugin_sandboxCustomerID"><?php echo esc_html_x('Customer ID', 'settings field', 'gravityforms-eway'); ?></label>
+				<?php gform_tooltip(esc_html__('eWAY customer ID, for the legacy XML API sandbox (not used for the Recurring Payments sandbox); from your MYeWAY console.', 'gravityforms-eway')); ?>
+			</th>
+			<td>
+				<input type="text" class="regular-text" name="gfeway_plugin[sandboxCustomerID]" id="gfeway_plugin_sandboxCustomerID" value="<?php echo esc_attr($options['sandboxCustomerID']); ?>" />
+			</td>
+		</tr>
+
+		<tr>
+			<th scope="row">
+				<label for="gfeway_plugin_sandboxEcryptKey"><?php echo esc_html_x('Client Side Encryption Key', 'settings field', 'gravityforms-eway'); ?></label>
+				<?php gform_tooltip(esc_html__("Securely encrypts sensitive credit card information in the customer's browser, so that a non-PCI certified merchant can accept the form data on their system.", 'gravityforms-eway')); ?>
+			</th>
+			<td>
+				<textarea name="gfeway_plugin[sandboxEcryptKey]" id="gfeway_plugin_sandboxEcryptKey" rows="5" class="large-text"><?php echo esc_attr($options['sandboxEcryptKey']); ?></textarea>
+			</td>
+		</tr>
+
+	</table>
+
+	<h4 class="gaddon-section-title gf_settings_subgroup_title"><?php echo esc_html_x('Options', 'settings page', 'gravityforms-eway'); ?></h4>
+
+	<table class="form-table gforms_form_settings">
+
 		<tr valign='top'>
-			<th scope="row"><?php _ex('Options', 'settings', 'gravityforms-eway'); ?></th>
+			<th>&nbsp;</th>
 			<td>
 
 				<fieldset>
-					<legend><?php _e('Payment Method', 'gravityforms-eway'); ?></legend>
+					<legend><?php echo esc_html_x('Payment Method', 'settings field', 'gravityforms-eway'); ?></legend>
 					<input type="radio" name="gfeway_plugin[useStored]" id="gfeway_plugin_useStored_no" value="" <?php checked($options['useStored'], ''); ?> />
-					<label for="gfeway_plugin_useStored_no"><?php _ex('Capture', 'payment method', 'gravityforms-eway'); ?></label>
+					<label for="gfeway_plugin_useStored_no"><?php echo esc_html_x('Capture', 'payment method', 'gravityforms-eway'); ?></label>
 					<input type="radio" name="gfeway_plugin[useStored]" id="gfeway_plugin_useStored_yes" value="1" <?php checked($options['useStored'], '1'); ?> />
-					<label for="gfeway_plugin_useStored_yes"><?php _ex('Authorize', 'payment method', 'gravityforms-eway'); ?></label>
-					<p id="gfeway-opt-admin-stored-test"><em><?php _e('The Stored Payments legacy XML API has no sandbox, so transactions are simulated via the Direct Payments XML API sandbox. Add your API key and password to use Rapid API and see PreAuth transactions in your sandbox.', 'gravityforms-eway'); ?></em></p>
+					<label for="gfeway_plugin_useStored_yes"><?php echo esc_html_x('Authorize', 'payment method', 'gravityforms-eway'); ?></label>
+					<p id="gfeway-opt-admin-stored-test"><em><?php esc_html_e('The Stored Payments legacy XML API has no sandbox, so transactions are simulated via the Direct Payments XML API sandbox. Add your API key and password to use Rapid API and see PreAuth transactions in your sandbox.', 'gravityforms-eway'); ?></em></p>
 				</fieldset>
 
 				<fieldset>
-					<legend><?php _e('Use Sandbox (testing environment)', 'gravityforms-eway'); ?></legend>
+					<legend><?php esc_html_e('Use Sandbox (testing environment)', 'gravityforms-eway'); ?></legend>
 					<input type="radio" name="gfeway_plugin[useTest]" id="gfeway_plugin_useTest_yes" value="1" <?php checked($options['useTest'], '1'); ?> />
-					<label for="gfeway_plugin_useTest_yes"><?php _ex('Yes', 'settings', 'gravityforms-eway'); ?></label>
+					<label for="gfeway_plugin_useTest_yes"><?php echo esc_html_x('Yes', 'settings', 'gravityforms-eway'); ?></label>
 					<input type="radio" name="gfeway_plugin[useTest]" id="gfeway_plugin_useTest_no" value="" <?php checked($options['useTest'], ''); ?> />
-					<label for="gfeway_plugin_useTest_no"><?php _ex('No', 'settings', 'gravityforms-eway'); ?></label>
+					<label for="gfeway_plugin_useTest_no"><?php echo esc_html_x('No', 'settings', 'gravityforms-eway'); ?></label>
 				</fieldset>
 
 				<fieldset>
-					<legend><?php _e('Round Amounts for Sandbox', 'gravityforms-eway'); ?></legend>
+					<legend><?php esc_html_e('Round Amounts for Sandbox', 'gravityforms-eway'); ?></legend>
 					<input type="radio" name="gfeway_plugin[roundTestAmounts]" id="gfeway_plugin_roundTestAmounts_yes" value="1" <?php checked($options['roundTestAmounts'], '1'); ?> />
-					<label for="gfeway_plugin_roundTestAmounts_yes"><?php _ex('Yes', 'settings', 'gravityforms-eway'); ?></label>
+					<label for="gfeway_plugin_roundTestAmounts_yes"><?php echo esc_html_x('Yes', 'settings', 'gravityforms-eway'); ?></label>
 					<input type="radio" name="gfeway_plugin[roundTestAmounts]" id="gfeway_plugin_roundTestAmounts_no" value="" <?php checked($options['roundTestAmounts'], ''); ?> />
-					<label for="gfeway_plugin_roundTestAmounts_no"><?php _ex('No', 'settings', 'gravityforms-eway'); ?></label>
-					<p><em><?php _e('Ensures successful transactions when the sandbox behavior is set to "Use Cents Value".', 'gravityforms-eway'); ?></em></p>
+					<label for="gfeway_plugin_roundTestAmounts_no"><?php echo esc_html_x('No', 'settings', 'gravityforms-eway'); ?></label>
+					<p><em><?php esc_html_e('Ensures successful transactions when the sandbox behavior is set to "Use Cents Value".', 'gravityforms-eway'); ?></em></p>
 				</fieldset>
 
 				<fieldset>
-					<legend><?php _e('Force Test Customer ID in Sandbox', 'gravityforms-eway'); ?></legend>
+					<legend><?php esc_html_e('Force Customer ID 87654321 in Sandbox', 'gravityforms-eway'); ?></legend>
 					<input type="radio" name="gfeway_plugin[forceTestAccount]" id="gfeway_plugin_forceTestAccount_yes" value="1" <?php checked($options['forceTestAccount'], '1'); ?> />
-					<label for="gfeway_plugin_forceTestAccount_yes"><?php _ex('Yes', 'settings', 'gravityforms-eway'); ?></label>
+					<label for="gfeway_plugin_forceTestAccount_yes"><?php echo esc_html_x('Yes', 'settings', 'gravityforms-eway'); ?></label>
 					<input type="radio" name="gfeway_plugin[forceTestAccount]" id="gfeway_plugin_forceTestAccount_no" value="" <?php checked($options['forceTestAccount'], ''); ?> />
-					<label for="gfeway_plugin_forceTestAccount_no"><?php _ex('No', 'settings', 'gravityforms-eway'); ?></label>
+					<label for="gfeway_plugin_forceTestAccount_no"><?php echo esc_html_x('No', 'settings', 'gravityforms-eway'); ?></label>
 				</fieldset>
 
 				<fieldset id="gfeway-opt-admin-beagle">
 					<legend><?php printf(__('Use <a href="%s" target="_blank">Beagle Lite</a> for legacy XML API', 'gravityforms-eway'), 'https://eway.io/features/antifraud-beagle-lite'); ?></legend>
 					<input type="radio" name="gfeway_plugin[useBeagle]" id="gfeway_plugin_useBeagle_yes" value="1" <?php checked($options['useBeagle'], '1'); ?> />
-					<label for="gfeway_plugin_useBeagle_yes"><?php _ex('Yes', 'settings', 'gravityforms-eway'); ?></label>
+					<label for="gfeway_plugin_useBeagle_yes"><?php echo esc_html_x('Yes', 'settings', 'gravityforms-eway'); ?></label>
 					<input type="radio" name="gfeway_plugin[useBeagle]" id="gfeway_plugin_useBeagle_no" value="" <?php checked($options['useBeagle'], ''); ?> />
-					<label for="gfeway_plugin_useBeagle_no"><?php _ex('No', 'settings', 'gravityforms-eway'); ?></label>
-					<p id="gfeway-opt-admin-stored-beagle"><em><?php _e('Beagle Lite is not available for the Stored Payments legacy XML API.', 'gravityforms-eway'); ?></em></p>
-					<p id="gfeway-opt-admin-beagle-address"><em><?php _e('Beagle Lite fraud detection requires an address for each transaction. Be sure to add an Address field to your forms, and make it a required field.', 'gravityforms-eway'); ?></em></p>
+					<label for="gfeway_plugin_useBeagle_no"><?php echo esc_html_x('No', 'settings', 'gravityforms-eway'); ?></label>
+					<p id="gfeway-opt-admin-stored-beagle"><em><?php esc_html_e('Beagle Lite is not available for the Stored Payments legacy XML API.', 'gravityforms-eway'); ?></em></p>
+					<p id="gfeway-opt-admin-beagle-address"><em><?php esc_html_e('Beagle Lite fraud detection requires an address for each transaction. Be sure to add an Address field to your forms, and make it a required field.', 'gravityforms-eway'); ?></em></p>
 				</fieldset>
 
 				<fieldset>
-					<legend><?php _e('Verify remote SSL certificate', 'gravityforms-eway'); ?></legend>
+					<legend><?php esc_html_e('Verify remote SSL certificate', 'gravityforms-eway'); ?></legend>
 					<input type="radio" name="gfeway_plugin[sslVerifyPeer]" id="gfeway_plugin_sslVerifyPeer_yes" value="Y" <?php checked($options['sslVerifyPeer'], '1'); ?> />
-					<label for="gfeway_plugin_sslVerifyPeer_yes"><?php _ex('Yes', 'settings', 'gravityforms-eway'); ?></label>
+					<label for="gfeway_plugin_sslVerifyPeer_yes"><?php echo esc_html_x('Yes', 'settings', 'gravityforms-eway'); ?></label>
 					<input type="radio" name="gfeway_plugin[sslVerifyPeer]" id="gfeway_plugin_sslVerifyPeer_no" value="N" <?php checked($options['sslVerifyPeer'], ''); ?> />
-					<label for="gfeway_plugin_sslVerifyPeer_no"><?php _ex('No', 'settings', 'gravityforms-eway'); ?></label>
+					<label for="gfeway_plugin_sslVerifyPeer_no"><?php echo esc_html_x('No', 'settings', 'gravityforms-eway'); ?></label>
 					<p><em><?php printf(__("Only choose 'no' if you can't <a target='_blank' href='%s'>fix your website SSL configuration</a> due to a technical reason.", 'gravityforms-eway'),
 						'http://snippets.webaware.com.au/howto/stop-turning-off-curlopt_ssl_verifypeer-and-fix-your-php-config/'); ?></em></p>
 				</fieldset>
@@ -99,8 +163,14 @@
 			</td>
 		</tr>
 
+	</table>
+
+	<h4 class="gaddon-section-title gf_settings_subgroup_title"><?php echo esc_html_x('Error messages', 'settings', 'gravityforms-eway'); ?></h4>
+
+	<table class="form-table gforms_form_settings">
+
 		<tr>
-			<th colspan="2"><?php _e('You may customize the error messages below. Leave a message blank to use the default error message.', 'gravityforms-eway'); ?></th>
+			<th colspan="2"><?php esc_html_e('You may customize the error messages below. Leave a message blank to use the default error message.', 'gravityforms-eway'); ?></th>
 		</tr>
 
 		<tr colspan="2">

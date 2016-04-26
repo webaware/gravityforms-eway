@@ -18,6 +18,7 @@ class GFEwayPlugin {
 
 	protected $txResult = null;                         // results from credit card payment transaction
 	protected $formHasCcField = false;                  // true if current form has credit card field
+	protected $ecryptKey;								// active ecrypt key
 
 	// minimum versions required
 	const MIN_VERSION_GF	= '1.9';
@@ -56,6 +57,10 @@ class GFEwayPlugin {
 			'apiKey'				=> '',
 			'apiPassword'			=> '',
 			'ecryptKey'				=> '',
+			'sandboxCustomerID'		=> '',
+			'sandboxApiKey'			=> '',
+			'sandboxPassword'		=> '',
+			'sandboxEcryptKey'		=> '',
 			'useTest'				=> true,
 			'useBeagle'				=> false,
 			'roundTestAmounts'		=> true,
@@ -205,7 +210,7 @@ class GFEwayPlugin {
 	* @return string
 	*/
 	public function ecryptFormTag($tag, $form) {
-		$attr = sprintf('data-eway-encrypt-key="%s"', esc_attr($this->options['ecryptKey']));
+		$attr = sprintf('data-eway-encrypt-key="%s"', esc_attr($this->ecryptKey));
 		$tag = str_replace('<form ', "<form $attr ", $tag);
 
 		return $tag;
@@ -410,9 +415,11 @@ class GFEwayPlugin {
 		$eway = null;
 		$isLiveSite = !$this->options['useTest'];
 
+		$creds = $this->getEwayCredentials($this->options['useTest']);
+
 		if ($type === 'recurring') {
 			// Recurring XML API
-			$customerID = $this->options['useTest'] ? '87654321' : $this->options['customerID'];
+			$customerID = $this->options['useTest'] ? '87654321' : $creds['customerID'];
 			if (empty($customerID)) {
 				throw new GFEwayException(__("Can't request recurring payment; no eWAY customer ID.", 'gravityforms-eway'));
 			}
@@ -420,14 +427,14 @@ class GFEwayPlugin {
 		}
 		else {
 			// single payments
-			if (!empty($this->options['apiKey']) && !empty($this->options['apiPassword'])) {
+			if (!empty($creds['apiKey']) && !empty($creds['password'])) {
 				// Rapid API
 				$capture = !$this->options['useStored'];
-				$eway = new GFEwayRapidAPI($this->options['apiKey'], $this->options['apiPassword'], $this->options['useTest'], $capture);
+				$eway = new GFEwayRapidAPI($creds['apiKey'], $creds['password'], $this->options['useTest'], $capture);
 			}
 			else {
 				// legacy XML APIs
-				$customerID = ($this->options['useTest'] && $this->options['forceTestAccount']) ? '87654321' : $this->options['customerID'];
+				$customerID = ($this->options['useTest'] && $this->options['forceTestAccount']) ? '87654321' : $creds['customerID'];
 				if (empty($customerID)) {
 					throw new GFEwayException(__("Can't request payment; no eWAY credentials.", 'gravityforms-eway'));
 				}
@@ -806,8 +813,10 @@ class GFEwayPlugin {
 	* @return bool
 	*/
 	protected function canEncryptCardDetails($form) {
+		$creds = $this->getEwayCredentials();
+
 		// must have Rapid API key/password and Client Side Encryption key
-		if (empty($this->options['ecryptKey']) || empty($this->options['apiKey']) || empty($this->options['apiPassword'])) {
+		if (empty($creds['ecryptKey']) || empty($creds['apiKey']) || empty($creds['password'])) {
 			return false;
 		}
 
@@ -815,6 +824,8 @@ class GFEwayPlugin {
 		if (!self::isEwayForm($form['id'], $form['fields'])) {
 			return false;
 		}
+
+		$this->ecryptKey = $creds['ecryptKey'];
 
 		return true;
 	}
@@ -858,6 +869,33 @@ class GFEwayPlugin {
 			}
 		}
 		return false;
+	}
+
+	/**
+	* get eWAY credentials
+	* @return string
+	*/
+	protected function getEwayCredentials() {
+		// get defaults from add-on settings
+		$creds = array(
+			'apiKey'		=> $this->options['apiKey'],
+			'password'		=> $this->options['apiPassword'],
+			'ecryptKey'		=> $this->options['ecryptKey'],
+			'customerID'	=> $this->options['customerID'],
+		);
+
+		// override with Sandbox settings if set for Sandbox
+		if ($this->options['useTest']) {
+			$credsSandbox = array_filter(array(
+				'apiKey'		=> $this->options['sandboxApiKey'],
+				'password'		=> $this->options['sandboxPassword'],
+				'ecryptKey'		=> $this->options['sandboxEcryptKey'],
+				'customerID'	=> $this->options['sandboxCustomerID'],
+			));
+			$creds = array_merge($creds, $credsSandbox);
+		}
+
+		return $creds;
 	}
 
 	/**

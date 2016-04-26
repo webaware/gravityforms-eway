@@ -262,6 +262,12 @@ class GFEwayAdmin {
 		$output['apiKey']				= trim(strip_tags($input['apiKey']));
 		$output['apiPassword']			= trim(strip_tags($input['apiPassword']));
 		$output['ecryptKey']			= trim($input['ecryptKey']);
+
+		$output['sandboxCustomerID']	= trim(sanitize_text_field($input['sandboxCustomerID']));
+		$output['sandboxApiKey']		= trim(strip_tags($input['sandboxApiKey']));
+		$output['sandboxPassword']		= trim(strip_tags($input['sandboxPassword']));
+		$output['sandboxEcryptKey']		= trim($input['sandboxEcryptKey']);
+
 		$output['useStored']			= empty($input['useStored']) ? '' : 1;
 		$output['useTest']				= empty($input['useTest']) ? '' : 1;
 		$output['useBeagle']			= empty($input['useBeagle']) ? '' : 1;
@@ -278,21 +284,6 @@ class GFEwayAdmin {
 		);
 		foreach ($errNames as $name) {
 			$output[$name] = trim(sanitize_text_field($input[$name]));
-		}
-
-		$msg = '';
-
-		if (empty($output['apiKey']) xor empty($output['apiPassword'])) {
-			$msg = __('Please enter both your eWAY API key and password', 'gravityforms-eway');
-			add_settings_error(GFEWAY_PLUGIN_OPTIONS, '', $msg);
-		}
-		elseif (empty($output['customerID']) && empty($output['apiKey']) && empty($output['apiPassword'])) {
-			$msg = __('Please enter your eWAY API key and password, or your customer ID', 'gravityforms-eway');
-			add_settings_error(GFEWAY_PLUGIN_OPTIONS, '', $msg);
-		}
-
-		if (empty($msg)) {
-			add_settings_error(GFEWAY_PLUGIN_OPTIONS, 'settings_updated', __('Settings saved.', 'gravityforms-eway'), 'updated');
 		}
 
 		return $output;
