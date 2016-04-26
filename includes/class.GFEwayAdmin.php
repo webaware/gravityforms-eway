@@ -58,11 +58,6 @@ class GFEwayAdmin {
 		add_settings_section(GFEWAY_PLUGIN_OPTIONS, false, false, GFEWAY_PLUGIN_OPTIONS);
 		register_setting(GFEWAY_PLUGIN_OPTIONS, GFEWAY_PLUGIN_OPTIONS, array($this, 'settingsValidate'));
 
-		// in_plugin_update_message isn't supported on multisite != blog-1, so just add another row
-		if (current_user_can('update_plugins')) {
-			add_action('after_plugin_row_' . GFEWAY_PLUGIN_NAME, array($this, 'upgradeMessage'), 20, 2);
-		}
-
 		// check for non-AJAX dismissable notices from click-through links
 		if (isset($_GET['gfeway_dismiss']) && !(defined('DOING_AJAX') && DOING_AJAX)) {
 			$this->dismissNotice();
@@ -181,27 +176,6 @@ class GFEwayAdmin {
 	*/
 	public function footerDismissableNotices() {
 		require GFEWAY_PLUGIN_ROOT . 'views/script-dismissable.php';
-	}
-
-	/**
-	* show upgrade messages on Plugins admin page
-	* @param string $file
-	* @param object $current_meta
-	*/
-	public function upgradeMessage($file, $plugin_data) {
-		$current = get_site_transient('update_plugins');
-
-		if (isset($current->response[$file])) {
-			$r = $current->response[$file];
-
-			if (!empty($r->upgrade_notice)) {
-				$wp_list_table = _get_list_table('WP_Plugins_List_Table');
-				$colspan = $wp_list_table->get_column_count();
-				$plugin_name = wp_kses($plugin_data['Name'], 'strip');
-
-				require GFEWAY_PLUGIN_ROOT . 'views/admin-upgrade-message.php';
-			}
-		}
 	}
 
 	/**
