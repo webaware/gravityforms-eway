@@ -32,21 +32,21 @@
 
 		<tr>
 			<th scope="row">
-				<label for="gfeway_plugin_customerID"><?php echo esc_html_x('Customer ID', 'settings field', 'gravityforms-eway'); ?></label>
-				<?php gform_tooltip(esc_html__('eWAY customer ID, required for Recurring Payments and legacy XML API; from your MYeWAY console.', 'gravityforms-eway')); ?>
+				<label for="gfeway_plugin_ecryptKey"><?php echo esc_html_x('Client Side Encryption Key', 'settings field', 'gravityforms-eway'); ?></label>
+				<?php gform_tooltip(esc_html__("Securely encrypts sensitive credit card information in the customer's browser, so that you can accept credit cards on your website without full PCI certification.", 'gravityforms-eway')); ?>
 			</th>
 			<td>
-				<input type="text" class="regular-text" name="gfeway_plugin[customerID]" id="gfeway_plugin_customerID" value="<?php echo esc_attr($options['customerID']); ?>" />
+				<textarea name="gfeway_plugin[ecryptKey]" id="gfeway_plugin_ecryptKey" rows="5" class="large-text"><?php echo esc_attr($options['ecryptKey']); ?></textarea>
 			</td>
 		</tr>
 
 		<tr>
 			<th scope="row">
-				<label for="gfeway_plugin_ecryptKey"><?php echo esc_html_x('Client Side Encryption Key', 'settings field', 'gravityforms-eway'); ?></label>
-				<?php gform_tooltip(esc_html__("Securely encrypts sensitive credit card information in the customer's browser, so that a non-PCI certified merchant can accept the form data on their system.", 'gravityforms-eway')); ?>
+				<label for="gfeway_plugin_customerID"><?php echo esc_html_x('Customer ID', 'settings field', 'gravityforms-eway'); ?></label>
+				<?php gform_tooltip(esc_html__('eWAY customer ID, required for Recurring Payments and legacy XML API; from your MYeWAY console.', 'gravityforms-eway')); ?>
 			</th>
 			<td>
-				<textarea name="gfeway_plugin[ecryptKey]" id="gfeway_plugin_ecryptKey" rows="5" class="large-text"><?php echo esc_attr($options['ecryptKey']); ?></textarea>
+				<input type="text" class="regular-text" name="gfeway_plugin[customerID]" id="gfeway_plugin_customerID" value="<?php echo esc_attr($options['customerID']); ?>" />
 			</td>
 		</tr>
 
@@ -78,21 +78,21 @@
 
 		<tr>
 			<th scope="row">
-				<label for="gfeway_plugin_sandboxCustomerID"><?php echo esc_html_x('Customer ID', 'settings field', 'gravityforms-eway'); ?></label>
-				<?php gform_tooltip(esc_html__('eWAY customer ID, for the legacy XML API sandbox (not used for the Recurring Payments sandbox); from your MYeWAY console.', 'gravityforms-eway')); ?>
+				<label for="gfeway_plugin_sandboxEcryptKey"><?php echo esc_html_x('Client Side Encryption Key', 'settings field', 'gravityforms-eway'); ?></label>
+				<?php gform_tooltip(esc_html__("Securely encrypts sensitive credit card information in the customer's browser, so that you can accept credit cards on your website without full PCI certification.", 'gravityforms-eway')); ?>
 			</th>
 			<td>
-				<input type="text" class="regular-text" name="gfeway_plugin[sandboxCustomerID]" id="gfeway_plugin_sandboxCustomerID" value="<?php echo esc_attr($options['sandboxCustomerID']); ?>" />
+				<textarea name="gfeway_plugin[sandboxEcryptKey]" id="gfeway_plugin_sandboxEcryptKey" rows="5" class="large-text"><?php echo esc_attr($options['sandboxEcryptKey']); ?></textarea>
 			</td>
 		</tr>
 
 		<tr>
 			<th scope="row">
-				<label for="gfeway_plugin_sandboxEcryptKey"><?php echo esc_html_x('Client Side Encryption Key', 'settings field', 'gravityforms-eway'); ?></label>
-				<?php gform_tooltip(esc_html__("Securely encrypts sensitive credit card information in the customer's browser, so that a non-PCI certified merchant can accept the form data on their system.", 'gravityforms-eway')); ?>
+				<label for="gfeway_plugin_sandboxCustomerID"><?php echo esc_html_x('Customer ID', 'settings field', 'gravityforms-eway'); ?></label>
+				<?php gform_tooltip(esc_html__('eWAY customer ID, for the legacy XML API sandbox (not used for the Recurring Payments sandbox); from your MYeWAY console.', 'gravityforms-eway')); ?>
 			</th>
 			<td>
-				<textarea name="gfeway_plugin[sandboxEcryptKey]" id="gfeway_plugin_sandboxEcryptKey" rows="5" class="large-text"><?php echo esc_attr($options['sandboxEcryptKey']); ?></textarea>
+				<input type="text" class="regular-text" name="gfeway_plugin[sandboxCustomerID]" id="gfeway_plugin_sandboxCustomerID" value="<?php echo esc_attr($options['sandboxCustomerID']); ?>" />
 			</td>
 		</tr>
 
