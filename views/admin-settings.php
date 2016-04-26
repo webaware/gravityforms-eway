@@ -6,7 +6,7 @@
 <form action="<?php echo admin_url('options.php'); ?>" method="POST" id="eway-settings-form">
 	<?php settings_fields(GFEWAY_PLUGIN_OPTIONS); ?>
 
-	<h4 class="gaddon-section-title gf_settings_subgroup_title"><?php esc_html_e('Live settings', 'gravityforms-eway'); ?></h4>
+	<h4 class="gf_settings_subgroup_title"><?php esc_html_e('Live settings', 'gravityforms-eway'); ?></h4>
 
 	<table class="form-table gforms_form_settings">
 
@@ -98,7 +98,7 @@
 
 	</table>
 
-	<h4 class="gaddon-section-title gf_settings_subgroup_title"><?php echo esc_html_x('Options', 'settings page', 'gravityforms-eway'); ?></h4>
+	<h4 class="gf_settings_subgroup_title"><?php echo esc_html_x('Options', 'settings page', 'gravityforms-eway'); ?></h4>
 
 	<table class="form-table gforms_form_settings">
 
@@ -165,7 +165,7 @@
 
 	</table>
 
-	<h4 class="gaddon-section-title gf_settings_subgroup_title"><?php echo esc_html_x('Error messages', 'settings', 'gravityforms-eway'); ?></h4>
+	<h4 class="gf_settings_subgroup_title"><?php echo esc_html_x('Error messages', 'settings', 'gravityforms-eway'); ?></h4>
 
 	<table class="form-table gforms_form_settings">
 
