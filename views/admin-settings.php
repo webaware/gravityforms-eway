@@ -9,21 +9,21 @@
 	<table class="form-table">
 
 		<tr>
-			<th><label for="gfeway_plugin_apiKey"><?php _e('eWAY API Key', 'gravityforms-eway'); ?></label></th>
+			<th scope="row"><label for="gfeway_plugin_apiKey"><?php _e('eWAY API Key', 'gravityforms-eway'); ?></label></th>
 			<td>
 				<input type="text" class="large-text" name="gfeway_plugin[apiKey]" id="gfeway_plugin_apiKey" value="<?php echo esc_attr($options['apiKey']); ?>" />
 			</td>
 		</tr>
 
 		<tr>
-			<th><label for="gfeway_plugin_apiPassword"><?php _e('eWAY API Password', 'gravityforms-eway'); ?></label></th>
+			<th scope="row"><label for="gfeway_plugin_apiPassword"><?php _e('eWAY API Password', 'gravityforms-eway'); ?></label></th>
 			<td>
 				<input type="text" class="regular-text" name="gfeway_plugin[apiPassword]" id="gfeway_plugin_apiPassword" value="<?php echo esc_attr($options['apiPassword']); ?>" />
 			</td>
 		</tr>
 
 		<tr>
-			<th><label for="gfeway_plugin_customerID"><?php _e('eWAY Customer ID', 'gravityforms-eway'); ?></label></th>
+			<th scope="row"><label for="gfeway_plugin_customerID"><?php _e('eWAY Customer ID', 'gravityforms-eway'); ?></label></th>
 			<td>
 				<input type="text" class="regular-text" name="gfeway_plugin[customerID]" id="gfeway_plugin_customerID" value="<?php echo esc_attr($options['customerID']); ?>" />
 				<p><em><?php _e('Required for recurring payments and legacy XML API.', 'gravityforms-eway'); ?></em></p>
@@ -31,7 +31,7 @@
 		</tr>
 
 		<tr>
-			<th><label for="gfeway_plugin_ecryptKey"><?php _e('Client Side Encryption Key', 'gravityforms-eway'); ?></label></th>
+			<th scope="row"><label for="gfeway_plugin_ecryptKey"><?php _e('Client Side Encryption Key', 'gravityforms-eway'); ?></label></th>
 			<td>
 				<textarea name="gfeway_plugin[ecryptKey]" id="gfeway_plugin_ecryptKey" rows="5" class="large-text"><?php echo esc_attr($options['ecryptKey']); ?></textarea>
 				<p><em><?php _e("Securely encrypts sensitive credit card information in the customer's browser, so that a non-PCI certified merchant can accept the form data on their system.", 'gravityforms-eway'); ?></em></p>
@@ -39,7 +39,7 @@
 		</tr>
 
 		<tr valign='top'>
-			<th><?php _ex('Options', 'settings', 'gravityforms-eway'); ?></th>
+			<th scope="row"><?php _ex('Options', 'settings', 'gravityforms-eway'); ?></th>
 			<td>
 
 				<fieldset>
