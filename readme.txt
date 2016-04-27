@@ -6,8 +6,8 @@ Author URI: http://webaware.com.au/
 Donate link: http://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+eWAY
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards, australia, new zealand, uk, singapore, malaysia, hong kong
 Requires at least: 4.2
-Tested up to: 4.4.2
-Stable tag: 2.1.5
+Tested up to: 4.5.1
+Stable tag: 2.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -208,41 +208,20 @@ Developers can use these filter hooks to modify some eWAY invoice properties. Ea
 
 == Upgrade Notice ==
 
-= 2.1.5 =
+= 2.2.0 =
 
-Client Side Encryption works on form previews now too, and translations work correctly again. Version 2 is a major upgrade, requiring WordPress 4.2+, Gravity Forms 1.9+. After upgrading, please check your forms to ensure that the correct credit cards are enabled.
+Added separate sandbox configuration, making it easier to switch between Live and Sandbox modes. Version 2 is a major upgrade, requiring WordPress 4.2+, Gravity Forms 1.9.15+. After upgrading, please check your forms to ensure that the correct credit cards are enabled.
 
 == Changelog ==
 
-[Gravity Forms eWAY Pro is now available!](https://gfeway.webaware.net.au/)
+> [Gravity Forms eWAY Pro is now available!](https://gfeway.webaware.net.au/)
 
 The full changelog for Gravity Forms eWAY can be found [on GitHub](https://github.com/webaware/gravityforms-eway/blob/master/changelog.md). Recent entries:
 
-### 2.1.5, 2016-03-14
+### 2.2.0, 2016-04-27
 
-* fixed: PHP warning on static member access
-* fixed: use correct textdomain slug for loading translation strings
-* fixed: Client Side Encryption works on form previews now too
-
-### 2.1.4, 2016-02-24
-
-* fixed: don't use Client-Side Encryption on Recurring Payments (even when not used conditionally!)
-* changed: use normal text field for API password in settings (stop browsers hassling to remember the password)
-
-### 2.1.3, 2016-02-15
-
-* fixed: Client-Side Encryption is now used for one-off transactions on forms that conditionally use Recurring Payments
-* changed: always send the customer IP in Rapid API transactions, for Beagle Lite support
-* changed: only allow turning off Beagle Lite when using the legacy XML API (can't be disabled externally for Rapid API)
-
-### 2.1.2, 2016-02-05
-
-* fixed: "Are you sure you want to do this?" security message when trying to save a form confirmation
-
-### 2.1.1, 2016-02-02
-
-* added: partner ID sent to eWAY with payment requests (improved traceability)
-* changed: some words on upgrade notices
+* changed: minimum required version of Gravity Forms is 1.9.15
+* added: separate sandbox configuration, making it easier to switch between Live and Sandbox modes
 
 ### 2.1.0, 2016-02-01
 
