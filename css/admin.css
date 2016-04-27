@@ -29,3 +29,16 @@
 	padding-right: 1.2em;
 }
 
+.gfeway-settings-promote {
+	float: right;
+	background-color: #FFAF00;
+	padding: 1em;
+	border-radius: 3px;
+}
+
+.gfeway-settings-promote a,
+.gfeway-settings-promote a:link,
+.gfeway-settings-promote a:visited {
+	font-weight: bold;
+	color: black;
+}

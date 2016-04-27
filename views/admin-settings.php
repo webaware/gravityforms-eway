@@ -1,6 +1,10 @@
 
 <?php settings_errors(GFEWAY_PLUGIN_OPTIONS); ?>
 
+<div class="gfeway-settings-promote">
+	<a target="_blank" href="https://gfeway.webaware.net.au/"><?php esc_html_e('Go Pro for more flexibility!', 'gravityforms-eway'); ?></a>
+</div>
+
 <h3><span><i class="fa fa-credit-card"></i> <?php echo esc_html_x('eWAY Payments', 'settings page', 'gravityforms-eway'); ?></span></h3>
 
 <form action="<?php echo admin_url('options.php'); ?>" method="POST" id="eway-settings-form">
