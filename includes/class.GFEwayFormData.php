@@ -113,6 +113,10 @@ class GFEwayFormData {
 
 				case 'total':
 					$this->total					= GFCommon::to_number(rgpost("input_{$id}"));
+					// handle condition where Total field comes back blank (e.g. when T2T Toolkit is messing up Gravity Forms) or invalid
+					if ($this->total === false) {
+						$this->total = 0;
+					}
 					$this->hasPurchaseFieldsFlag	= true;
 					break;
 

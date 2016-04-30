@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 2.2.1, soon...
+
+* fixed: T2T Toolkit breaks posted Gravity Forms total field when products have options
+
 ### 2.2.0, 2016-04-27
 
 * changed: minimum required version of Gravity Forms is 1.9.15
