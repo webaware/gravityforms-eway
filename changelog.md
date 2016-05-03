@@ -5,6 +5,7 @@
 ### 2.2.1, soon...
 
 * fixed: T2T Toolkit breaks posted Gravity Forms total field when products have options
+* fixed: set default values for optional Recurring Payment fields, avoids fatal PHP error
 
 ### 2.2.0, 2016-04-27
 

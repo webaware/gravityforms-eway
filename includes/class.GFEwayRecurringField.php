@@ -711,12 +711,14 @@ class GFEwayRecurringField {
 					break;
 			}
 
+			$today = date_create('now', timezone_open('Australia/Sydney'));
+
 			$recurring = array (
-				'amountInit'			=> GFCommon::to_number($recurring[1]),
-				'dateInit'				=> self::parseDate($recurring[2]),
+				'amountInit'			=> empty($recurring[1]) ? 0 : GFCommon::to_number($recurring[1]),
+				'dateInit'				=> empty($recurring[2]) ? $today : self::parseDate($recurring[2]),
 				'amountRecur'			=> GFCommon::to_number($recurring[3]),
-				'dateStart'				=> self::parseDate($recurring[4]),
-				'dateEnd'				=> self::parseDate($recurring[5]),
+				'dateStart'				=> empty($recurring[4]) ? $today : self::parseDate($recurring[4]),
+				'dateEnd'				=> self::parseDate(empty($recurring[5]) ? '31/12/2099' : $recurring[5]),
 				'intervalSize'			=> $intervalSize,
 				'intervalType'			=> $intervalType,
 				'intervalTypeDesc'		=> $recurring[6],
