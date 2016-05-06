@@ -7,7 +7,6 @@ Version: 2.2.1-dev
 Author: WebAware
 Author URI: http://webaware.com.au/
 Text Domain: gravityforms-eway
-Domain Path: /languages/
 */
 
 /*
