@@ -7,7 +7,7 @@ Donate link: http://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+e
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards, australia, new zealand, uk, singapore, malaysia, hong kong
 Requires at least: 4.2
 Tested up to: 4.5.1
-Stable tag: 2.2.0
+Stable tag: 2.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -208,9 +208,9 @@ Developers can use these filter hooks to modify some eWAY invoice properties. Ea
 
 == Upgrade Notice ==
 
-= 2.2.0 =
+= 2.2.1 =
 
-Added separate sandbox configuration, making it easier to switch between Live and Sandbox modes. Version 2 is a major upgrade, requiring WordPress 4.2+, Gravity Forms 1.9.15+. After upgrading, please check your forms to ensure that the correct credit cards are enabled.
+Fixed T2T Toolkit conflict; fixed Recurring Payments fatal error on empty optional subfields.
 
 == Changelog ==
 
@@ -218,22 +218,12 @@ Added separate sandbox configuration, making it easier to switch between Live an
 
 The full changelog for Gravity Forms eWAY can be found [on GitHub](https://github.com/webaware/gravityforms-eway/blob/master/changelog.md). Recent entries:
 
+### 2.2.1, 2016-05-06
+
+* fixed: T2T Toolkit breaks posted Gravity Forms total field when products have options
+* fixed: set default values for optional Recurring Payment fields, avoids fatal PHP error
+
 ### 2.2.0, 2016-04-27
 
 * changed: minimum required version of Gravity Forms is 1.9.15
 * added: separate sandbox configuration, making it easier to switch between Live and Sandbox modes
-
-### 2.1.0, 2016-02-01
-
-* added: [support for eWAY Client Side Encryption](http://shop.webaware.com.au/gravity-forms-eway-client-side-encryption), allowing sites without PCI compliance to use Rapid 3.1 API
-
-### 2.0.0, 2016-01-27
-
-* changed: uses eWAY Rapid API if API key and password are set (not applicable for Recurring Payments)
-* changed: minimum Gravity Forms version is now 1.9
-* changed: currency is no longer limited to AUD
-* changed: don't restrict credit cards, let user select; please review your forms after upgrading, and ensure that the correct credit cards are enabled in your forms
-* changed: use WordPress post date format for recurring payments reported dates
-* fixed: don't attempt to use real Customer ID for Recurring Payments sandbox (only 87654321 works)
-* fixed: only need `gravityforms_edit_settings` to save eWAY settings
-* added: strings are localized and ready for [translation](https://translate.wordpress.org/projects/wp-plugins/gravityforms-eway)!
