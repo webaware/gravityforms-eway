@@ -1,5 +1,5 @@
 
-<?php settings_errors(GFEWAY_PLUGIN_OPTIONS); ?>
+<?php settings_errors(); ?>
 
 <div class="gfeway-settings-promote">
 	<a target="_blank" href="https://gfeway.webaware.net.au/"><?php esc_html_e('Go Pro for more flexibility!', 'gravityforms-eway'); ?></a>

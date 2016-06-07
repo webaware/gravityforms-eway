@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 2.2.2, soon...
+
+* fixed: no confirmation message after saving settings
+
 ### 2.2.1, 2016-05-06
 
 * fixed: T2T Toolkit breaks posted Gravity Forms total field when products have options
