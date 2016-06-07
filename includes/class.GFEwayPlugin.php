@@ -112,7 +112,8 @@ class GFEwayPlugin {
 	* NB: must happen after Gravity Forms registers scripts
 	*/
 	public function registerScripts() {
-		wp_register_script('eway-ecrypt', 'https://secure.ewaypayments.com/scripts/eCrypt.js', array('jquery'), null, true);
+		$min = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
+		wp_register_script('eway-ecrypt', "https://secure.ewaypayments.com/scripts/eCrypt$min.js", array('jquery'), null, true);
 	}
 
 	/**
