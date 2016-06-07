@@ -6,6 +6,7 @@
 
 * fixed: no confirmation message after saving settings
 * changed: use the minified version of the eWAY Client Side Encryption script, unless `SCRIPT_DEBUG` is enabled
+* added: check for PCRE (regular expression library) minimum version
 
 ### 2.2.1, 2016-05-06
 
