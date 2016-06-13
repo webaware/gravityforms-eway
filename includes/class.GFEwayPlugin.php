@@ -1028,7 +1028,7 @@ class GFEwayPlugin {
 			throw new GFEwayCurlException($response->get_error_message());
 		}
 
-		return $response['body'];
+		return wp_remote_retrieve_body($response);
 	}
 
 	/**

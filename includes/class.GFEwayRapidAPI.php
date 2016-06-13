@@ -530,12 +530,15 @@ class GFEwayRapidAPI {
 			throw new GFEwayException(sprintf(__('Error posting eWAY request: %s', 'gravityforms-eway'), $msg));
 		}
 
-		if (empty($response['response']['code']) || $response['response']['code'] !== 200) {
-			$msg = empty($response['response']['message']) ? $response['response']['code'] : $response['response']['message'];
+		if (wp_remote_retrieve_response_code($response) !== 200) {
+			$msg = wp_remote_retrieve_response_message($response);
+			if (empty($msg)) {
+				$msg = wp_remote_retrieve_response_code($response);
+			}
 			throw new GFEwayException(sprintf(__('Error posting eWAY request: %s', 'gravityforms-eway'), $msg));
 		}
 
-		$responseJSON = $response['body'];
+		$responseJSON = wp_remote_retrieve_body($response);
 
 		$response = new GFEwayRapidAPIResponse();
 		$response->loadResponse($responseJSON);
