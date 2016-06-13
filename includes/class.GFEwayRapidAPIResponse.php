@@ -150,6 +150,7 @@ class GFEwayRapidAPIResponse {
 				'A2010' => _x('%s: Approved For Partial Amount', 'eWAY coded response', 'gravityforms-eway'),
 				'A2011' => _x('%s: Approved, VIP', 'eWAY coded response', 'gravityforms-eway'),
 				'A2016' => _x('%s: Approved, Update Track 3', 'eWAY coded response', 'gravityforms-eway'),
+
 				'D4401' => _x('%s: Refer to Issuer', 'eWAY coded response', 'gravityforms-eway'),
 				'D4402' => _x('%s: Refer to Issuer, special', 'eWAY coded response', 'gravityforms-eway'),
 				'D4403' => _x('%s: No Merchant', 'eWAY coded response', 'gravityforms-eway'),
@@ -210,6 +211,7 @@ class GFEwayRapidAPIResponse {
 				'D4497' => _x('%s: MasterPass Error', 'eWAY coded response', 'gravityforms-eway'),
 				'D4498' => _x('%s: PayPal Create Transaction Error', 'eWAY coded response', 'gravityforms-eway'),
 				'D4499' => _x('%s: Invalid Transaction for Auth/Void', 'eWAY coded response', 'gravityforms-eway'),
+
 				'F7000' => _x('%s: Undefined Fraud Error', 'eWAY coded response', 'gravityforms-eway'),
 				'F7001' => _x('%s: Challenged Fraud', 'eWAY coded response', 'gravityforms-eway'),
 				'F7002' => _x('%s: Country Match Fraud', 'eWAY coded response', 'gravityforms-eway'),
@@ -250,6 +252,7 @@ class GFEwayRapidAPIResponse {
 				'F9037' => _x('%s: Suspicious Customer Email Address', 'eWAY coded response', 'gravityforms-eway'),
 				'F9050' => _x('%s: High Risk Email Address and amount', 'eWAY coded response', 'gravityforms-eway'),
 				'F9113' => _x('%s: Card issuing country differs from IP address country', 'eWAY coded response', 'gravityforms-eway'),
+
 				'S5000' => _x('%s: System Error', 'eWAY coded response', 'gravityforms-eway'),
 				'S5011' => _x('%s: PayPal Connection Error', 'eWAY coded response', 'gravityforms-eway'),
 				'S5012' => _x('%s: PayPal Settings Error', 'eWAY coded response', 'gravityforms-eway'),
@@ -259,6 +262,7 @@ class GFEwayRapidAPIResponse {
 				'S5088' => _x('%s: PayPal Transaction Created', 'eWAY coded response', 'gravityforms-eway'),
 				'S5099' => _x('%s: Incomplete (Access Code in progress/incomplete)', 'eWAY coded response', 'gravityforms-eway'),
 				'S5010' => _x('%s: Unknown error returned by gateway', 'eWAY coded response', 'gravityforms-eway'),
+
 				'V6000' => _x('%s: Validation error', 'eWAY coded response', 'gravityforms-eway'),
 				'V6001' => _x('%s: Invalid CustomerIP', 'eWAY coded response', 'gravityforms-eway'),
 				'V6002' => _x('%s: Invalid DeviceID', 'eWAY coded response', 'gravityforms-eway'),
@@ -362,14 +366,23 @@ class GFEwayRapidAPIResponse {
 				'V6140' => _x('%s: Merchant account is suspended', 'eWAY coded response', 'gravityforms-eway'),
 				'V6141' => _x('%s: Invalid PayPal account details or API signature', 'eWAY coded response', 'gravityforms-eway'),
 				'V6142' => _x('%s: Authorize not available for Bank/Branch', 'eWAY coded response', 'gravityforms-eway'),
+				'V6143' => _x('%s: Invalid Public Key', 'eWAY coded response', 'gravityforms-eway'),
+				'V6146' => _x('%s: Client Side Encryption Key Missing or Invalid', 'eWAY coded response', 'gravityforms-eway'),
+				'V6147' => _x('%s: Unable to Create One Time Code for Secure Field', 'eWAY coded response', 'gravityforms-eway'),
+				'V6148' => _x('%s: Secure Field has Expired', 'eWAY coded response', 'gravityforms-eway'),
+				'V6149' => _x('%s: Invalid Secure Field One Time Code', 'eWAY coded response', 'gravityforms-eway'),
 				'V6150' => _x('%s: Invalid Refund Amount', 'eWAY coded response', 'gravityforms-eway'),
 				'V6151' => _x('%s: Refund amount greater than original transaction', 'eWAY coded response', 'gravityforms-eway'),
 				'V6152' => _x('%s: Original transaction already refunded for total amount', 'eWAY coded response', 'gravityforms-eway'),
 				'V6153' => _x('%s: Card type not support by merchant', 'eWAY coded response', 'gravityforms-eway'),
 				'V6160' => _x('%s: Encryption Method Not Supported', 'eWAY coded response', 'gravityforms-eway'),
+				'V6161' => _x('%s: Encryption failed, missing or invalid key', 'eWAY coded response', 'gravityforms-eway'),
 				'V6165' => _x('%s: Invalid Visa Checkout data or decryption failed', 'eWAY coded response', 'gravityforms-eway'),
 				'V6170' => _x('%s: Invalid TransactionSearch, Invoice Number is not unique', 'eWAY coded response', 'gravityforms-eway'),
 				'V6171' => _x('%s: Invalid TransactionSearch, Invoice Number not found', 'eWAY coded response', 'gravityforms-eway'),
+				'V6210' => _x('%s: Secure Field Invalid Type', 'eWAY coded response', 'gravityforms-eway'),
+				'V6211' => _x('%s: Secure Field Invalid Div', 'eWAY coded response', 'gravityforms-eway'),
+				'V6212' => _x('%s: Invalid Style string for Secure Field', 'eWAY coded response', 'gravityforms-eway'),
 			);
 		}
 

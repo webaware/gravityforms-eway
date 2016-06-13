@@ -8,6 +8,7 @@
 * changed: use the minified version of the eWAY Client Side Encryption script, unless `SCRIPT_DEBUG` is enabled
 * changed: use `wp_remote_retrieve_*()` functions instead of response array access (WP4.6 compatibility)
 * added: check for PCRE (regular expression library) minimum version
+* added: new error message strings for eWAY Rapid API response codes
 
 ### 2.2.1, 2016-05-06
 
