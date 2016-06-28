@@ -7,6 +7,7 @@
 * fixed: no confirmation message after saving settings
 * changed: use the minified version of the eWAY Client Side Encryption script, unless `SCRIPT_DEBUG` is enabled
 * changed: use `wp_remote_retrieve_*()` functions instead of response array access (WP4.6 compatibility)
+* changed: use Gravity Forms `get_order_total()` to calculate form total (fixes T2T Toolkit conflict with Coupons add-on)
 * added: check for PCRE (regular expression library) minimum version
 * added: new error message strings for eWAY Rapid API response codes
 
