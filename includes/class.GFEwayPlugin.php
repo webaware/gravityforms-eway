@@ -1024,8 +1024,23 @@ class GFEwayPlugin {
 			'body'			=> $data,
 		));
 
+		// failure to handle the http request
 		if (is_wp_error($response)) {
 			throw new GFEwayCurlException($response->get_error_message());
+		}
+
+		// error code returned by request
+		$code = wp_remote_retrieve_response_code($response);
+		if ($code !== 200) {
+			$msg = wp_remote_retrieve_response_message($response);
+
+			if (empty($msg)) {
+				$msg = sprintf(__('Error posting eWAY request: %s', 'gravityforms-eway'), $code);
+			}
+			else {
+				$msg = sprintf(__('Error posting eWAY request: %1$s, %2$s', 'gravityforms-eway'), $code, $msg);
+			}
+			throw new GFEwayException($msg);
 		}
 
 		return wp_remote_retrieve_body($response);
