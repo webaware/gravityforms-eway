@@ -2,7 +2,7 @@
 
 ## Changelog
 
-### 2.2.2, soon...
+### 2.2.2, 2016-07-24
 
 * fixed: no confirmation message after saving settings
 * changed: use the minified version of the eWAY Client Side Encryption script, unless `SCRIPT_DEBUG` is enabled

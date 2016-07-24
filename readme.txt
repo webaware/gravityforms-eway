@@ -6,8 +6,8 @@ Author URI: http://webaware.com.au/
 Donate link: http://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+eWAY
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards, australia, new zealand, uk, singapore, malaysia, hong kong
 Requires at least: 4.2
-Tested up to: 4.5.1
-Stable tag: 2.2.1
+Tested up to: 4.6
+Stable tag: 2.2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -208,15 +208,25 @@ Developers can use these filter hooks to modify some eWAY invoice properties. Ea
 
 == Upgrade Notice ==
 
-= 2.2.1 =
+= 2.2.2 =
 
-Fixed T2T Toolkit conflict; fixed Recurring Payments fatal error on empty optional subfields.
+Fixed T2T Toolkit conflict with Coupons add-on; WP4.6 compatibility; use the minified eWAY Client Side Encryption script.
 
 == Changelog ==
 
 > [Gravity Forms eWAY Pro is now available!](https://gfeway.webaware.net.au/)
 
 The full changelog for Gravity Forms eWAY can be found [on GitHub](https://github.com/webaware/gravityforms-eway/blob/master/changelog.md). Recent entries:
+
+### 2.2.2, 2016-07-24
+
+* fixed: no confirmation message after saving settings
+* changed: use the minified version of the eWAY Client Side Encryption script, unless `SCRIPT_DEBUG` is enabled
+* changed: use `wp_remote_retrieve_*()` functions instead of response array access (WP4.6 compatibility)
+* changed: use Gravity Forms `get_order_total()` to calculate form total (fixes T2T Toolkit conflict with Coupons add-on)
+* added: check for PCRE (regular expression library) minimum version
+* added: new error message strings for eWAY Rapid API response codes
+* added: prevent multiple instances of Recurring field on form
 
 ### 2.2.1, 2016-05-06
 
