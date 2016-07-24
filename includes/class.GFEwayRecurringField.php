@@ -97,8 +97,15 @@ class GFEwayRecurringField {
 	*/
 	public function gformEditorJS() {
 		$min = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
-		$ver = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? time() : GFEWAY_PLUGIN_VERSION;
-		printf('<script src="%s?ver=%s"></script>', esc_url(plugins_url("js/admin-recurring$min.js", GFEWAY_PLUGIN_FILE)), $ver);
+
+		$strings = array(
+			'only_one'	=> __('Only one Recurring field can be added to the form', 'gravityforms-eway'),
+		);
+
+		echo '<script>';
+		printf('var gfeway_editor_admin_strings_recurring = %s;', json_encode($strings));
+		readfile(GFEWAY_PLUGIN_ROOT . "js/admin-recurring$min.js");
+		echo '</script>';
 	}
 
 	/**

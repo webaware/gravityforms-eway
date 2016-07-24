@@ -1,11 +1,9 @@
-/*!
-gravityforms-eway
-copyright (c) 2012-2016 WebAware Pty Ltd
-form editor for Recurring Payments field
-*/
+/*! gravityforms-eway: form editor for Recurring Payments field */
 
 // initialise form on page load
-jQuery(function($) {
+(function($) {
+
+	var TYPE_RECURRING = "gfewayrecurring";
 
 	// add required classes to the field on the admin form
 	fieldSettings.gfewayrecurring = ".conditional_logic_field_setting, .error_message_setting, .label_setting, .admin_label_setting, .rules_setting, .description_setting, .css_class_setting, .gfewayrecurring_setting";
@@ -117,4 +115,19 @@ jQuery(function($) {
 		SetFieldProperty(this.id, newLabel);
 	});
 
-});
+	/**
+	* prevent multiple instances of Recurring field on form
+	* @param {bool} can_be_added
+	* @param {String} field_type
+	* @return {bool}
+	*/
+	gform.addFilter("gform_form_editor_can_field_be_added", function(can_be_added, field_type) {
+		if (field_type === TYPE_RECURRING && GetFieldsByType([field_type]).length > 0) {
+			can_be_added = false;
+			window.alert(gfeway_editor_admin_strings_recurring.only_one);
+		}
+
+		return can_be_added;
+	});
+
+})(jQuery);

@@ -12,6 +12,8 @@
 		"eCrypt": false,
 		"gform": false,
 		"module": false,
+		"gfeway_editor_admin_strings_recurring": false,
+		"GetFieldsByType": false,
 		"GetSelectedField": false,
 		"SetFieldProperty": false,
 		"fieldSettings": false

@@ -10,6 +10,7 @@
 * changed: use Gravity Forms `get_order_total()` to calculate form total (fixes T2T Toolkit conflict with Coupons add-on)
 * added: check for PCRE (regular expression library) minimum version
 * added: new error message strings for eWAY Rapid API response codes
+* added: prevent multiple instances of Recurring field on form
 
 ### 2.2.1, 2016-05-06
 
