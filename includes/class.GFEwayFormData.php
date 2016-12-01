@@ -31,6 +31,7 @@ class GFEwayFormData {
 
 	private $isLastPageFlag			= false;
 	private $isCcHiddenFlag			= false;
+	private $failedHoneypot			= false;
 	private $hasPurchaseFieldsFlag	= false;
 
 	/**
@@ -40,6 +41,12 @@ class GFEwayFormData {
 	public function __construct(&$form) {
 		// check for last page
         $this->isLastPageFlag = GFFormDisplay::is_last_page($form);
+
+        // check whether the form has failed a honeypot test
+        if ($this->isLastPageFlag && rgar($form, 'enableHoneypot')) {
+			$honeypot_id = GFFormDisplay::get_max_field_id($form) + 1;
+			$this->failedHoneypot = !rgempty("input_{$honeypot_id}");
+		}
 
 		// load the form data
 		$this->loadForm($form);
@@ -146,7 +153,7 @@ class GFEwayFormData {
 	* @return boolean
 	*/
 	public function canValidatePayment() {
-		return $this->isLastPageFlag && !empty($this->ccField) && !$this->isCcHiddenFlag;
+		return $this->isLastPageFlag && !$this->failedHoneypot && !empty($this->ccField) && !$this->isCcHiddenFlag;
 	}
 
 	/**
