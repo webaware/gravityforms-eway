@@ -39,9 +39,7 @@ class GFEwayFormData {
 	*/
 	public function __construct(&$form) {
 		// check for last page
-        $current_page	= (int) GFFormDisplay::get_source_page($form['id']);
-        $target_page	= (int) GFFormDisplay::get_target_page($form, $current_page, rgpost('gform_field_values'));
-        $this->isLastPageFlag = ($target_page === 0);
+        $this->isLastPageFlag = GFFormDisplay::is_last_page($form);
 
 		// load the form data
 		$this->loadForm($form);
@@ -144,19 +142,11 @@ class GFEwayFormData {
 	}
 
 	/**
-	* check whether we're on the last page of the form
+	* check whether form can be validated and credit card submitted
 	* @return boolean
 	*/
-	public function isLastPage() {
-		return $this->isLastPageFlag;
-	}
-
-	/**
-	* check whether CC field is hidden (which indicates that payment is being made another way)
-	* @return boolean
-	*/
-	public function isCcHidden() {
-		return $this->isCcHiddenFlag;
+	public function canValidatePayment() {
+		return $this->isLastPageFlag && !empty($this->ccField) && !$this->isCcHiddenFlag;
 	}
 
 	/**

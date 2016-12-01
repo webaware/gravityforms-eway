@@ -343,7 +343,7 @@ class GFEwayPlugin {
 
 			// make that this is the last page of the form and that we have a credit card field and something to bill
 			// and that credit card field is not hidden (which indicates that payment is being made another way)
-			else if (!$formData->isCcHidden() && $formData->isLastPage() && $formData->ccField !== false) {
+			else if ($formData->canValidatePayment()) {
 				if (!$formData->hasPurchaseFields()) {
 					$data['is_valid'] = false;
 					$formData->ccField['failed_validation']		= true;
