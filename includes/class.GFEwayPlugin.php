@@ -82,7 +82,7 @@ class GFEwayPlugin {
 			add_filter('gform_admin_pre_render', array($this, 'gformPreRenderSniff'));
 			add_action('gform_enable_credit_card_field', '__return_true');
 			add_filter('gform_pre_validation', array($this, 'ecryptPreValidation'));
-			add_filter('gform_validation', array($this, 'gformValidation'));
+			add_filter('gform_validation', array($this, 'gformValidation'), 100);
 			add_action('gform_entry_post_save', array($this, 'gformEntryPostSave'), 10, 2);
 			add_filter('gform_custom_merge_tags', array($this, 'gformCustomMergeTags'), 10, 4);
 			add_filter('gform_replace_merge_tags', array($this, 'gformReplaceMergeTags'), 10, 7);
