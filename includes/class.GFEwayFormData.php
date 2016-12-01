@@ -40,10 +40,10 @@ class GFEwayFormData {
 	*/
 	public function __construct(&$form) {
 		// check for last page
-        $this->isLastPageFlag = GFFormDisplay::is_last_page($form);
+		$this->isLastPageFlag = GFFormDisplay::is_last_page($form);
 
-        // check whether the form has failed a honeypot test
-        if ($this->isLastPageFlag && rgar($form, 'enableHoneypot')) {
+		// check whether the form has failed a honeypot test
+		if ($this->isLastPageFlag && rgar($form, 'enableHoneypot')) {
 			$honeypot_id = GFFormDisplay::get_max_field_id($form) + 1;
 			$this->failedHoneypot = !rgempty("input_{$honeypot_id}");
 		}
