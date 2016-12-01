@@ -161,7 +161,7 @@
 					<input type="radio" name="gfeway_plugin[sslVerifyPeer]" id="gfeway_plugin_sslVerifyPeer_no" value="N" <?php checked($options['sslVerifyPeer'], ''); ?> />
 					<label for="gfeway_plugin_sslVerifyPeer_no"><?php echo esc_html_x('No', 'settings', 'gravityforms-eway'); ?></label>
 					<p><em><?php printf(__("Only choose 'no' if you can't <a target='_blank' href='%s'>fix your website SSL configuration</a> due to a technical reason.", 'gravityforms-eway'),
-						'http://snippets.webaware.com.au/howto/stop-turning-off-curlopt_ssl_verifypeer-and-fix-your-php-config/'); ?></em></p>
+						'https://snippets.webaware.com.au/howto/stop-turning-off-curlopt_ssl_verifypeer-and-fix-your-php-config/'); ?></em></p>
 				</fieldset>
 
 			</td>

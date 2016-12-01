@@ -54,7 +54,7 @@
 
 ### 2.1.0, 2016-02-01
 
-* added: [support for eWAY Client Side Encryption](http://shop.webaware.com.au/gravity-forms-eway-client-side-encryption), allowing sites without PCI compliance to use Rapid 3.1 API
+* added: [support for eWAY Client Side Encryption](https://shop.webaware.com.au/gravity-forms-eway-client-side-encryption), allowing sites without PCI compliance to use Rapid 3.1 API
 
 ### 2.0.0, 2016-01-27
 

@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Gravity Forms eWAY
-Plugin URI: http://shop.webaware.com.au/downloads/gravity-forms-eway/
+Plugin URI: https://shop.webaware.com.au/downloads/gravity-forms-eway/
 Description: Integrate Gravity Forms with eWAY payment gateway, enabling end users to purchase goods and services through Gravity Forms.
 Version: 2.2.3-dev
 Author: WebAware
-Author URI: http://webaware.com.au/
+Author URI: https://shop.webaware.com.au/
 Text Domain: gravityforms-eway
 */
 
