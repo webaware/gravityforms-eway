@@ -153,7 +153,7 @@ class GFEwayFormData {
 	* @return boolean
 	*/
 	public function canValidatePayment() {
-		return $this->isLastPageFlag && !$this->failedHoneypot && !empty($this->ccField) && !$this->isCcHiddenFlag;
+		return $this->isLastPageFlag && !$this->failedHoneypot && !empty($this->ccField) && !$this->isCcHiddenFlag && rgpost('action') !== 'heartbeat';
 	}
 
 	/**
