@@ -112,7 +112,7 @@ class GFEwayPlugin {
 	* NB: must happen after Gravity Forms registers scripts
 	*/
 	public function registerScripts() {
-		$min = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
+		$min = SCRIPT_DEBUG ? '' : '.min';
 		wp_register_script('eway-ecrypt', "https://secure.ewaypayments.com/scripts/eCrypt$min.js", array('jquery'), null, true);
 	}
 
@@ -138,7 +138,7 @@ class GFEwayPlugin {
 			wp_print_scripts(array('eway-ecrypt'));
 		}
 
-		$min = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
+		$min = SCRIPT_DEBUG ? '' : '.min';
 
 		echo '<script>';
 		readfile(GFEWAY_PLUGIN_ROOT . "js/gfeway_ecrypt$min.js");

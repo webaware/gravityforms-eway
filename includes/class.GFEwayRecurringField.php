@@ -63,8 +63,8 @@ class GFEwayRecurringField {
 	* NB: must happen after Gravity Forms registers scripts
 	*/
 	public function registerScripts() {
-		$min = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
-		$ver = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? time() : GFEWAY_PLUGIN_VERSION;
+		$min = SCRIPT_DEBUG ? '' : '.min';
+		$ver = SCRIPT_DEBUG ? time() : GFEWAY_PLUGIN_VERSION;
 
 		wp_register_script('gfeway_recurring', plugins_url("js/recurring$min.js", GFEWAY_PLUGIN_FILE), array('gform_datepicker_init'), $ver, true);
 
@@ -96,7 +96,7 @@ class GFEwayRecurringField {
 	* load custom script for editor form
 	*/
 	public function gformEditorJS() {
-		$min = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
+		$min = SCRIPT_DEBUG ? '' : '.min';
 
 		$strings = array(
 			'only_one'	=> __('Only one Recurring field can be added to the form', 'gravityforms-eway'),

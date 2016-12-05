@@ -73,7 +73,7 @@ class GFEwayAdmin {
 	*/
 	public function enqueueScripts($hook) {
 		if ($hook === 'forms_page_gf_settings' || $hook === 'toplevel_page_gf_edit_forms') {
-			$ver = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? time() : GFEWAY_PLUGIN_VERSION;
+			$ver = SCRIPT_DEBUG ? time() : GFEWAY_PLUGIN_VERSION;
 			wp_enqueue_style('gfeway-admin', plugins_url('css/admin.css', GFEWAY_PLUGIN_FILE), false, $ver);
 		}
 	}
