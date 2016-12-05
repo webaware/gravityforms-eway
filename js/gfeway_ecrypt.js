@@ -6,7 +6,7 @@
 	* @param {Number} form_id int ID of Gravity Forms form
 	*/
 	$(document).on("gform_post_render", function(event, form_id) {
-		$("#gform_" + form_id + "[data-eway-encrypt-key]").on("submit", maybeEncryptForm);
+		$("#gform_" + form_id + "[data-gfeway-encrypt-key]").on("submit", maybeEncryptForm);
 	});
 
 	/**
@@ -21,7 +21,7 @@
 			return true;
 		}
 
-		var key = frm.data("eway-encrypt-key");
+		var key = frm.data("gfeway-encrypt-key");
 
 		function maybeEncryptField(field_selector) {
 			var field = frm.find(field_selector);

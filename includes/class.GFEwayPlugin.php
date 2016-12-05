@@ -211,7 +211,7 @@ class GFEwayPlugin {
 	* @return string
 	*/
 	public function ecryptFormTag($tag, $form) {
-		$attr = sprintf('data-eway-encrypt-key="%s"', esc_attr($this->ecryptKey));
+		$attr = sprintf('data-gfeway-encrypt-key="%s"', esc_attr($this->ecryptKey));
 		$tag = str_replace('<form ', "<form $attr ", $tag);
 
 		return $tag;

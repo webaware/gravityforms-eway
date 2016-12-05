@@ -5,6 +5,7 @@
 ### 2.2.3, soon...
 
 * fixed: don't attempt card processing if form validation fails (validation in other plugins; honeypot failure; save and continue heartbeat)
+* fixed: conflict between eWAY's Client Side Encryption script and File Upload fields
 
 ### 2.2.2, 2016-07-24
 
