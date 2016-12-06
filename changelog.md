@@ -6,6 +6,7 @@
 
 * fixed: don't attempt card processing if form validation fails (validation in other plugins; honeypot failure; save and continue heartbeat)
 * fixed: conflict between eWAY's Client Side Encryption script and File Upload fields
+* fixed: undefined index errors on `gform_replace_merge_tags` hook, e.g. with GF User Registration login widget
 
 ### 2.2.2, 2016-07-24
 

@@ -737,6 +737,11 @@ class GFEwayPlugin {
 	* @return string
 	*/
 	public function gformReplaceMergeTags($text, $form, $lead, $url_encode, $esc_html, $nl2br, $format) {
+		// handle invalid calls, e.g. Gravity Forms User Registration login widget
+		if (empty($form['id'])) {
+			return $text;
+		}
+
 		if (self::isEwayForm($form['id'], $form['fields'])) {
 			if (is_null($this->txResult)) {
 				// lead loaded from database, get values from lead meta
