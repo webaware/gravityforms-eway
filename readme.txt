@@ -28,9 +28,11 @@ Gravity Forms eWAY integrates the [eWAY credit card payment gateway](https://ewa
 
 * record entry even when transaction fails
 * use Responsive Shared Page, no need for SSL certificate on standard payments
-* more complex forms with feeds mapping fields to eWAY
-* support for shipping addresses
-* more conditional logic support
+* create complex forms with feeds mapping fields to eWAY
+* create token payment customers
+* remember customer cards using tokens
+* send shipping addresses to eWAY
+* use sophisticated conditional logic
 * mix multiple currencies on one website
 * mix multiple eWAY accounts on one website
 
@@ -74,7 +76,7 @@ Gravity Forms will now display the Credit Card and Recurring fields under Pricin
 
 = What is eWAY? =
 
-eWAY is a leading provider of online payments solutions with a presence in Australia, New Zealand, the UK, and Asia. This plugin integrates with eWAY so that your website can safely accept credit card payments.
+eWAY is a leading provider of online payments solutions with a presence in Australia, New Zealand, and Asia. This plugin integrates with eWAY so that your website can safely accept credit card payments.
 
 = Will this plugin work without installing Gravity Forms? =
 
@@ -116,7 +118,7 @@ You will find your Client-Side Encryption key in MYeWAY where you created your A
 
 > V6010: Invalid TransactionType, account not certified for eCome only MOTO or Recurring available
 
-It probably means you need to set your Client-Side Encryption key; see above.
+It probably means you need to set your Client-Side Encryption key; see above. It can also indicate that your website has JavaScript errors, which can prevent Client-Side Encryption from working. Check for errors in your browser's developer console.
 
 If your website is PCI Certified and you don't want to use Client-Side Encryption for some reason, then you will still get this error in the sandbox until you enable PCI for Direct Connections. See [screenshots](https://wordpress.org/plugins/gravityforms-eway/screenshots/)
 
