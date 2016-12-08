@@ -7,7 +7,7 @@ Donate link: https://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards, australia, new zealand, uk, singapore, malaysia, hong kong
 Requires at least: 4.2
 Tested up to: 4.7
-Stable tag: 2.2.2
+Stable tag: 2.2.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -210,9 +210,9 @@ Developers can use these filter hooks to modify some eWAY invoice properties. Ea
 
 == Upgrade Notice ==
 
-= 2.2.2 =
+= 2.2.3 =
 
-Fixed T2T Toolkit conflict with Coupons add-on; WP4.6 compatibility; use the minified eWAY Client Side Encryption script.
+Fixed conflict between eWAY's Client Side Encryption script and File Upload fields; fixed undefined index errors with GF User Registration login widget; improve validation sequencing
 
 == Changelog ==
 
@@ -220,22 +220,8 @@ Fixed T2T Toolkit conflict with Coupons add-on; WP4.6 compatibility; use the min
 
 The full changelog for Gravity Forms eWAY can be found [on GitHub](https://github.com/webaware/gravityforms-eway/blob/master/changelog.md). Recent entries:
 
-### 2.2.2, 2016-07-24
+### 2.2.3, 2016-12-08
 
-* fixed: no confirmation message after saving settings
-* changed: use the minified version of the eWAY Client Side Encryption script, unless `SCRIPT_DEBUG` is enabled
-* changed: use `wp_remote_retrieve_*()` functions instead of response array access (WP4.6 compatibility)
-* changed: use Gravity Forms `get_order_total()` to calculate form total (fixes T2T Toolkit conflict with Coupons add-on)
-* added: check for PCRE (regular expression library) minimum version
-* added: new error message strings for eWAY Rapid API response codes
-* added: prevent multiple instances of Recurring field on form
-
-### 2.2.1, 2016-05-06
-
-* fixed: T2T Toolkit breaks posted Gravity Forms total field when products have options
-* fixed: set default values for optional Recurring Payment fields, avoids fatal PHP error
-
-### 2.2.0, 2016-04-27
-
-* changed: minimum required version of Gravity Forms is 1.9.15
-* added: separate sandbox configuration, making it easier to switch between Live and Sandbox modes
+* fixed: don't attempt card processing if form validation fails (validation in other plugins; honeypot failure; save and continue heartbeat)
+* fixed: conflict between eWAY's Client Side Encryption script and File Upload fields
+* fixed: undefined index errors on `gform_replace_merge_tags` hook, e.g. with GF User Registration login widget
