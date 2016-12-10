@@ -737,8 +737,8 @@ class GFEwayPlugin {
 	* @return string
 	*/
 	public function gformReplaceMergeTags($text, $form, $lead, $url_encode, $esc_html, $nl2br, $format) {
-		// handle invalid calls, e.g. Gravity Forms User Registration login widget
-		if (empty($form['id'])) {
+		// check for invalid calls, e.g. Gravity Forms User Registration login form widget
+		if (empty($form) || empty($lead)) {
 			return $text;
 		}
 
