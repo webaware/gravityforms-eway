@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 2.2.4, soon...
+
+* fixed: logging should not record encrypted card details (even though they're encrypted)
+
 ### 2.2.3, 2016-12-08
 
 * fixed: don't attempt card processing if form validation fails (validation in other plugins; honeypot failure; save and continue heartbeat)

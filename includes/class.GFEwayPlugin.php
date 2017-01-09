@@ -982,8 +982,11 @@ class GFEwayPlugin {
 	* @return string
 	*/
 	protected static function sanitiseLog($message) {
-		// credit card number, a string of at least 12 numeric digits
+		// obfuscate anything that looks like credit card number: a string of at least 12 numeric digits
 		$message = preg_replace('#[0-9]{8,}([0-9]{4})#', '************$1', $message);
+
+		// obfuscate encrypted card details
+		$message = preg_replace('#eCrypted:\S+#', '[encrypted]', $message);
 
 		return $message;
 	}
