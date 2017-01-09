@@ -172,7 +172,7 @@ class GFEwayPlugin {
 			// clear any previously set credit card data set for fooling GF validation
 			foreach ($form['fields'] as $field) {
 				if (GFFormsModel::get_input_type($field) === 'creditcard') {
-					$field_name    = "input_{$field['id']}";
+					$field_name    = "input_{$field->id}";
 					$ccnumber_name = $field_name . '_1';
 					$cvn_name      = $field_name . '_3';
 
@@ -228,7 +228,7 @@ class GFEwayPlugin {
 	*/
 	public function ecryptCcField($field_content, $field, $value, $zero, $form_id) {
 		if (RGFormsModel::get_input_type($field) === 'creditcard') {
-			$field_id    = "input_{$form_id}_{$field['id']}";
+			$field_id    = "input_{$form_id}_{$field->id}";
 			$ccnumber_id = $field_id . '_1';
 			$cvn_id      = $field_id . '_3';
 
@@ -250,7 +250,7 @@ class GFEwayPlugin {
 			if (!empty($_POST['EWAY_CARDNUMBER']) && !empty($_POST['EWAY_CARDCVN'])) {
 				foreach ($form['fields'] as $field) {
 					if (GFFormsModel::get_input_type($field) === 'creditcard') {
-						$field_name    = "input_{$field['id']}";
+						$field_name    = "input_{$field->id}";
 						$ccnumber_name = $field_name . '_1';
 						$cvn_name      = $field_name . '_3';
 
@@ -258,7 +258,7 @@ class GFEwayPlugin {
 						$_POST[$ccnumber_name] = $this->getTestCardNumber($field->creditCards);
 						$_POST[$cvn_name]      = '***';
 
-						add_action("gform_save_field_value_{$form['id']}_{$field['id']}", array($this, 'ecryptSaveCreditCard'), 10, 5);
+						add_action("gform_save_field_value_{$form['id']}_{$field->id}", array($this, 'ecryptSaveCreditCard'), 10, 5);
 
 						// exit loop
 						break;
@@ -337,8 +337,8 @@ class GFEwayPlugin {
 			// make sure form hasn't already been submitted / processed
 			if ($this->hasFormBeenProcessed($data['form'])) {
 				$data['is_valid'] = false;
-				$formData->ccField['failed_validation']		= true;
-				$formData->ccField['validation_message']	= $this->getErrMsg(GFEWAY_ERROR_ALREADY_SUBMITTED);
+				$formData->ccField->failed_validation			= true;
+				$formData->ccField->validation_message			= $this->getErrMsg(GFEWAY_ERROR_ALREADY_SUBMITTED);
 			}
 
 			// make that this is the last page of the form and that we have a credit card field and something to bill
@@ -346,8 +346,8 @@ class GFEwayPlugin {
 			else if ($formData->canValidatePayment()) {
 				if (!$formData->hasPurchaseFields()) {
 					$data['is_valid'] = false;
-					$formData->ccField['failed_validation']		= true;
-					$formData->ccField['validation_message']	= $this->getErrMsg(GFEWAY_ERROR_NO_AMOUNT);
+					$formData->ccField->failed_validation		= true;
+					$formData->ccField->validation_message		= $this->getErrMsg(GFEWAY_ERROR_NO_AMOUNT);
 				}
 				else {
 					// only check credit card details if we've got something to bill
@@ -360,11 +360,11 @@ class GFEwayPlugin {
 						foreach ($required as $name => $message) {
 							if (empty($formData->$name)) {
 								$data['is_valid'] = false;
-								$formData->ccField['failed_validation'] = true;
-								if (!empty($formData->ccField['validation_message'])) {
-									$formData->ccField['validation_message'] .= '<br />';
+								$formData->ccField->failed_validation = true;
+								if (!empty($formData->ccField->validation_message)) {
+									$formData->ccField->validation_message .= '<br />';
 								}
-								$formData->ccField['validation_message'] .= $message;
+								$formData->ccField->validation_message .= $message;
 							}
 						}
 
@@ -383,7 +383,7 @@ class GFEwayPlugin {
 
 			// if errors, send back to credit card page
 			if (!$data['is_valid']) {
-				GFFormDisplay::set_current_page($data['form']['id'], $formData->ccField['pageNumber']);
+				GFFormDisplay::set_current_page($data['form']['id'], $formData->ccField->pageNumber);
 			}
 		}
 
@@ -543,16 +543,16 @@ class GFEwayPlugin {
 			}
 			else {
 				$data['is_valid'] = false;
-				$formData->ccField['failed_validation']		= true;
-				$formData->ccField['validation_message']	= $this->getErrMsg(GFEWAY_ERROR_EWAY_FAIL);
+				$formData->ccField->failed_validation		= true;
+				$formData->ccField->validation_message		= $this->getErrMsg(GFEWAY_ERROR_EWAY_FAIL);
 				$this->txResult['payment_status']			= 'Failed';
 				$this->txResult['authcode']					= '';			// empty bank authcode, for conditional logic
 
 				if (!empty($response->Errors)) {
-					$formData->ccField['validation_message'] .= ':<br/>' . nl2br(esc_html(implode("\n", $response->Errors)));
+					$formData->ccField->validation_message	.= ':<br/>' . nl2br(esc_html(implode("\n", $response->Errors)));
 				}
 				elseif (!empty($response->ResponseMessage)) {
-					$formData->ccField['validation_message'] .= ' (' . esc_html(implode(',', array_keys($response->ResponseMessage))) . ')';
+					$formData->ccField->validation_message	.= ' (' . esc_html(implode(',', array_keys($response->ResponseMessage))) . ')';
 				}
 
 				self::log_debug(sprintf('%s: failed; %s', __FUNCTION__, implode('; ', array_merge($response->Errors, $response->ResponseMessage))));
@@ -563,8 +563,8 @@ class GFEwayPlugin {
 		}
 		catch (GFEwayException $e) {
 			$data['is_valid'] = false;
-			$formData->ccField['failed_validation']			= true;
-			$formData->ccField['validation_message']		= nl2br($this->getErrMsg(GFEWAY_ERROR_EWAY_FAIL) . esc_html(":\n{$e->getMessage()}"));
+			$formData->ccField->failed_validation			= true;
+			$formData->ccField->validation_message			= nl2br($this->getErrMsg(GFEWAY_ERROR_EWAY_FAIL) . esc_html(":\n{$e->getMessage()}"));
 			$this->txResult['payment_status']				= 'Failed';
 			$this->txResult['authcode']						= '';			// empty bank authcode, for conditional logic
 
@@ -646,12 +646,12 @@ class GFEwayPlugin {
 			}
 			else {
 				$data['is_valid'] = false;
-				$formData->ccField['failed_validation']		= true;
-				$formData->ccField['validation_message']	= $this->getErrMsg(GFEWAY_ERROR_EWAY_FAIL);
+				$formData->ccField->failed_validation		= true;
+				$formData->ccField->validation_message		= $this->getErrMsg(GFEWAY_ERROR_EWAY_FAIL);
 				$this->txResult['payment_status']			= 'Failed';
 
 				if (!empty($response->error)) {
-					$formData->ccField['validation_message'] .= ':<br/>' . nl2br(esc_html($response->error));
+					$formData->ccField->validation_message	.= ':<br/>' . nl2br(esc_html($response->error));
 				}
 
 				self::log_debug(sprintf('%s: failed; %s', __FUNCTION__, $response->error));
@@ -659,8 +659,8 @@ class GFEwayPlugin {
 		}
 		catch (GFEwayException $e) {
 			$data['is_valid'] = false;
-			$formData->ccField['failed_validation']			= true;
-			$formData->ccField['validation_message']		= nl2br($this->getErrMsg(GFEWAY_ERROR_EWAY_FAIL) . esc_html(":\n{$e->getMessage()}"));
+			$formData->ccField->failed_validation			= true;
+			$formData->ccField->validation_message			= nl2br($this->getErrMsg(GFEWAY_ERROR_EWAY_FAIL) . esc_html(":\n{$e->getMessage()}"));
 			$this->txResult['payment_status']				= 'Failed';
 
 			self::log_error(__METHOD__ . ": " . $e->getMessage());
