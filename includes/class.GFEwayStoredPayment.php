@@ -14,6 +14,8 @@ if (!defined('ABSPATH')) {
 */
 class GFEwayStoredPayment {
 
+	#region members
+
 	// environment / website specific members
 	/**
 	* NB: Stored Payments use the Direct Payments sandbox; there is no Stored Payments sandbox
@@ -161,10 +163,16 @@ class GFEwayStoredPayment {
 	*/
 	public $options = array();
 
+	#endregion
+
+	#region constants
+
 	/** host for the eWAY Real Time API in the developer sandbox environment */
 	const REALTIME_API_SANDBOX = 'https://www.eway.com.au/gateway/xmltest/testpage.asp';
 	/** host for the eWAY Real Time API in the production environment */
 	const REALTIME_API_LIVE = 'https://www.eway.com.au/gateway/xmlstored.asp';
+
+	#endregion
 
 	/**
 	* populate members with defaults, and set account and environment information
@@ -327,59 +335,51 @@ class GFEwayStoredPayment {
 */
 class GFEwayStoredResponse {
 
+	#region members
+
 	/**
-	* For a successful transaction "True" is passed and for a failed transaction "False" is passed.
+	* bank authorisation code
+	* @var string
+	*/
+	public $AuthorisationCode;
+
+	/**
+	* array of codes describing the result (including Beagle failure codes)
+	* @var array
+	*/
+	public $ResponseMessage;
+
+	/**
+	* eWAY transacation ID
+	* @var string
+	*/
+	public $TransactionID;
+
+	/**
+	* eWAY transaction status: true for success
 	* @var boolean
 	*/
-	public $status;
+	public $TransactionStatus;
 
 	/**
-	* eWAYTrxnNumber
-	* @var string max. 16 characters
+	* Beagle fraud detection score
+	* @var string
 	*/
-	public $transactionNumber;
+	public $BeagleScore;
 
 	/**
-	* eWAYTrxnNumber referenced in transaction (e.g. invoice number)
-	* @var string max. 16 characters
+	* payment details object
+	* @var object
 	*/
-	public $transactionReference;
+	public $Payment;
 
 	/**
-	* optional additional information for use in shopping carts, etc.
-	* @var string max. 255 characters
+	* a list of errors -- just the one for the Direct API
+	* @var
 	*/
-	public $option1;
+	public $Errors;
 
-	/**
-	* optional additional information for use in shopping carts, etc.
-	* @var string max. 255 characters
-	*/
-	public $option2;
-
-	/**
-	* optional additional information for use in shopping carts, etc.
-	* @var string max. 255 characters
-	*/
-	public $option3;
-
-	/**
-	* If the transaction is successful, this is the bank authorisation number. This is also sent in the email receipt.
-	* @var string max. 6 characters
-	*/
-	public $authCode;
-
-	/**
-	* total amount of payment as processed, in dollars and cents as a floating-point number
-	* @var float
-	*/
-	public $amount;
-
-	/**
-	* the response returned by the bank, and can be related to both successful and failed transactions.
-	* @var string max. 100 characters
-	*/
-	public $error;
+	#endregion
 
 	/**
 	* load eWAY response data as XML string
@@ -387,11 +387,18 @@ class GFEwayStoredResponse {
 	* @param string $response eWAY response as a string (hopefully of XML data)
 	*/
 	public function loadResponseXML($response) {
-		try {
-			// prevent XML injection attacks, and handle errors without warnings
-			$oldDisableEntityLoader = libxml_disable_entity_loader(TRUE);
-			$oldUseInternalErrors = libxml_use_internal_errors(TRUE);
+		GFEwayPlugin::log_debug(sprintf('%s: eWAY says "%s"', __METHOD__, $response));
 
+		// make sure we actually got something from eWAY
+		if (strlen($response) === 0) {
+			throw new GFEwayException(__('eWAY payment request returned nothing; please check your card details', 'gravityforms-eway'));
+		}
+
+		// prevent XML injection attacks, and handle errors without warnings
+		$oldDisableEntityLoader = libxml_disable_entity_loader(true);
+		$oldUseInternalErrors = libxml_use_internal_errors(true);
+
+		try {
 			$xml = simplexml_load_string($response);
 			if ($xml === false) {
 				$errmsg = '';
@@ -401,20 +408,17 @@ class GFEwayStoredResponse {
 				throw new Exception($errmsg);
 			}
 
-			$this->status = (strcasecmp((string) $xml->ewayTrxnStatus, 'true') === 0);
-			$this->transactionNumber = (string) $xml->ewayTrxnNumber;
-			$this->transactionReference = (string) $xml->ewayTrxnReference;
-			$this->option1 = (string) $xml->ewayTrxnOption1;
-			$this->option2 = (string) $xml->ewayTrxnOption2;
-			$this->option3 = (string) $xml->ewayTrxnOption3;
-			$this->authCode = (string) $xml->ewayAuthCode;
-			$this->error = (string) $xml->ewayTrxnError;
+			$this->AuthorisationCode			= (string) $xml->ewayAuthCode;
+			$this->ResponseMessage				= array();
+			$this->TransactionStatus			= (strcasecmp((string) $xml->ewayTrxnStatus, 'true') === 0);
+			$this->TransactionID				= (string) $xml->ewayTrxnNumber;
+			$this->BeagleScore					= '';		// Stored Payment Legacy XML API does not support Beagle
+			$this->Errors						= array('ERROR' => (string) $xml->ewayTrxnError);
 
 			// if we got an amount, convert it back into dollars.cents from just cents
-			if (!empty($xml->ewayReturnAmount))
-				$this->amount = floatval($xml->ewayReturnAmount) / 100.0;
-			else
-				$this->amount = NULL;
+			$this->Payment						= new stdClass;
+			$this->Payment->TotalAmount			= empty($xml->ewayReturnAmount) ? null : floatval($xml->ewayReturnAmount) / 100.0;
+			$this->Payment->InvoiceReference	= (string) $xml->ewayTrxnReference;
 
 			// restore old libxml settings
 			libxml_disable_entity_loader($oldDisableEntityLoader);
@@ -425,7 +429,7 @@ class GFEwayStoredResponse {
 			libxml_disable_entity_loader($oldDisableEntityLoader);
 			libxml_use_internal_errors($oldUseInternalErrors);
 
-			throw new GFEwayException('Error parsing eWAY response: ' . $e->getMessage());
+			throw new GFEwayException(sprintf(__('Error parsing eWAY response: %s', 'gravityforms-eway'), $e->getMessage()));
 		}
 	}
 
