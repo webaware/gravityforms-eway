@@ -7,6 +7,7 @@
 * fixed: logging should not record encrypted card details (even though they're encrypted)
 * fixed: stored payments legacy API fails
 * changed: replace old $field array access with GF_Field object access
+* changed: log which API was used, and capture or authorise
 
 ### 2.2.3, 2016-12-08
 

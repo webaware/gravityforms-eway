@@ -425,6 +425,7 @@ class GFEwayPlugin {
 				throw new GFEwayException(__("Can't request recurring payment; no eWAY customer ID.", 'gravityforms-eway'));
 			}
 			$eway = new GFEwayRecurringPayment($customerID, $isLiveSite);
+			self::log_debug(sprintf('%s: %s gateway, Recurring Payments XML API', __FUNCTION__, $isLiveSite ? 'live' : 'test'));
 		}
 		else {
 			// single payments
@@ -432,6 +433,7 @@ class GFEwayPlugin {
 				// Rapid API
 				$capture = !$this->options['useStored'];
 				$eway = new GFEwayRapidAPI($creds['apiKey'], $creds['password'], $this->options['useTest'], $capture);
+				self::log_debug(sprintf('%s: %s gateway, Rapid API, method = %s', __FUNCTION__, $isLiveSite ? 'live' : 'test', $capture ? 'capture' : 'authorize'));
 			}
 			else {
 				// legacy XML APIs
@@ -441,9 +443,11 @@ class GFEwayPlugin {
 				}
 				if ($this->options['useStored']) {
 					$eway = new GFEwayStoredPayment($customerID, $isLiveSite);
+					self::log_debug(sprintf('%s: %s gateway, Legacy XML API, method = authorize (stored payment)', __FUNCTION__, $isLiveSite ? 'live' : 'test'));
 				}
 				else {
 					$eway = new GFEwayPayment($customerID, $isLiveSite, $this->options['useBeagle']);
+					self::log_debug(sprintf('%s: %s gateway, Legacy XML API, method = capture', __FUNCTION__, $isLiveSite ? 'live' : 'test'));
 				}
 			}
 		}
