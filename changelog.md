@@ -2,7 +2,7 @@
 
 ## Changelog
 
-### 2.2.4, soon...
+### 2.2.4, 2017-01-19
 
 * fixed: logging should not record encrypted card details (even though they're encrypted)
 * fixed: stored payments legacy API fails

@@ -6,8 +6,8 @@ Author URI: https://shop.webaware.com.au/
 Donate link: https://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+eWAY
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards, australia, new zealand, uk, singapore, malaysia, hong kong
 Requires at least: 4.2
-Tested up to: 4.7
-Stable tag: 2.2.3
+Tested up to: 4.7.1
+Stable tag: 2.2.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -210,9 +210,9 @@ Developers can use these filter hooks to modify some eWAY invoice properties. Ea
 
 == Upgrade Notice ==
 
-= 2.2.3 =
+= 2.2.4 =
 
-Fixed conflict between eWAY's Client Side Encryption script and File Upload fields; fixed undefined index errors with GF User Registration login widget; improve validation sequencing
+Fixed Authorize (stored payments) for legacy XML API; improved logging via the Gravity Forms Logging add-on
 
 == Changelog ==
 
@@ -220,8 +220,9 @@ Fixed conflict between eWAY's Client Side Encryption script and File Upload fiel
 
 The full changelog for Gravity Forms eWAY can be found [on GitHub](https://github.com/webaware/gravityforms-eway/blob/master/changelog.md). Recent entries:
 
-### 2.2.3, 2016-12-08
+### 2.2.4, 2017-01-19
 
-* fixed: don't attempt card processing if form validation fails (validation in other plugins; honeypot failure; save and continue heartbeat)
-* fixed: conflict between eWAY's Client Side Encryption script and File Upload fields
-* fixed: undefined index errors on `gform_replace_merge_tags` hook, e.g. with GF User Registration login widget
+* fixed: logging should not record encrypted card details (even though they're encrypted)
+* fixed: stored payments legacy API fails
+* changed: replace old $field array access with GF_Field object access
+* changed: log which API was used, and capture or authorise
