@@ -1,6 +1,6 @@
 {
   "name": "gravityforms-eway",
-  "version": "2.2.4-dev",
+  "version": "2.2.4",
   "description": "Integrate Gravity Forms with eWAY payment gateway, enabling end users to purchase goods and services through Gravity Forms.",
   "main": "Gruntfile.js",
   "devDependencies": {
