@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 2.2.5, soon...
+
+* fixed: Recurring Payments could not send formatted phone numbers with () characters
+
 ### 2.2.4, 2017-01-19
 
 * fixed: logging should not record encrypted card details (even though they're encrypted)

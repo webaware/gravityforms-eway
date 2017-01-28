@@ -367,7 +367,7 @@ class GFEwayRecurringPayment {
 		$xml->writeElement('CustomerState', $this->state);				// req
 		$xml->writeElement('CustomerPostCode', $this->postcode);		// req
 		$xml->writeElement('CustomerCountry', $this->country);			// req
-		$xml->writeElement('CustomerPhone1', $this->phone);
+		$xml->writeElement('CustomerPhone1', self::cleanPhone($this->phone));
 		$xml->writeElement('CustomerPhone2', '');
 		$xml->writeElement('CustomerFax', '');
 		$xml->writeElement('CustomerURL', '');
@@ -395,6 +395,15 @@ class GFEwayRecurringPayment {
 		$xml->endElement();		// RebillUpload
 
 		return $xml->outputMemory();
+	}
+
+	/**
+	* clean phone number field value for legacy XML API
+	* @param string $phone
+	* @return string
+	*/
+	protected static function cleanPhone($phone) {
+		return preg_replace('#[^0-9 +-]#', '', $phone);
 	}
 
 	/**
