@@ -6,8 +6,8 @@ Author URI: https://shop.webaware.com.au/
 Donate link: https://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+eWAY
 Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards, australia, new zealand, uk, singapore, malaysia, hong kong
 Requires at least: 4.2
-Tested up to: 4.7.1
-Stable tag: 2.2.4
+Tested up to: 4.7
+Stable tag: 2.2.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -210,9 +210,9 @@ Developers can use these filter hooks to modify some eWAY invoice properties. Ea
 
 == Upgrade Notice ==
 
-= 2.2.4 =
+= 2.2.5 =
 
-Fixed Authorize (stored payments) for legacy XML API; improved logging via the Gravity Forms Logging add-on
+fixed sending formatted phone numbers with () characters in Recurring Payments
 
 == Changelog ==
 
@@ -220,9 +220,7 @@ Fixed Authorize (stored payments) for legacy XML API; improved logging via the G
 
 The full changelog for Gravity Forms eWAY can be found [on GitHub](https://github.com/webaware/gravityforms-eway/blob/master/changelog.md). Recent entries:
 
-### 2.2.4, 2017-01-19
+### 2.2.5, 2017-05-01
 
-* fixed: logging should not record encrypted card details (even though they're encrypted)
-* fixed: stored payments legacy API fails
-* changed: replace old $field array access with GF_Field object access
-* changed: log which API was used, and capture or authorise
+* fixed: Recurring Payments could not send formatted phone numbers with () characters
+* changed: filters pass `false` for third parameter, for compatibilty with filters in Pro version
