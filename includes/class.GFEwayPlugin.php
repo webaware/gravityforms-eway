@@ -496,13 +496,14 @@ class GFEwayPlugin {
 			$eway->transactionNumber = substr(uniqid(), -12);
 
 			// allow plugins/themes to modify invoice description and reference, and set option fields
-			$eway->invoiceDescription		= apply_filters('gfeway_invoice_desc', $eway->invoiceDescription, $data['form']);
-			$eway->invoiceReference			= apply_filters('gfeway_invoice_ref', $eway->invoiceReference, $data['form']);
-			$eway->transactionNumber		= apply_filters('gfeway_invoice_trans_number', $eway->transactionNumber, $data['form']);
+			// NB: Pro version can pass entry to these filters for Responsive Shared Page, but Free version doesn't have an entry yet
+			$eway->invoiceDescription		= apply_filters('gfeway_invoice_desc', $eway->invoiceDescription, $data['form'], false);
+			$eway->invoiceReference			= apply_filters('gfeway_invoice_ref', $eway->invoiceReference, $data['form'], false);
+			$eway->transactionNumber		= apply_filters('gfeway_invoice_trans_number', $eway->transactionNumber, $data['form'], false);
 			$eway->options					= array_filter(array(
-												apply_filters('gfeway_invoice_option1', '', $data['form']),
-												apply_filters('gfeway_invoice_option2', '', $data['form']),
-												apply_filters('gfeway_invoice_option3', '', $data['form']),
+												apply_filters('gfeway_invoice_option1', '', $data['form'], false),
+												apply_filters('gfeway_invoice_option2', '', $data['form'], false),
+												apply_filters('gfeway_invoice_option3', '', $data['form'], false),
 											), 'strlen');
 
 			// if live, pass through amount exactly, but if using test site, round up to whole dollars or eWAY will fail
