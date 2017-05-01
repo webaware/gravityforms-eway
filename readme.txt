@@ -223,4 +223,4 @@ The full changelog for Gravity Forms eWAY can be found [on GitHub](https://githu
 ### 2.2.5, 2017-05-01
 
 * fixed: Recurring Payments could not send formatted phone numbers with () characters
-* changed: filters pass `false` for third parameter, for compatibilty with filters in Pro version
+* changed: filters pass `false` for third parameter, for compatibility with filters in Pro version
