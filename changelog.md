@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 2.2.6, soon...
+
+* fixed: amounts in Japanese Yen (JPY) are already in the lowest denomination; no need to shift to / from cents
+
 ### 2.2.5, 2017-05-01
 
 * fixed: Recurring Payments could not send formatted phone numbers with () characters
