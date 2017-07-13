@@ -476,7 +476,7 @@ class GFEwayRapidAPI {
 	protected function getPaymentRecord() {
 		$record = new stdClass;
 
-		$record->TotalAmount		= number_format($this->amount * 100, 0, '', '');
+		$record->TotalAmount		= self::formatCurrency($this->amount, $this->currencyCode);
 		$record->InvoiceNumber		= $this->transactionNumber ? substr($this->transactionNumber, 0, 12) : '';
 		$record->InvoiceDescription	= $this->invoiceDescription ? substr($this->invoiceDescription, 0, 64) : '';
 		$record->InvoiceReference	= $this->invoiceReference ? substr($this->invoiceReference, 0, 50) : '';
@@ -551,6 +551,29 @@ class GFEwayRapidAPI {
 		$response = new GFEwayRapidAPIResponse();
 		$response->loadResponse($responseJSON);
 		return $response;
+	}
+
+	/**
+	* format amount per currency
+	* @param float $amount
+	* @param string $currencyCode
+	* @return string
+	*/
+	protected static function formatCurrency($amount, $currencyCode) {
+		switch ($currencyCode) {
+
+			// Japanese Yen already has no decimal fraction
+			case 'JPY':
+				$value = number_format($amount, 0, '', '');
+				break;
+
+			default:
+				$value = number_format($amount * 100, 0, '', '');
+				break;
+
+		}
+
+		return $value;
 	}
 
 }
