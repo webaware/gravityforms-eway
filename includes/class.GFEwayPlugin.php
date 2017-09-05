@@ -397,14 +397,20 @@ class GFEwayPlugin {
 	* @return boolean
 	*/
 	protected function hasFormBeenProcessed($form) {
-		global $wpdb;
-
 		$unique_id = RGFormsModel::get_form_unique_id($form['id']);
 
-		$sql = "select lead_id from {$wpdb->prefix}rg_lead_meta where meta_key='gfeway_unique_id' and meta_value = %s";
-		$lead_id = $wpdb->get_var($wpdb->prepare($sql, $unique_id));
+		$search = array(
+			'field_filters' => array(
+									array(
+										'key'		=> 'gfeway_unique_id',
+										'value'		=> $unique_id,
+									),
+								),
+		);
 
-		return !empty($lead_id);
+		$entries = GFAPI::get_entries($form['id'], $search);
+
+		return !empty($entries);
 	}
 
 	/**
