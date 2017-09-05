@@ -232,8 +232,9 @@ class GFEwayPlugin {
 			$ccnumber_id = $field_id . '_1';
 			$cvn_id      = $field_id . '_3';
 
-			$field_content = preg_replace("#<input[^>]+id='$ccnumber_id'\K#", ' data-gfeway-encrypt-name="EWAY_CARDNUMBER"', $field_content);
-			$field_content = preg_replace("#<input[^>]+id='$cvn_id'\K#",      ' data-gfeway-encrypt-name="EWAY_CARDCVN"', $field_content);
+			$pattern       = '#<input[^>]+id=[\'"]%s[\'"]\K#';
+			$field_content = preg_replace(sprintf($pattern, $ccnumber_id), ' data-gfeway-encrypt-name="EWAY_CARDNUMBER"', $field_content);
+			$field_content = preg_replace(sprintf($pattern, $cvn_id),      ' data-gfeway-encrypt-name="EWAY_CARDCVN"',    $field_content);
 		}
 
 		return $field_content;

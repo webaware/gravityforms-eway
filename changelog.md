@@ -5,6 +5,7 @@
 ### 2.2.6, soon...
 
 * fixed: amounts in Japanese Yen (JPY) are already in the lowest denomination; no need to shift to / from cents
+* fixed: Client Side Encryption fails when Gravity Forms HTML5 Validation plugin is active
 
 ### 2.2.5, 2017-05-01
 
