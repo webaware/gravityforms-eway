@@ -2,7 +2,7 @@
 
 ## Changelog
 
-### 2.2.6, soon...
+### 2.2.6, 2017-09-12
 
 * fixed: Gravity Forms 2.3 compatibility; don't directly access database tables
 * fixed: amounts in Japanese Yen (JPY) are already in the lowest denomination; no need to shift to / from cents

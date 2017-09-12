@@ -4,10 +4,10 @@ Plugin Name: Gravity Forms eWAY
 Plugin URI: https://shop.webaware.com.au/downloads/gravity-forms-eway/
 Author URI: https://shop.webaware.com.au/
 Donate link: https://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+eWAY
-Tags: gravityforms, gravity forms, gravity, eway, donation, donations, payment, recurring, ecommerce, credit cards, australia, new zealand, uk, singapore, malaysia, hong kong
+Tags: gravity forms, eway, donations, payment, payment gateway, ecommerce
 Requires at least: 4.2
-Tested up to: 4.7
-Stable tag: 2.2.5
+Tested up to: 4.8
+Stable tag: 2.2.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -210,9 +210,9 @@ Developers can use these filter hooks to modify some eWAY invoice properties. Ea
 
 == Upgrade Notice ==
 
-= 2.2.5 =
+= 2.2.6 =
 
-fixed sending formatted phone numbers with () characters in Recurring Payments
+Gravity Forms 2.3 compatibility; proper handling of Japanese Yen (JPY); Gravity Forms HTML5 Validation plugin compatibility
 
 == Changelog ==
 
@@ -220,7 +220,8 @@ fixed sending formatted phone numbers with () characters in Recurring Payments
 
 The full changelog for Gravity Forms eWAY can be found [on GitHub](https://github.com/webaware/gravityforms-eway/blob/master/changelog.md). Recent entries:
 
-### 2.2.5, 2017-05-01
+### 2.2.6, 2017-09-12
 
-* fixed: Recurring Payments could not send formatted phone numbers with () characters
-* changed: filters pass `false` for third parameter, for compatibility with filters in Pro version
+* fixed: Gravity Forms 2.3 compatibility; don't directly access database tables
+* fixed: amounts in Japanese Yen (JPY) are already in the lowest denomination; no need to shift to / from cents
+* fixed: Client Side Encryption fails when Gravity Forms HTML5 Validation plugin is active
