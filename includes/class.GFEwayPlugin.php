@@ -227,7 +227,7 @@ class GFEwayPlugin {
 	* @return string
 	*/
 	public function ecryptCcField($field_content, $field, $value, $zero, $form_id) {
-		if (RGFormsModel::get_input_type($field) === 'creditcard') {
+		if (GFFormsModel::get_input_type($field) === 'creditcard') {
 			$field_id    = "input_{$form_id}_{$field->id}";
 			$ccnumber_id = $field_id . '_1';
 			$cvn_id      = $field_id . '_3';
@@ -397,7 +397,7 @@ class GFEwayPlugin {
 	* @return boolean
 	*/
 	protected function hasFormBeenProcessed($form) {
-		$unique_id = RGFormsModel::get_form_unique_id($form['id']);
+		$unique_id = GFFormsModel::get_form_unique_id($form['id']);
 
 		$search = array(
 			'field_filters' => array(
@@ -881,7 +881,7 @@ class GFEwayPlugin {
 	public static function hasFieldType($fields, $type) {
 		if (is_array($fields)) {
 			foreach ($fields as $field) {
-				if (RGFormsModel::get_input_type($field) === $type) {
+				if (GFFormsModel::get_input_type($field) === $type) {
 					return true;
 				}
 			}

@@ -197,7 +197,7 @@ class GFEwayRecurringField {
 	*/
 	public function gformPreSubmit($form) {
 		foreach ($form['fields'] as $field) {
-			if ($field->type === GFEWAY_FIELD_RECURRING && !RGFormsModel::is_field_hidden($form, $field, RGForms::post('gform_field_values'))) {
+			if ($field->type === GFEWAY_FIELD_RECURRING && !GFFormsModel::is_field_hidden($form, $field, GFForms::post('gform_field_values'))) {
 				$recurring = self::getPost($field->id);
 				if ($recurring) {
 					$_POST["input_{$field->id}"] = $this->getRecurringDescription($recurring);
@@ -214,7 +214,7 @@ class GFEwayRecurringField {
 	*/
 	public function gformPreValidation($form) {
         foreach($form['fields'] as $field) {
-			if ($field->type === GFEWAY_FIELD_RECURRING && !RGFormsModel::is_field_hidden($form, $field, RGForms::post('gform_field_values'))) {
+			if ($field->type === GFEWAY_FIELD_RECURRING && !GFFormsModel::is_field_hidden($form, $field, GFForms::post('gform_field_values'))) {
 				$recurring = self::getPost($field->id);
 				if ($recurring) {
 					$_POST["input_{$field->id}"] = $this->getRecurringDescription($recurring);
@@ -267,7 +267,7 @@ class GFEwayRecurringField {
 	*/
 	public function gformFieldValidation($validation_result, $value, $form, $field) {
 		if ($field->type === GFEWAY_FIELD_RECURRING) {
-			if (!RGFormsModel::is_field_hidden($form, $field, RGForms::post('gform_field_values'))) {
+			if (!GFFormsModel::is_field_hidden($form, $field, GFForms::post('gform_field_values'))) {
 				// get the real values
 				$value = self::getPost($field->id);
 
@@ -502,6 +502,8 @@ class GFEwayRecurringField {
 	* @return string
 	*/
 	protected function fieldDate($field, $value = '', $lead_id = 0, $form_id = 0) {
+		$current_view	= GFForms::get('view');
+
 		$id				= $field['id'];
 		$sub_id			= $field['sub_id'];
 		$field_id		= IS_ADMIN || $form_id === 0 ? "gfeway_{$id}_{$sub_id}" : "gfeway_{$form_id}_{$id}_{$sub_id}";
@@ -509,8 +511,8 @@ class GFEwayRecurringField {
 
 		$format			= empty($field['dateFormat']) ? 'dmy' : esc_attr($field['dateFormat']);
 		$size			= rgar($field, 'size');
-		$disabled_text	= (IS_ADMIN && RG_CURRENT_VIEW != 'entry') ? 'disabled="disabled"' : '';
-		$class_suffix	= RG_CURRENT_VIEW === 'entry' ? '_admin' : '';
+		$disabled_text	= (IS_ADMIN && $current_view !== 'entry') ? 'disabled="disabled"' : '';
+		$class_suffix	= $current_view === 'entry' ? '_admin' : '';
 
 		$value			= GFCommon::date_display($value, $format);
 		$icon_class		= $field['calendarIconType'] === 'none' ? 'datepicker_no_icon' : 'datepicker_with_icon';
@@ -560,14 +562,16 @@ class GFEwayRecurringField {
 	* @return string
 	*/
 	protected function fieldDonation($field, $value = '', $lead_id = 0, $form_id = 0) {
+		$current_view	= GFForms::get('view');
+
 		$id				= $field['id'];
 		$sub_id			= $field['sub_id'];
 		$field_id		= IS_ADMIN || $form_id === 0 ? "gfeway_{$id}_{$sub_id}" : "gfeway_{$form_id}_{$id}_{$sub_id}";
 		$form_id		= IS_ADMIN && empty($form_id) ? rgget('id') : $form_id;
 
 		$size			= rgar($field, 'size');
-		$disabled_text	= (IS_ADMIN && RG_CURRENT_VIEW != 'entry') ? 'disabled="disabled"' : '';
-		$class_suffix	= RG_CURRENT_VIEW === 'entry' ? '_admin' : '';
+		$disabled_text	= (IS_ADMIN && $current_view !== 'entry') ? 'disabled="disabled"' : '';
+		$class_suffix	= $current_view === 'entry' ? '_admin' : '';
 		$class			= $size . $class_suffix;
 
 		$tabindex		= GFCommon::get_tabindex();
@@ -600,14 +604,16 @@ class GFEwayRecurringField {
 	* @return string
 	*/
 	protected function fieldIntervalType($field, $value = '', $lead_id = 0, $form_id = 0) {
+		$current_view	= GFForms::get('view');
+
 		$id				= $field['id'];
 		$sub_id			= $field['sub_id'];
 		$field_id		= IS_ADMIN || $form_id === 0 ? "gfeway_{$id}_{$sub_id}" : "gfeway_{$form_id}_{$id}_{$sub_id}";
 		$form_id		= IS_ADMIN && empty($form_id) ? rgget('id') : $form_id;
 
 		$size			= rgar($field, 'size');
-		$disabled_text	= (IS_ADMIN && RG_CURRENT_VIEW != 'entry') ? 'disabled="disabled"' : '';
-		$class_suffix	= RG_CURRENT_VIEW === 'entry' ? '_admin' : '';
+		$disabled_text	= (IS_ADMIN && $current_view !== 'entry') ? 'disabled="disabled"' : '';
+		$class_suffix	= $current_view === 'entry' ? '_admin' : '';
 		$class			= $size . $class_suffix;
 
 		$tabindex		= GFCommon::get_tabindex();

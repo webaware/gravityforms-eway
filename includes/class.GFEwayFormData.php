@@ -98,7 +98,7 @@ class GFEwayFormData {
 					break;
 
 				case 'creditcard':
-					$this->isCcHiddenFlag			= GFFormsModel::is_field_hidden($form, $field, RGForms::post('gform_field_values'));
+					$this->isCcHiddenFlag			= GFFormsModel::is_field_hidden($form, $field, GFForms::post('gform_field_values'));
 					$this->ccField					=& $field;
 					$this->ccName					= trim(rgpost("input_{$id}_5"));
 					$this->ccNumber					= self::cleanCcNumber(trim(rgpost("input_{$id}_1")));
@@ -121,7 +121,7 @@ class GFEwayFormData {
 
 				case GFEWAY_FIELD_RECURRING:
 					// only pick it up if it isn't hidden
-					if (!GFFormsModel::is_field_hidden($form, $field, RGForms::post('gform_field_values'))) {
+					if (!GFFormsModel::is_field_hidden($form, $field, GFForms::post('gform_field_values'))) {
 						$this->recurring			= GFEwayRecurringField::getPost($id);
 					}
 					break;
