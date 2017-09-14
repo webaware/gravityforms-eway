@@ -10,12 +10,14 @@ if (!defined('ABSPATH')) {
 class GFEwayAdmin {
 
 	private $plugin;
+	private $slug;
 
 	/**
 	* @param GFEwayPlugin $plugin
 	*/
 	public function __construct($plugin) {
 		$this->plugin = $plugin;
+		$this->slug   = 'gravityforms-eway';
 
 		// handle basic plugin actions and filters
 		add_action('admin_init', array($this, 'adminInit'));
@@ -48,13 +50,15 @@ class GFEwayAdmin {
 	* handle admin init action
 	*/
 	public function adminInit() {
-		if (isset($_GET['page'])) {
-			switch ($_GET['page']) {
-				case 'gf_settings':
-					// add our settings page to the Gravity Forms settings menu
-					RGForms::add_settings_page(_x('eWAY Payments', 'settings page', 'gravityforms-eway'), array($this, 'settingsPage'));
-					break;
-			}
+		if (rgget('page') === 'gf_settings') {
+			// add our settings page to the Gravity Forms settings menu
+			$title = esc_html_x('eWAY Payments', 'settings page', 'gravityforms-eway');
+			GFForms::add_settings_page(array(
+				'name'			=> $this->slug,
+				'tab_label'		=> $title,
+				'title'			=> $title,
+				'handler'		=> array($this, 'settingsPage'),
+			));
 		}
 
 		add_settings_section(GFEWAY_PLUGIN_OPTIONS, false, false, GFEWAY_PLUGIN_OPTIONS);
@@ -190,7 +194,7 @@ class GFEwayAdmin {
 	* add plugin action links
 	*/
 	public function addPluginActionLinks($links) {
-		$url = esc_url(admin_url('admin.php?page=gf_settings&subview=eWAY+Payments'));
+		$url = esc_url(admin_url('admin.php?page=gf_settings&subview=' . $this->slug));
 		$settings_link = sprintf('<a href="%s">%s</a>', $url, _x('Settings', 'plugin details links', 'gravityforms-eway'));
 		array_unshift($links, $settings_link);
 
