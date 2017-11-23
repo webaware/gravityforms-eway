@@ -727,11 +727,21 @@ class GFEwayPlugin {
 	*/
 	public function gformCustomMergeTags($merge_tags, $form_id, $fields, $element_id) {
 		if ($fields && self::isEwayForm($form_id, $fields)) {
-			$merge_tags[] = array('label' => _x('Transaction ID', 'merge tag label', 'gravityforms-eway'), 'tag' => '{transaction_id}');
-			$merge_tags[] = array('label' => _x('AuthCode',       'merge tag label', 'gravityforms-eway'), 'tag' => '{authcode}');
-			$merge_tags[] = array('label' => _x('Payment Amount', 'merge tag label', 'gravityforms-eway'), 'tag' => '{payment_amount}');
-			$merge_tags[] = array('label' => _x('Payment Status', 'merge tag label', 'gravityforms-eway'), 'tag' => '{payment_status}');
-			$merge_tags[] = array('label' => _x('Beagle Score',   'merge tag label', 'gravityforms-eway'), 'tag' => '{beagle_score}');
+			$tags = array_flip(wp_list_pluck($merge_tags, 'tag'));
+
+			$custom_tags = array(
+				array('label' => _x('Transaction ID', 'merge tag label', 'gravityforms-eway'), 'tag' => '{transaction_id}'),
+				array('label' => _x('AuthCode',       'merge tag label', 'gravityforms-eway'), 'tag' => '{authcode}'),
+				array('label' => _x('Payment Amount', 'merge tag label', 'gravityforms-eway'), 'tag' => '{payment_amount}'),
+				array('label' => _x('Payment Status', 'merge tag label', 'gravityforms-eway'), 'tag' => '{payment_status}'),
+				array('label' => _x('Beagle Score',   'merge tag label', 'gravityforms-eway'), 'tag' => '{beagle_score}'),
+			);
+
+			foreach ($custom_tags as $custom) {
+				if (!isset($tags[$custom['tag']])) {
+					$merge_tags[] = $custom;
+				}
+			}
 		}
 
 		return $merge_tags;
