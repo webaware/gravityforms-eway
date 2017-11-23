@@ -735,6 +735,7 @@ class GFEwayPlugin {
 				array('label' => _x('Payment Amount', 'merge tag label', 'gravityforms-eway'), 'tag' => '{payment_amount}'),
 				array('label' => _x('Payment Status', 'merge tag label', 'gravityforms-eway'), 'tag' => '{payment_status}'),
 				array('label' => _x('Beagle Score',   'merge tag label', 'gravityforms-eway'), 'tag' => '{beagle_score}'),
+				array('label' => _x('Entry Date',     'merge tag label', 'gravityforms-eway'), 'tag' => '{date_created}'),
 			);
 
 			foreach ($custom_tags as $custom) {
@@ -772,6 +773,7 @@ class GFEwayPlugin {
 				$payment_status		= isset($lead['payment_status']) ? $lead['payment_status'] : '';
 				$authcode			= (string) gform_get_meta($lead['id'], 'authcode');
 				$beagle_score		= (string) gform_get_meta($lead['id'], 'beagle_score');
+				$date_created		= $lead['date_created'];
 			}
 			else {
 				// lead not yet saved, get values from transaction results
@@ -780,6 +782,7 @@ class GFEwayPlugin {
 				$payment_status		= isset($this->txResult['payment_status']) ? $this->txResult['payment_status'] : '';
 				$authcode			= isset($this->txResult['authcode'])       ? $this->txResult['authcode'] : '';
 				$beagle_score		= isset($this->txResult['beagle_score'])   ? $this->txResult['beagle_score'] : '';
+				$date_created		= gmdate('Y-m-d H:i:s');
 			}
 
 			// format payment amount as currency
@@ -791,6 +794,7 @@ class GFEwayPlugin {
 				'{payment_status}',
 				'{authcode}',
 				'{beagle_score}',
+				'{date_created}',
 			);
 			$values = array (
 				$transaction_id,
@@ -798,7 +802,16 @@ class GFEwayPlugin {
 				$payment_status,
 				$authcode,
 				$beagle_score,
+				GFCommon::format_date($date_created, false, '', false),
 			);
+
+			// maybe encode the results
+			if ($url_encode) {
+				$values = array_map('urlencode', $values);
+			}
+			elseif ($esc_html) {
+				$values = array_map('esc_html', $values);
+			}
 
 			$text = str_replace($tags, $values, $text);
 		}

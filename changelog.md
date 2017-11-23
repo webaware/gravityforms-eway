@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 2.2.7, soon...
+
+* added: custom merge tag `{date_created}` so that notification resends can show the entry date instead of the current date
+
 ### 2.2.6, 2017-09-12
 
 * fixed: Gravity Forms 2.3 compatibility; don't directly access database tables
