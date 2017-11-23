@@ -206,10 +206,10 @@ class GFEwayAdmin {
 	*/
 	public static function addPluginDetailsLinks($links, $file) {
 		if ($file === GFEWAY_PLUGIN_NAME) {
-			$links[] = sprintf('<a href="https://wordpress.org/support/plugin/gravityforms-eway" target="_blank">%s</a>', _x('Get help', 'plugin details links', 'gravityforms-eway'));
-			$links[] = sprintf('<a href="https://wordpress.org/plugins/gravityforms-eway/" target="_blank">%s</a>', _x('Rating', 'plugin details links', 'gravityforms-eway'));
-			$links[] = sprintf('<a href="https://translate.wordpress.org/projects/wp-plugins/gravityforms-eway" target="_blank">%s</a>', _x('Translate', 'plugin details links', 'gravityforms-eway'));
-			$links[] = sprintf('<a href="https://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+eWAY" target="_blank">%s</a>', _x('Donate', 'plugin details links', 'gravityforms-eway'));
+			$links[] = sprintf('<a href="https://wordpress.org/support/plugin/gravityforms-eway" rel="noopener" target="_blank">%s</a>', _x('Get help', 'plugin details links', 'gravityforms-eway'));
+			$links[] = sprintf('<a href="https://wordpress.org/plugins/gravityforms-eway/" rel="noopener" target="_blank">%s</a>', _x('Rating', 'plugin details links', 'gravityforms-eway'));
+			$links[] = sprintf('<a href="https://translate.wordpress.org/projects/wp-plugins/gravityforms-eway" rel="noopener" target="_blank">%s</a>', _x('Translate', 'plugin details links', 'gravityforms-eway'));
+			$links[] = sprintf('<a href="https://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+eWAY" rel="noopener" target="_blank">%s</a>', _x('Donate', 'plugin details links', 'gravityforms-eway'));
 		}
 
 		return $links;

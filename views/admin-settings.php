@@ -2,7 +2,7 @@
 <?php settings_errors(); ?>
 
 <div class="gfeway-settings-promote">
-	<a target="_blank" href="https://gfeway.webaware.net.au/"><?php esc_html_e('Go Pro for more flexibility!', 'gravityforms-eway'); ?></a>
+	<a rel="noopener" target="_blank" href="https://gfeway.webaware.net.au/"><?php esc_html_e('Go Pro for more flexibility!', 'gravityforms-eway'); ?></a>
 </div>
 
 <h3><span><i class="fa fa-credit-card"></i> <?php echo esc_html_x('eWAY Payments', 'settings page', 'gravityforms-eway'); ?></span></h3>
@@ -145,7 +145,7 @@
 				</fieldset>
 
 				<fieldset id="gfeway-opt-admin-beagle">
-					<legend><?php printf(__('Use <a href="%s" target="_blank">Beagle Lite</a> for legacy XML API', 'gravityforms-eway'), 'https://eway.io/features/antifraud-beagle-lite'); ?></legend>
+					<legend><?php printf(__('Use <a href="%s" rel="noopener" target="_blank">Beagle Lite</a> for legacy XML API', 'gravityforms-eway'), 'https://eway.io/features/antifraud-beagle-lite'); ?></legend>
 					<input type="radio" name="gfeway_plugin[useBeagle]" id="gfeway_plugin_useBeagle_yes" value="1" <?php checked($options['useBeagle'], '1'); ?> />
 					<label for="gfeway_plugin_useBeagle_yes"><?php echo esc_html_x('Yes', 'settings', 'gravityforms-eway'); ?></label>
 					<input type="radio" name="gfeway_plugin[useBeagle]" id="gfeway_plugin_useBeagle_no" value="" <?php checked($options['useBeagle'], ''); ?> />
@@ -160,7 +160,7 @@
 					<label for="gfeway_plugin_sslVerifyPeer_yes"><?php echo esc_html_x('Yes', 'settings', 'gravityforms-eway'); ?></label>
 					<input type="radio" name="gfeway_plugin[sslVerifyPeer]" id="gfeway_plugin_sslVerifyPeer_no" value="N" <?php checked($options['sslVerifyPeer'], ''); ?> />
 					<label for="gfeway_plugin_sslVerifyPeer_no"><?php echo esc_html_x('No', 'settings', 'gravityforms-eway'); ?></label>
-					<p><em><?php printf(__("Only choose 'no' if you can't <a target='_blank' href='%s'>fix your website SSL configuration</a> due to a technical reason.", 'gravityforms-eway'),
+					<p><em><?php printf(__("Only choose 'no' if you can't <a rel='noopener' target='_blank' href='%s'>fix your website SSL configuration</a> due to a technical reason.", 'gravityforms-eway'),
 						'https://snippets.webaware.com.au/howto/stop-turning-off-curlopt_ssl_verifypeer-and-fix-your-php-config/'); ?></em></p>
 				</fieldset>
 
