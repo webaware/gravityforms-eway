@@ -50,7 +50,9 @@ class GFEwayAdmin {
 	* handle admin init action
 	*/
 	public function adminInit() {
-		if (rgget('page') === 'gf_settings') {
+		global $plugin_page;
+
+		if ($plugin_page === 'gf_settings') {
 			// add our settings page to the Gravity Forms settings menu
 			$title = esc_html_x('eWAY Payments', 'settings page', 'gravityforms-eway');
 			GFForms::add_settings_page(array(
@@ -95,7 +97,7 @@ class GFEwayAdmin {
 
 		$options = $this->plugin->options;
 		$gfSettingsURL = admin_url('admin.php?page=gf_settings');
-		$ewaySettingsURL = admin_url('admin.php?page=gf_settings&subview=eWAY+Payments');
+		$ewaySettingsURL = admin_url('admin.php?page=gf_settings&subview=' . urlencode($this->slug));
 
 		// need at least PHP 5.2.11 for libxml_disable_entity_loader()
 		$php_min = '5.2.11';
