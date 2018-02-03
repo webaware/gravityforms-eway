@@ -113,7 +113,8 @@ class GFEwayPlugin {
 	*/
 	public function registerScripts() {
 		$min = SCRIPT_DEBUG ? '' : '.min';
-		wp_register_script('eway-ecrypt', "https://secure.ewaypayments.com/scripts/eCrypt$min.js", array('jquery'), null, true);
+		wp_register_script('eway-ecrypt', "https://secure.ewaypayments.com/scripts/eCrypt$min.js", array(), null, true);
+		wp_register_script('gfeway-ecrypt', plugins_url("js/gfeway_ecrypt$min.js", GFEWAY_PLUGIN_FILE), array('jquery','eway-ecrypt'), null, true);
 	}
 
 	/**
@@ -123,8 +124,7 @@ class GFEwayPlugin {
 	*/
 	public function gformEnqueueScripts($form, $ajax) {
 		if ($this->canEncryptCardDetails($form)) {
-			wp_enqueue_script('eway-ecrypt');
-			add_action('wp_print_footer_scripts', array($this, 'ecryptInitScript'));
+			wp_enqueue_script('gfeway-ecrypt');
 			add_action('gform_preview_footer', array($this, 'ecryptInitScript'));
 		}
 	}
@@ -134,15 +134,9 @@ class GFEwayPlugin {
 	*/
 	public function ecryptInitScript() {
 		// when previewing form, will not have printed footer scripts
-		if (!wp_script_is('eway-ecrypt', 'done')) {
-			wp_print_scripts(array('eway-ecrypt'));
+		if (!wp_script_is('gfeway-ecrypt', 'done')) {
+			wp_print_scripts(array('gfeway-ecrypt'));
 		}
-
-		$min = SCRIPT_DEBUG ? '' : '.min';
-
-		echo '<script>';
-		readfile(GFEWAY_PLUGIN_ROOT . "js/gfeway_ecrypt$min.js");
-		echo '</script>';
 	}
 
 	/**
