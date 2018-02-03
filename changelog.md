@@ -2,7 +2,7 @@
 
 ## Changelog
 
-### 2.2.7, soon...
+### 2.2.7, 2018-02-03
 
 * changed: load front end CSE script from file, don't inline in the page footer
 * added: custom merge tag `{date_created}` so that notification resends can show the entry date instead of the current date

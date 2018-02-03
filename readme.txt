@@ -6,9 +6,9 @@ Author URI: https://shop.webaware.com.au/
 Donate link: https://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+eWAY
 Tags: gravity forms, eway, donations, payment, payment gateway, ecommerce
 Requires at least: 4.2
-Tested up to: 4.8
+Tested up to: 4.9
 Requires PHP: 5.3
-Stable tag: 2.2.6
+Stable tag: 2.2.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -211,9 +211,9 @@ Developers can use these filter hooks to modify some eWAY invoice properties. Ea
 
 == Upgrade Notice ==
 
-= 2.2.6 =
+= 2.2.7 =
 
-Gravity Forms 2.3 compatibility; proper handling of Japanese Yen (JPY); Gravity Forms HTML5 Validation plugin compatibility
+custom merge tag for date created; improve load of Client Side Encryption script to avoid errors on some sites
 
 == Changelog ==
 
@@ -221,8 +221,7 @@ Gravity Forms 2.3 compatibility; proper handling of Japanese Yen (JPY); Gravity 
 
 The full changelog for Gravity Forms eWAY can be found [on GitHub](https://github.com/webaware/gravityforms-eway/blob/master/changelog.md). Recent entries:
 
-### 2.2.6, 2017-09-12
+### 2.2.7, 2018-02-03
 
-* fixed: Gravity Forms 2.3 compatibility; don't directly access database tables
-* fixed: amounts in Japanese Yen (JPY) are already in the lowest denomination; no need to shift to / from cents
-* fixed: Client Side Encryption fails when Gravity Forms HTML5 Validation plugin is active
+* changed: load front end CSE script from file, don't inline in the page footer
+* added: custom merge tag `{date_created}` so that notification resends can show the entry date instead of the current date
