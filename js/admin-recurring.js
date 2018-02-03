@@ -9,7 +9,7 @@
 	fieldSettings.gfewayrecurring = ".conditional_logic_field_setting, .error_message_setting, .label_setting, .admin_label_setting, .rules_setting, .description_setting, .css_class_setting, .gfewayrecurring_setting";
 
 	// binding to the load field settings event to initialize custom inputs
-	$(document).bind("gform_load_field_settings", function(event, field, form) {
+	$(document).on("gform_load_field_settings", function(event, field /* , form */) {
 
 		$("#gfeway_initial_setting").prop("checked", !!field.gfeway_initial_setting);
 		if (!field.gfeway_initial_setting) {
@@ -123,8 +123,8 @@
 	*/
 	gform.addFilter("gform_form_editor_can_field_be_added", function(can_be_added, field_type) {
 		if (field_type === TYPE_RECURRING && GetFieldsByType([field_type]).length > 0) {
-			can_be_added = false;
 			window.alert(gfeway_editor_admin_strings_recurring.only_one);
+			return false;
 		}
 
 		return can_be_added;

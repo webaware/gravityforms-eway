@@ -56,7 +56,7 @@ Recurring Payments field
 	});
 
 	// watch for conditional logic changes
-	gform.addAction("gform_post_conditional_logic_field_action", function(formId, action, targetId, defaultValues, isInit) {
+	gform.addAction("gform_post_conditional_logic_field_action", function(formId, action, targetId /* , defaultValues, isInit */) {
 		var target = $(targetId);
 
 		if (target.hasClass("gfeway-contains-recurring")) {
