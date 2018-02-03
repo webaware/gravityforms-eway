@@ -1,3 +1,8 @@
+<?php
+if (!defined('ABSPATH')) {
+	exit;
+}
+?>
 
 <li class="gfewayrecurring_setting field_setting">
 

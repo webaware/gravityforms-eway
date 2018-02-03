@@ -1,5 +1,10 @@
+<?php
+if (!defined('ABSPATH')) {
+	exit;
+}
+?>
 
-<div class="error gfeway-dismissable" data-gfeway-dismiss="upgrade_from_v1">
+<div class="notice notice-error gfeway-dismissable" data-gfeway-dismiss="upgrade_from_v1">
 	<p><?php _e('Gravity Forms eWAY has been upgraded. Please check your settings.', 'gravityforms-eway'); ?></p>
 
 	<ul style="padding-left: 2em">
