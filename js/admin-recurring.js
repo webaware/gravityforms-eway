@@ -11,7 +11,7 @@
 	// binding to the load field settings event to initialize custom inputs
 	$(document).on("gform_load_field_settings", function(event, field /* , form */) {
 
-		$("#gfeway_initial_setting").prop("checked", !!field.gfeway_initial_setting);
+		$("#gfeway_initial_setting").prop("checked", field.gfeway_initial_setting);
 		if (!field.gfeway_initial_setting) {
 			$("#gfeway_initial_fields").hide();
 		}
@@ -47,7 +47,7 @@
 	* toggle whether to show the Initial Amount and Initial Date fields
 	*/
 	$("#gfeway_initial_setting").on("change", function() {
-		SetFieldProperty(this.id, this.checked ? "1" : "");
+		SetFieldProperty(this.id, this.checked);
 
 		if (this.checked) {
 			$("#gfeway_initial_fields").slideDown();
@@ -61,12 +61,12 @@
 	* toggle whether to show the Start Date field
 	*/
 	$("#gfeway_recurring_date_start").on("change", function() {
-		SetFieldProperty(this.id, this.checked ? "1" : "");
+		SetFieldProperty(this.id, this.checked);
 
 		// cleanup old combined start/end setting
 		var field = GetSelectedField();
 		if ("gfeway_recurring_date_setting" in field) {
-			field.gfeway_recurring_date_end = field.gfeway_recurring_date_setting ? "1" : "";
+			field.gfeway_recurring_date_end = !!field.gfeway_recurring_date_setting;
 			delete(field.gfeway_recurring_date_setting);
 		}
 
@@ -82,12 +82,12 @@
 	* toggle whether to show the End Date field
 	*/
 	$("#gfeway_recurring_date_end").on("change", function() {
-		SetFieldProperty(this.id, this.checked ? "1" : "");
+		SetFieldProperty(this.id, this.checked);
 
 		// cleanup old combined start/end setting
 		var field = GetSelectedField();
 		if ("gfeway_recurring_date_setting" in field) {
-			field.gfeway_recurring_date_start = field.gfeway_recurring_date_setting ? "1" : "";
+			field.gfeway_recurring_date_start = !!field.gfeway_recurring_date_setting;
 			delete(field.gfeway_recurring_date_setting);
 		}
 
