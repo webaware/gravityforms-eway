@@ -1,3 +1,5 @@
+// gravityforms-eway: Client Side Encryption
+
 (function($) {
 
 	/**
@@ -41,4 +43,3 @@
 	}
 
 })(jQuery);
-

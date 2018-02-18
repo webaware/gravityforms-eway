@@ -1,4 +1,4 @@
-/*! gravityforms-eway: form editor for Recurring Payments field */
+// gravityforms-eway: form editor for Recurring Payments field
 
 // initialise form on page load
 (function($) {

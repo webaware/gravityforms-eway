@@ -1,21 +1,17 @@
-/*!
-gravityforms-eway
-copyright (c) 2012-2016 WebAware Pty Ltd
-Recurring Payments field
-*/
+// gravityforms-eway: Recurring Payments field
 
 // initialise form on page load
 (function($) {
 
-	var	thisYear			= (new Date()).getFullYear(),
-		yearRange			= thisYear + ":2099",				// year range for max date settings, mumble mumble jquery-ui mumble
-		reDatePattern		= /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/,	// regex test for ISO date string
-		setPickerOptions	= false;
+	var thisYear			= (new Date()).getFullYear();
+	var yearRange			= thisYear + ":2099";				// year range for max date settings; mumble mumble jquery-ui mumble
+	var reDatePattern		= /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;	// regex test for ISO date string
+	var setPickerOptions	= false;
 
 	// set datepicker minimum date if given
 	$("input[data-gfeway-minDate]").each(function() {
-		var	input   = $(this),
-			minDate = this.getAttribute("data-gfeway-minDate");
+		var input   = $(this);
+		var minDate = this.getAttribute("data-gfeway-minDate");
 
 		// if minDate is an ISO date string, convert to a Date object as a reliable way to set minDate
 		if (reDatePattern.test(minDate)) {
@@ -28,8 +24,8 @@ Recurring Payments field
 
 	// set datepicker maximum date if given
 	$("input[data-gfeway-maxDate]").each(function() {
-		var	input   = $(this),
-			maxDate = this.getAttribute("data-gfeway-maxDate");
+		var input   = $(this);
+		var maxDate = this.getAttribute("data-gfeway-maxDate");
 
 		// if maxDate is an ISO date string, convert to a Date object as a reliable way to set maxDate
 		if (reDatePattern.test(maxDate)) {
