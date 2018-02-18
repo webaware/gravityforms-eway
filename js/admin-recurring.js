@@ -12,27 +12,17 @@
 	$(document).on("gform_load_field_settings", function(event, field /* , form */) {
 
 		$("#gfeway_initial_setting").prop("checked", field.gfeway_initial_setting);
-		if (!field.gfeway_initial_setting) {
-			$("#gfeway_initial_fields").hide();
-		}
+		setFieldsVisibility("#gfeway_initial_fields", field.gfeway_initial_setting);
 
 		// NB: for backwards compatibility, check for combined start/end setting
-		if (field.gfeway_recurring_date_start || field.gfeway_recurring_date_setting) {
-			$("#gfeway_recurring_date_start").prop("checked", true);
-		}
-		else {
-			$("#gfeway_recurring_date_start").prop("checked", false);
-			$("#gfeway_recurring_start_date_fields").hide();
-		}
+		var dateStart = field.gfeway_recurring_date_start || field.gfeway_recurring_date_setting;
+		$("#gfeway_recurring_date_start").prop("checked", dateStart);
+		setFieldsVisibility("#gfeway_recurring_start_date_fields", dateStart);
 
 		// NB: for backwards compatibility, check for combined start/end setting
-		if (field.gfeway_recurring_date_end || field.gfeway_recurring_date_setting) {
-			$("#gfeway_recurring_date_end").prop("checked", true);
-		}
-		else {
-			$("#gfeway_recurring_date_end").prop("checked", false);
-			$("#gfeway_recurring_end_date_fields").hide();
-		}
+		var dateEnd = field.gfeway_recurring_date_end || field.gfeway_recurring_date_setting;
+		$("#gfeway_recurring_date_end").prop("checked", dateEnd);
+		setFieldsVisibility("#gfeway_recurring_end_date_fields", dateEnd);
 
 		$("#gfeway_initial_amount_label").val(field.gfeway_initial_amount_label);
 		$("#gfeway_recurring_amount_label").val(field.gfeway_recurring_amount_label);
@@ -48,13 +38,7 @@
 	*/
 	$("#gfeway_initial_setting").on("change", function() {
 		SetFieldProperty(this.id, this.checked);
-
-		if (this.checked) {
-			$("#gfeway_initial_fields").slideDown();
-		}
-		else {
-			$("#gfeway_initial_fields").slideUp();
-		}
+		setFieldsVisibility("#gfeway_initial_fields", this.checked);
 	});
 
 	/**
@@ -70,12 +54,7 @@
 			delete(field.gfeway_recurring_date_setting);
 		}
 
-		if (this.checked) {
-			$("#gfeway_recurring_start_date_fields").slideDown();
-		}
-		else {
-			$("#gfeway_recurring_start_date_fields").slideUp();
-		}
+		setFieldsVisibility("#gfeway_recurring_start_date_fields", this.checked);
 	});
 
 	/**
@@ -91,12 +70,7 @@
 			delete(field.gfeway_recurring_date_setting);
 		}
 
-		if (this.checked) {
-			$("#gfeway_recurring_end_date_fields").slideDown();
-		}
-		else {
-			$("#gfeway_recurring_end_date_fields").slideUp();
-		}
+		setFieldsVisibility("#gfeway_recurring_end_date_fields", this.checked);
 	});
 
 	/**
@@ -129,5 +103,21 @@
 
 		return can_be_added;
 	});
+
+	/**
+	* set visibility of selected fields
+	* @param {String} selector
+	* @param {bool} show
+	*/
+	function setFieldsVisibility(selector, show) {
+		var fields = $(selector);
+
+		if (show) {
+			fields.slideDown();
+		}
+		else {
+			fields.slideUp();
+		}
+	}
 
 })(jQuery);
