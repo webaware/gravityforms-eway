@@ -41,6 +41,7 @@
 	"globals": {
 		"eCrypt": false,
 		"gform": false,
+		"gfeway_ecrypt_strings": false,
 		"gfeway_editor_admin_strings_recurring": false,
 		"GetFieldsByType": false,
 		"GetSelectedField": false,

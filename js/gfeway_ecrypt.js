@@ -13,10 +13,12 @@
 
 	/**
 	* check form for conditions to encrypt sensitive fields
+	* @param {jQuery.Event} event
 	*/
-	function maybeEncryptForm() {
+	function maybeEncryptForm(event) {
 
 		var frm = $(this);
+		var form_id = extractFormId(this.id);
 
 		// don't encrypt if sending to the Recurring Payment XML API
 		if (frm.find(".gfeway-recurring-active").length) {
@@ -28,18 +30,82 @@
 		function maybeEncryptField(field_selector) {
 			var field = frm.find(field_selector);
 
-			if (field.length && field.val().length) {
-				var encrypted = eCrypt.encryptValue(field.val(), key);
-				$("<input type='hidden'>").attr("name", field.data("gfeway-encrypt-name")).val(encrypted).appendTo(frm);
-				field.val("");
+			if (field.length) {
+				var value = field.val().trim();
+				var length = value.length;
+				var target = field.data("gfeway-encrypt-name");
+
+				if (target === "EWAY_CARDNUMBER" && !cardnumberValid(value)) {
+					throw {
+						name:		"Credit Card Error",
+						message:	gfeway_ecrypt_strings.card_number_invalid,
+						field:		field,
+					};
+				}
+
+				if (length) {
+					var encrypted = eCrypt.encryptValue(field.val(), key);
+					$("<input type='hidden'>").attr("name", target).val(encrypted).appendTo(frm);
+					field.val("").prop("placeholder", repeatString(gfeway_ecrypt_strings.ecrypt_mask, length));
+				}
 			}
 		}
 
-		maybeEncryptField("input[data-gfeway-encrypt-name='EWAY_CARDNUMBER']");
-		maybeEncryptField("input[data-gfeway-encrypt-name='EWAY_CARDCVN']");
+		function repeatString(character, length) {
+			var s = character;
+			for (var i = length; --i >= 1; ) {
+				s += character;
+			}
+			return s;
+		}
+
+		function extractFormId(form_element_id) {
+			var parts = form_element_id.split("_");
+
+			return parts.length > 1 ? parts[1] : "";
+		}
+
+		try {
+			maybeEncryptField("input[data-gfeway-encrypt-name='EWAY_CARDNUMBER']");
+			maybeEncryptField("input[data-gfeway-encrypt-name='EWAY_CARDCVN']");
+		}
+		catch (e) {
+			event.preventDefault();
+			window["gf_submitting_" + form_id] = false;
+			$("#gform_ajax_spinner_" + form_id).remove();
+			e.field.focus();
+			window.alert(e.message);
+		}
 
 		return true;
 
+	}
+
+	/**
+	* basic card number validation using Luhn algorithm
+	* @param {String} card_number
+	* @return bool
+	*/
+	function cardnumberValid(card_number) {
+		var checksum	= 0;
+		var multiplier	= 1;
+		var digit;
+
+		// process each character, starting at the right
+		for (var i = card_number.length - 1; i >= 0; i--) {
+			digit = card_number.charAt(i) * multiplier;
+			multiplier = (multiplier === 1) ? 2 : 1;
+
+			// digit can't be greater than 9
+			if (digit >= 10) {
+				checksum++;
+				digit -= 10;
+			}
+
+			checksum += digit;
+		}
+
+		return checksum % 10 === 0;
 	}
 
 })(jQuery);
