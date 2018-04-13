@@ -2,6 +2,11 @@
 
 ## Changelog
 
+### 2.2.8, soon...
+
+* added: credit card number validation in the browser when using Client Side Encryption
+* added: show placeholders in the credit card number and security code fields when their values are removed during Client Side Encryption
+
 ### 2.2.7, 2018-02-03
 
 * changed: load front end CSE script from file, don't inline in the page footer
