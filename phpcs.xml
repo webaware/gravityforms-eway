@@ -36,7 +36,6 @@
 	</rule>
 
 	<rule ref="Generic.WhiteSpace.ArbitraryParenthesesSpacing">
-		<exclude-pattern>includes/class.EDDUpdater.php</exclude-pattern>
 		<properties>
 			<property name="ignoreNewlines" value="true" />
 		</properties>
