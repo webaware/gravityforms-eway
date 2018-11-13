@@ -3,7 +3,7 @@
 // initialise form on page load
 (function($) {
 
-	var TYPE_RECURRING = "gfewayrecurring";
+	const TYPE_RECURRING = "gfewayrecurring";
 
 	// add required classes to the field on the admin form
 	fieldSettings.gfewayrecurring = ".conditional_logic_field_setting, .error_message_setting, .label_setting, .admin_label_setting, .rules_setting, .description_setting, .css_class_setting, .gfewayrecurring_setting";
@@ -15,12 +15,12 @@
 		setFieldsVisibility("#gfeway_initial_fields", field.gfeway_initial_setting);
 
 		// NB: for backwards compatibility, check for combined start/end setting
-		var dateStart = field.gfeway_recurring_date_start || field.gfeway_recurring_date_setting;
+		const dateStart = field.gfeway_recurring_date_start || field.gfeway_recurring_date_setting;
 		$("#gfeway_recurring_date_start").prop("checked", dateStart);
 		setFieldsVisibility("#gfeway_recurring_start_date_fields", dateStart);
 
 		// NB: for backwards compatibility, check for combined start/end setting
-		var dateEnd = field.gfeway_recurring_date_end || field.gfeway_recurring_date_setting;
+		const dateEnd = field.gfeway_recurring_date_end || field.gfeway_recurring_date_setting;
 		$("#gfeway_recurring_date_end").prop("checked", dateEnd);
 		setFieldsVisibility("#gfeway_recurring_end_date_fields", dateEnd);
 
@@ -48,7 +48,7 @@
 		SetFieldProperty(this.id, this.checked);
 
 		// cleanup old combined start/end setting
-		var field = GetSelectedField();
+		const field = GetSelectedField();
 		if ("gfeway_recurring_date_setting" in field) {
 			field.gfeway_recurring_date_end = !!field.gfeway_recurring_date_setting;
 			delete(field.gfeway_recurring_date_setting);
@@ -64,7 +64,7 @@
 		SetFieldProperty(this.id, this.checked);
 
 		// cleanup old combined start/end setting
-		var field = GetSelectedField();
+		const field = GetSelectedField();
 		if ("gfeway_recurring_date_setting" in field) {
 			field.gfeway_recurring_date_start = !!field.gfeway_recurring_date_setting;
 			delete(field.gfeway_recurring_date_setting);
@@ -77,7 +77,7 @@
 	* set the label on a subfield in the recurring field
 	*/
 	$("li.gfewayrecurring_setting").on("keyup", "input.gfeway-field-label", function() {
-		var newLabel = this.value;
+		let newLabel = this.value;
 
 		// if new label value is empty, pick up the default value instead
 		if (!(/\S/.test(newLabel))) {
@@ -110,7 +110,7 @@
 	* @param {bool} show
 	*/
 	function setFieldsVisibility(selector, show) {
-		var fields = $(selector);
+		const fields = $(selector);
 
 		if (show) {
 			fields.slideDown();

@@ -3,15 +3,15 @@
 // initialise form on page load
 (function($) {
 
-	var thisYear			= (new Date()).getFullYear();
-	var yearRange			= thisYear + ":2099";				// year range for max date settings; mumble mumble jquery-ui mumble
-	var reDatePattern		= /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;	// regex test for ISO date string
-	var setPickerOptions	= false;
+	const thisYear			= (new Date()).getFullYear();
+	const yearRange			= thisYear + ":2099";				// year range for max date settings; mumble mumble jquery-ui mumble
+	const reDatePattern		= /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;	// regex test for ISO date string
+	let setPickerOptions	= false;
 
 	// set datepicker minimum date if given
 	$("input[data-gfeway-minDate]").each(function() {
-		var input   = $(this);
-		var minDate = this.getAttribute("data-gfeway-minDate");
+		const input = $(this);
+		let minDate = this.getAttribute("data-gfeway-minDate");
 
 		// if minDate is an ISO date string, convert to a Date object as a reliable way to set minDate
 		if (reDatePattern.test(minDate)) {
@@ -24,8 +24,8 @@
 
 	// set datepicker maximum date if given
 	$("input[data-gfeway-maxDate]").each(function() {
-		var input   = $(this);
-		var maxDate = this.getAttribute("data-gfeway-maxDate");
+		const input = $(this);
+		let maxDate = this.getAttribute("data-gfeway-maxDate");
 
 		// if maxDate is an ISO date string, convert to a Date object as a reliable way to set maxDate
 		if (reDatePattern.test(maxDate)) {
@@ -53,7 +53,7 @@
 
 	// watch for conditional logic changes
 	gform.addAction("gform_post_conditional_logic_field_action", function(formId, action, targetId /* , defaultValues, isInit */) {
-		var target = $(targetId);
+		const target = $(targetId);
 
 		if (target.hasClass("gfeway-contains-recurring")) {
 			if (action === "show") {
