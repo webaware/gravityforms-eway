@@ -575,7 +575,6 @@ class GFEwayRecurringField {
 		$class			= $size . $class_suffix;
 
 		$tabindex		= GFCommon::get_tabindex();
-		//~ $logic_event = GFCommon::get_logic_event($field, "keyup");
 
 		$spanClass		= '';
 		if (!empty($field['hidden'])) {

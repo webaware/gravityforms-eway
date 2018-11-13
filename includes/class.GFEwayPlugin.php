@@ -982,7 +982,7 @@ class GFEwayPlugin {
 	* @param array $plugins
 	* @return array
 	*/
-	public function enableLogging($plugins){
+	public function enableLogging($plugins) {
 		$plugins['gfeway'] = __('Gravity Forms eWAY', 'gravityforms-eway');
 
 		return $plugins;
@@ -992,7 +992,7 @@ class GFEwayPlugin {
 	* write an error log via the Gravity Forms Logging Add-On
 	* @param string $message
 	*/
-	public static function log_error($message){
+	public static function log_error($message) {
 		if (class_exists('GFLogging')) {
 			GFLogging::include_logger();
 			GFLogging::log_message('gfeway', self::sanitiseLog($message), KLogger::ERROR);
@@ -1003,7 +1003,7 @@ class GFEwayPlugin {
 	* write an debug message log via the Gravity Forms Logging Add-On
 	* @param string $message
 	*/
-	public static function log_debug($message){
+	public static function log_debug($message) {
 		if (class_exists('GFLogging')) {
 			GFLogging::include_logger();
 			GFLogging::log_message('gfeway', self::sanitiseLog($message), KLogger::DEBUG);

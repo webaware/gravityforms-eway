@@ -407,7 +407,6 @@ class GFEwayRapidAPI {
 	protected function getCustomerRecord() {
 		$record = new stdClass;
 
-		//~ $record->Reference		= '';		// TODO: customer reference?
 		$record->Title				= $this->title ? substr($this->title, 0, 5) : '';
 		$record->FirstName			= $this->firstName ? substr($this->firstName, 0, 50) : '';
 		$record->LastName			= $this->lastName ? substr($this->lastName, 0, 50) : '';

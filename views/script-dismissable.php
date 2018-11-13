@@ -1,3 +1,8 @@
+<?php
+if (!defined('ABSPATH')) {
+	exit;
+}
+?>
 
 <script>
 jQuery(document).on("click", "a.gfeway-dismissable", function() {
