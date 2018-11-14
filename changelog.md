@@ -6,6 +6,7 @@
 
 * added: credit card number validation in the browser when using Client Side Encryption
 * added: show placeholders in the credit card number and security code fields when their values are removed during Client Side Encryption
+* tested: WordPress 5.0, Gravity Forms 2.4 beta 2
 
 ### 2.2.7, 2018-02-03
 
