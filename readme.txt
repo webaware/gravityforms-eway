@@ -54,6 +54,14 @@ If you'd like to help out by translating this plugin, please [sign up for an acc
 * you need an account with eWAY
 * this plugin uses eWAY's [Rapid API Direct Payments](https://eway.io/features/api-rapid-api) and [Recurring Payments XML API](https://www.eway.com.au/features/payments-recurring-payments), and does not support eWAY's Responsive Shared Page (available with [Pro](https://gfeway.webaware.net.au/))
 
+### Contributions
+
+* [Fork me on GitHub](https://github.com/webaware/gravityforms-eway/)
+
+### Privacy
+
+Information gathered for processing a credit card transaction is transmitted to eWAY for processing, and in turn, eWAY passes that information on to your bank. Please review [eWAY's Privacy Policy](https://www.eway.com.au/legal#privacy) for information about how that affects your website's privacy policy. By using this plugin, you are agreeing to the terms of use for eWAY.
+
 ## Installation
 
 1. Either install automatically through the WordPress admin, or download the .zip file, unzip to a folder, and upload the folder to your /wp-content/plugins/ directory. Read [Installing Plugins](https://codex.wordpress.org/Managing_Plugins#Installing_Plugins) in the WordPress Codex for details.
@@ -179,6 +187,10 @@ The plugin will run in shared hosting environments, but requires PHP 5 with the 
 * XMLWriter
 * SimpleXML
 
+## Are there any filter hooks?
+
+Developers can use these [filter hooks to modify some eWAY invoice properties](https://gfeway.webaware.net.au/faq/what-filters-does-the-plugin-have/).
+
 ## Screenshots
 
 1. Options screen
@@ -189,14 +201,6 @@ The plugin will run in shared hosting environments, but requires PHP 5 with the 
 6. Example with recurring payments
 7. Forcing SSL on a page with a credit card form
 8. Enabling PCI for Direct Connections in the Sandbox
-
-## Filter hooks
-
-Developers can use these [filter hooks to modify some eWAY invoice properties](https://gfeway.webaware.net.au/faq/what-filters-does-the-plugin-have/).
-
-## Contributions
-
-* [Fork me on GitHub](https://github.com/webaware/gravityforms-eway/)
 
 ## Upgrade Notice
 
