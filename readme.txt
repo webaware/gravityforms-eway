@@ -210,7 +210,9 @@ validates credit card number before running Client Side Encryption, then shows p
 
 The full changelog for Gravity Forms eWAY can be found [on GitHub](https://github.com/webaware/gravityforms-eway/blob/master/changelog.md). Recent entries:
 
-### 2.2.8, 2018-11-17
+### 2.2.8
+
+Released 2018-11-17
 
 * added: validates credit card number before running Client Side Encryption
 * added: show placeholders when field values are hidden during Client Side Encryption
