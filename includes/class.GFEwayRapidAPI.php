@@ -407,7 +407,7 @@ class GFEwayRapidAPI {
 	protected function getCustomerRecord() {
 		$record = new stdClass;
 
-		$record->Title				= $this->title ? substr($this->title, 0, 5) : '';
+		$record->Title				= $this->title ? substr(self::sanitiseCustomerTitle($this->title), 0, 5) : '';
 		$record->FirstName			= $this->firstName ? substr($this->firstName, 0, 50) : '';
 		$record->LastName			= $this->lastName ? substr($this->lastName, 0, 50) : '';
 		$record->Street1			= $this->address1 ? substr($this->address1, 0, 50) : '';
@@ -573,6 +573,31 @@ class GFEwayRapidAPI {
 		}
 
 		return $value;
+	}
+
+	/**
+	* sanitise the customer title, to avoid error V6058: Invalid Customer Title
+	* @param string $title
+	* @return string
+	*/
+	protected static function sanitiseCustomerTitle($title) {
+		$valid = [
+			'mr'			=> 'Mr.',
+			'master'		=> 'Mr.',
+			'ms'			=> 'Ms.',
+			'mrs'			=> 'Mrs.',
+			'missus'		=> 'Mrs.',
+			'miss'			=> 'Miss',
+			'dr'			=> 'Dr.',
+			'doctor'		=> 'Dr.',
+			'sir'			=> 'Sir',
+			'prof'			=> 'Prof.',
+			'professor'		=> 'Prof.',
+		];
+
+		$simple = rtrim(strtolower(trim($title)), '.');
+
+		return isset($valid[$simple]) ? $valid[$simple] : '';
 	}
 
 }
