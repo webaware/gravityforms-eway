@@ -187,7 +187,7 @@ The plugin will run in shared hosting environments, but requires PHP 5 with the 
 * XMLWriter
 * SimpleXML
 
-## Are there any filter hooks?
+### Are there any filter hooks?
 
 Developers can use these [filter hooks to modify some eWAY invoice properties](https://gfeway.webaware.net.au/faq/what-filters-does-the-plugin-have/).
 
