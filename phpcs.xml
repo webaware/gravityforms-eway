@@ -36,11 +36,11 @@
 		</properties>
 	</rule>
 
-	<rule ref="Generic.Arrays.DisallowLongArraySyntax">
+	<!-- <rule ref="Generic.Arrays.DisallowLongArraySyntax">
 		<exclude-pattern>gravityforms-eway.php</exclude-pattern>
 		<exclude-pattern>includes/functions-global.php</exclude-pattern>
 		<exclude-pattern>views/requires-php.php</exclude-pattern>
-	</rule>
+	</rule> -->
 
 	<rule ref="Generic.WhiteSpace.ArbitraryParenthesesSpacing">
 		<properties>
