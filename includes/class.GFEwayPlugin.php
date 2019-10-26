@@ -579,7 +579,7 @@ class GFEwayPlugin {
 			$this->txResult['payment_status']				= 'Failed';
 			$this->txResult['authcode']						= '';			// empty bank authcode, for conditional logic
 
-			self::log_error(__METHOD__ . ": " . $e->getMessage());
+			self::log_error(__METHOD__ . ': ' . $e->getMessage());
 		}
 
 		return $data;
@@ -674,7 +674,7 @@ class GFEwayPlugin {
 			$formData->ccField->validation_message			= nl2br($this->getErrMsg(GFEWAY_ERROR_EWAY_FAIL) . esc_html(":\n{$e->getMessage()}"));
 			$this->txResult['payment_status']				= 'Failed';
 
-			self::log_error(__METHOD__ . ": " . $e->getMessage());
+			self::log_error(__METHOD__ . ': ' . $e->getMessage());
 		}
 
 		return $data;
