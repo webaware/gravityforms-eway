@@ -3,14 +3,14 @@
 Plugin Name: Gravity Forms eWAY
 Plugin URI: https://shop.webaware.com.au/downloads/gravity-forms-eway/
 Description: Easily create online payment forms with Gravity Forms and eWAY.
-Version: 2.2.8
+Version: 2.3.0-dev
 Author: WebAware
 Author URI: https://shop.webaware.com.au/
 Text Domain: gravityforms-eway
 */
 
 /*
-copyright (c) 2012-2018 WebAware Pty Ltd (email : support@webaware.com.au)
+copyright (c) 2012-2021 WebAware Pty Ltd (email : support@webaware.com.au)
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -35,7 +35,7 @@ define('GFEWAY_PLUGIN_FILE', __FILE__);
 define('GFEWAY_PLUGIN_ROOT', dirname(__FILE__) . '/');
 define('GFEWAY_PLUGIN_NAME', basename(dirname(__FILE__)) . '/' . basename(__FILE__));
 define('GFEWAY_PLUGIN_OPTIONS', 'gfeway_plugin');
-define('GFEWAY_PLUGIN_VERSION', '2.2.8');
+define('GFEWAY_PLUGIN_VERSION', '2.3.0-dev');
 
 // error message names
 define('GFEWAY_ERROR_ALREADY_SUBMITTED',	'gfeway_err_already');
@@ -46,7 +46,6 @@ define('GFEWAY_ERROR_EWAY_FAIL',			'gfeway_err_eway_fail');
 
 // custom fields
 define('GFEWAY_FIELD_RECURRING', 'gfewayrecurring');
-
 
 // instantiate the plug-in
 require GFEWAY_PLUGIN_ROOT . 'includes/class.GFEwayPlugin.php';
