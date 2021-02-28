@@ -122,7 +122,7 @@ class GFEwayRapidAPIResponse {
 	* @return array
 	*/
 	protected function getResponseDetails($codes) {
-		$responses = array();
+		$responses = [];
 
 		if (!empty($codes)) {
 			foreach (explode(',', $codes) as $code) {

@@ -43,7 +43,7 @@ class GFEwayPlugin {
 	private function __construct() {
 		spl_autoload_register(array(__CLASS__, 'autoload'));
 
-		add_action('plugins_loaded', array($this, 'load'));
+		add_action('plugins_loaded', [$this, 'load']);
 		add_action('init', array($this, 'loadTextDomain'));
 	}
 
@@ -52,7 +52,7 @@ class GFEwayPlugin {
 	*/
 	public function load() {
 		// grab options, setting new defaults for any that are missing
-		$defaults = array (
+		$defaults = [
 			'customerID'			=> '87654321',
 			'apiKey'				=> '',
 			'apiPassword'			=> '',
@@ -66,27 +66,27 @@ class GFEwayPlugin {
 			'roundTestAmounts'		=> true,
 			'forceTestAccount'		=> true,
 			'sslVerifyPeer'			=> true,
-		);
-		$this->options = wp_parse_args(get_option(GFEWAY_PLUGIN_OPTIONS, array()), $defaults);
+		];
+		$this->options = wp_parse_args(get_option(GFEWAY_PLUGIN_OPTIONS, []), $defaults);
 
 		// do nothing if Gravity Forms isn't enabled or doesn't meet required minimum version
 		if (self::hasMinimumGF()) {
-			add_action('wp_enqueue_scripts', array($this, 'registerScripts'), 20);
-			add_action('gform_preview_footer', array($this, 'registerScripts'), 5);
+			add_action('wp_enqueue_scripts', [$this, 'registerScripts'], 20);
+			add_action('gform_preview_footer', [$this, 'registerScripts'], 5);
 
 			// hook into Gravity Forms to enable credit cards and trap form submissions
-			add_action('gform_enqueue_scripts', array($this, 'gformEnqueueScripts'), 20, 2);
-			add_filter('gform_logging_supported', array($this, 'enableLogging'));
-			add_filter('gform_pre_render', array($this, 'ecryptModifyForm'));
-			add_filter('gform_pre_render', array($this, 'gformPreRenderSniff'));
-			add_filter('gform_admin_pre_render', array($this, 'gformPreRenderSniff'));
+			add_action('gform_enqueue_scripts', [$this, 'gformEnqueueScripts'], 20, 2);
+			add_filter('gform_logging_supported', [$this, 'enableLogging']);
+			add_filter('gform_pre_render', [$this, 'ecryptModifyForm']);
+			add_filter('gform_pre_render', [$this, 'gformPreRenderSniff']);
+			add_filter('gform_admin_pre_render', [$this, 'gformPreRenderSniff']);
 			add_action('gform_enable_credit_card_field', '__return_true');
-			add_filter('gform_pre_validation', array($this, 'ecryptPreValidation'));
-			add_filter('gform_validation', array($this, 'gformValidation'), 100);
-			add_action('gform_entry_post_save', array($this, 'gformEntryPostSave'), 10, 2);
-			add_filter('gform_custom_merge_tags', array($this, 'gformCustomMergeTags'), 10, 4);
-			add_filter('gform_replace_merge_tags', array($this, 'gformReplaceMergeTags'), 10, 7);
-			add_filter('gform_entry_meta', array($this, 'gformEntryMeta'), 10, 2);
+			add_filter('gform_pre_validation', [$this, 'ecryptPreValidation']);
+			add_filter('gform_validation', [$this, 'gformValidation'], 100);
+			add_action('gform_entry_post_save', [$this, 'gformEntryPostSave'], 10, 2);
+			add_filter('gform_custom_merge_tags', [$this, 'gformCustomMergeTags'], 10, 4);
+			add_filter('gform_replace_merge_tags', [$this, 'gformReplaceMergeTags'], 10, 7);
+			add_filter('gform_entry_meta', [$this, 'gformEntryMeta'], 10, 2);
 
 			// hook into Gravity Forms to handle Recurring Payments custom field
 			require GFEWAY_PLUGIN_ROOT . 'includes/class.GFEwayRecurringField.php';
@@ -113,13 +113,13 @@ class GFEwayPlugin {
 	*/
 	public function registerScripts() {
 		$min = SCRIPT_DEBUG ? '' : '.min';
-		wp_register_script('eway-ecrypt', "https://secure.ewaypayments.com/scripts/eCrypt$min.js", array(), null, true);
-		wp_register_script('gfeway-ecrypt', plugins_url("js/gfeway_ecrypt$min.js", GFEWAY_PLUGIN_FILE), array('jquery','eway-ecrypt'), null, true);
-		wp_localize_script('gfeway-ecrypt', 'gfeway_ecrypt_strings', array(
+		wp_register_script('eway-ecrypt', "https://secure.ewaypayments.com/scripts/eCrypt$min.js", [], null, true);
+		wp_register_script('gfeway-ecrypt', plugins_url("js/gfeway_ecrypt$min.js", GFEWAY_PLUGIN_FILE), ['jquery','eway-ecrypt'], null, true);
+		wp_localize_script('gfeway-ecrypt', 'gfeway_ecrypt_strings', [
 			/* translators: when a card number or security code is encrypted before being submitted to the server, its field is emptied and a string of these characters is displayed as a placeholder */
 			'ecrypt_mask'			=> _x('•', 'encrypted field mask character', 'gravityforms-eway'),
 			'card_number_invalid'	=> __('Card number is invalid', 'gravityforms-eway'),
-		));
+		]);
 	}
 
 	/**
@@ -130,7 +130,7 @@ class GFEwayPlugin {
 	public function gformEnqueueScripts($form, $ajax) {
 		if ($this->canEncryptCardDetails($form)) {
 			wp_enqueue_script('gfeway-ecrypt');
-			add_action('gform_preview_footer', array($this, 'ecryptInitScript'));
+			add_action('gform_preview_footer', [$this, 'ecryptInitScript']);
 		}
 	}
 
@@ -140,7 +140,7 @@ class GFEwayPlugin {
 	public function ecryptInitScript() {
 		// when previewing form, will not have printed footer scripts
 		if (!wp_script_is('gfeway-ecrypt', 'done')) {
-			wp_print_scripts(array('gfeway-ecrypt'));
+			wp_print_scripts(['gfeway-ecrypt']);
 		}
 	}
 
@@ -164,9 +164,9 @@ class GFEwayPlugin {
 	public function ecryptModifyForm($form) {
 		if ($this->canEncryptCardDetails($form)) {
 			// inject eWAY Client Side Encryption
-			add_filter('gform_form_tag', array($this, 'ecryptFormTag'), 10, 2);
-			add_filter('gform_field_content', array($this, 'ecryptCcField'), 10, 5);
-			add_filter('gform_get_form_filter_' . $form['id'], array($this, 'ecryptEndRender'), 10, 2);
+			add_filter('gform_form_tag', [$this, 'ecryptFormTag'], 10, 2);
+			add_filter('gform_field_content', [$this, 'ecryptCcField'], 10, 5);
+			add_filter('gform_get_form_filter_' . $form['id'], [$this, 'ecryptEndRender'], 10, 2);
 
 			// clear any previously set credit card data set for fooling GF validation
 			foreach ($form['fields'] as $field) {
@@ -197,8 +197,8 @@ class GFEwayPlugin {
 	* @return string
 	*/
 	public function ecryptEndRender($html, $form) {
-		remove_filter('gform_form_tag', array($this, 'ecryptFormTag'), 10, 2);
-		remove_filter('gform_field_content', array($this, 'ecryptCcField'), 10, 5);
+		remove_filter('gform_form_tag', [$this, 'ecryptFormTag'], 10, 2);
+		remove_filter('gform_field_content', [$this, 'ecryptCcField'], 10, 5);
 
 		return $html;
 	}
@@ -258,7 +258,7 @@ class GFEwayPlugin {
 						$_POST[$ccnumber_name] = $this->getTestCardNumber($field->creditCards);
 						$_POST[$cvn_name]      = '***';
 
-						add_action("gform_save_field_value_{$form['id']}_{$field->id}", array($this, 'ecryptSaveCreditCard'), 10, 5);
+						add_action("gform_save_field_value_{$form['id']}_{$field->id}", [$this, 'ecryptSaveCreditCard'], 10, 5);
 
 						// exit loop
 						break;
@@ -312,12 +312,12 @@ class GFEwayPlugin {
 			$cardType = $supportedCards[0];
 		}
 
-		$testNumbers = array(
+		$testNumbers = [
 			'amex'			=> '378282246310005',
 			'discover'		=> '6011111111111117',
 			'mastercard'	=> '5105105105105100',
 			'visa'			=> '4444333322221111',
-		);
+		];
 
 		return isset($testNumbers[$cardType]) ? $testNumbers[$cardType] : $testNumbers['visa'];
 	}
@@ -353,10 +353,10 @@ class GFEwayPlugin {
 					// only check credit card details if we've got something to bill
 					if ($formData->total > 0 || $formData->hasRecurringPayments()) {
 						// check for required fields
-						$required = array(
+						$required = [
 							'ccName'	=> $this->getErrMsg(GFEWAY_ERROR_REQ_CARD_HOLDER),
 							'ccNumber'	=> $this->getErrMsg(GFEWAY_ERROR_REQ_CARD_NAME),
-						);
+						];
 						foreach ($required as $name => $message) {
 							if (empty($formData->$name)) {
 								$data['is_valid'] = false;
@@ -398,14 +398,14 @@ class GFEwayPlugin {
 	protected function hasFormBeenProcessed($form) {
 		$unique_id = GFFormsModel::get_form_unique_id($form['id']);
 
-		$search = array(
-			'field_filters' => array(
-									array(
-										'key'		=> 'gfeway_unique_id',
-										'value'		=> $unique_id,
-									),
-								),
-		);
+		$search = [
+			'field_filters' => [
+				[
+					'key'		=> 'gfeway_unique_id',
+					'value'		=> $unique_id,
+				],
+			],
+		];
 
 		$entries = GFAPI::get_entries($form['id'], $search);
 
@@ -506,11 +506,11 @@ class GFEwayPlugin {
 			$eway->invoiceDescription		= apply_filters('gfeway_invoice_desc', $eway->invoiceDescription, $data['form'], false);
 			$eway->invoiceReference			= apply_filters('gfeway_invoice_ref', $eway->invoiceReference, $data['form'], false);
 			$eway->transactionNumber		= apply_filters('gfeway_invoice_trans_number', $eway->transactionNumber, $data['form'], false);
-			$eway->options					= array_filter(array(
+			$eway->options					= array_filter([
 												apply_filters('gfeway_invoice_option1', '', $data['form'], false),
 												apply_filters('gfeway_invoice_option2', '', $data['form'], false),
 												apply_filters('gfeway_invoice_option3', '', $data['form'], false),
-											), 'strlen');
+											], 'strlen');
 
 			// if live, pass through amount exactly, but if using test site, round up to whole dollars or eWAY will fail
 			if ($this->options['useTest'] && $this->options['roundTestAmounts']) {
@@ -529,10 +529,10 @@ class GFEwayPlugin {
 				$eway->amount, $eway->currencyCode, $eway->cardNumber));
 
 			// record basic transaction data, for updating the entry with later
-			$this->txResult = array (
+			$this->txResult = [
 				'payment_gateway'		=> 'gfeway',
 				'gfeway_unique_id'		=> GFFormsModel::get_form_unique_id($data['form']['id']),	// reduces risk of double-submission
-			);
+			];
 
 			$response = $eway->processPayment();
 			if ($response->TransactionStatus) {
@@ -640,10 +640,10 @@ class GFEwayPlugin {
 				$eway->intervalSize, $eway->intervalType, $eway->cardNumber));
 
 			// record basic transaction data, for updating the entry with later
-			$this->txResult = array (
+			$this->txResult = [
 				'payment_gateway'		=> 'gfeway',
 				'gfeway_unique_id'		=> GFFormsModel::get_form_unique_id($data['form']['id']),	// reduces risk of double-submission
-			);
+			];
 
 			$response = $eway->processPayment();
 			if ($response->status) {
@@ -728,14 +728,14 @@ class GFEwayPlugin {
 		if ($fields && self::isEwayForm($form_id, $fields)) {
 			$tags = array_flip(wp_list_pluck($merge_tags, 'tag'));
 
-			$custom_tags = array(
-				array('label' => _x('Transaction ID', 'merge tag label', 'gravityforms-eway'), 'tag' => '{transaction_id}'),
-				array('label' => _x('AuthCode',       'merge tag label', 'gravityforms-eway'), 'tag' => '{authcode}'),
-				array('label' => _x('Payment Amount', 'merge tag label', 'gravityforms-eway'), 'tag' => '{payment_amount}'),
-				array('label' => _x('Payment Status', 'merge tag label', 'gravityforms-eway'), 'tag' => '{payment_status}'),
-				array('label' => _x('Beagle Score',   'merge tag label', 'gravityforms-eway'), 'tag' => '{beagle_score}'),
-				array('label' => _x('Entry Date',     'merge tag label', 'gravityforms-eway'), 'tag' => '{date_created}'),
-			);
+			$custom_tags = [
+				['label' => _x('Transaction ID', 'merge tag label', 'gravityforms-eway'), 'tag' => '{transaction_id}'],
+				['label' => _x('AuthCode',       'merge tag label', 'gravityforms-eway'), 'tag' => '{authcode}'],
+				['label' => _x('Payment Amount', 'merge tag label', 'gravityforms-eway'), 'tag' => '{payment_amount}'],
+				['label' => _x('Payment Status', 'merge tag label', 'gravityforms-eway'), 'tag' => '{payment_status}'],
+				['label' => _x('Beagle Score',   'merge tag label', 'gravityforms-eway'), 'tag' => '{beagle_score}'],
+				['label' => _x('Entry Date',     'merge tag label', 'gravityforms-eway'), 'tag' => '{date_created}'],
+			];
 
 			foreach ($custom_tags as $custom) {
 				if (!isset($tags[$custom['tag']])) {
@@ -787,22 +787,22 @@ class GFEwayPlugin {
 			// format payment amount as currency
 			$payment_amount = GFCommon::format_number($payment_amount, 'currency');
 
-			$tags = array (
+			$tags = [
 				'{transaction_id}',
 				'{payment_amount}',
 				'{payment_status}',
 				'{authcode}',
 				'{beagle_score}',
 				'{date_created}',
-			);
-			$values = array (
+			];
+			$values = [
 				$transaction_id,
 				$payment_amount,
 				$payment_status,
 				$authcode,
 				$beagle_score,
 				GFCommon::format_date($date_created, false, '', false),
-			);
+			];
 
 			// maybe encode the results
 			if ($url_encode) {
@@ -826,23 +826,23 @@ class GFEwayPlugin {
 	*/
 	public function gformEntryMeta($entry_meta, $form_id) {
 
-		$entry_meta['payment_gateway'] = array(
+		$entry_meta['payment_gateway'] = [
 			'label'					=> _x('Payment Gateway', 'entry meta label', 'gravityforms-eway'),
 			'is_numeric'			=> false,
 			'is_default_column'		=> false,
-			'filter'				=> array(
-											'operators' => array('is', 'isnot')
-										),
-		);
+			'filter'				=> [
+										'operators' => ['is', 'isnot'],
+									],
+		];
 
-		$entry_meta['authcode'] = array(
+		$entry_meta['authcode'] = [
 			'label'					=> _x('AuthCode', 'entry meta label', 'gravityforms-eway'),
 			'is_numeric'			=> false,
 			'is_default_column'		=> false,
-			'filter'				=> array(
-											'operators' => array('is', 'isnot')
-										),
-		);
+			'filter'				=> [
+										'operators' => ['is', 'isnot'],
+									],
+		];
 
 		return $entry_meta;
 	}
@@ -877,7 +877,7 @@ class GFEwayPlugin {
 	* @return bool
 	*/
 	public static function isEwayForm($form_id, $fields) {
-		static $mapFormsHaveCC = array();
+		static $mapFormsHaveCC = [];
 
 		// see whether we've already checked
 		if (isset($mapFormsHaveCC[$form_id])) {
@@ -917,21 +917,21 @@ class GFEwayPlugin {
 	*/
 	protected function getEwayCredentials() {
 		// get defaults from add-on settings
-		$creds = array(
+		$creds = [
 			'apiKey'		=> $this->options['apiKey'],
 			'password'		=> $this->options['apiPassword'],
 			'ecryptKey'		=> $this->options['ecryptKey'],
 			'customerID'	=> $this->options['customerID'],
-		);
+		];
 
 		// override with Sandbox settings if set for Sandbox
 		if ($this->options['useTest']) {
-			$credsSandbox = array_filter(array(
+			$credsSandbox = array_filter([
 				'apiKey'		=> $this->options['sandboxApiKey'],
 				'password'		=> $this->options['sandboxPassword'],
 				'ecryptKey'		=> $this->options['sandboxEcryptKey'],
 				'customerID'	=> $this->options['sandboxCustomerID'],
-			));
+			]);
 			$creds = array_merge($creds, $credsSandbox);
 		}
 
@@ -948,13 +948,13 @@ class GFEwayPlugin {
 		static $messages = false;
 
 		if ($messages === false) {
-			$messages = array (
+			$messages = [
 				GFEWAY_ERROR_ALREADY_SUBMITTED  => __('Payment already submitted and processed - please close your browser window', 'gravityforms-eway'),
 				GFEWAY_ERROR_NO_AMOUNT          => __('This form has credit card fields, but no products or totals', 'gravityforms-eway'),
 				GFEWAY_ERROR_REQ_CARD_HOLDER    => __('Card holder name is required for credit card processing', 'gravityforms-eway'),
 				GFEWAY_ERROR_REQ_CARD_NAME      => __('Card number is required for credit card processing', 'gravityforms-eway'),
 				GFEWAY_ERROR_EWAY_FAIL          => __('Transaction failed', 'gravityforms-eway'),
-			);
+			];
 		}
 
 		// default
@@ -1058,13 +1058,13 @@ class GFEwayPlugin {
 	*/
 	public static function curlSendRequest($url, $data, $sslVerifyPeer = true) {
 		// send data via HTTPS and receive response
-		$response = wp_remote_post($url, array(
+		$response = wp_remote_post($url, [
 			'user-agent'	=> 'Gravity Forms eWAY ' . GFEWAY_PLUGIN_VERSION,
 			'sslverify'		=> $sslVerifyPeer,
 			'timeout'		=> 60,
-			'headers'		=> array('Content-Type' => 'text/xml; charset=utf-8'),
+			'headers'		=> ['Content-Type' => 'text/xml; charset=utf-8'],
 			'body'			=> $data,
-		));
+		]);
 
 		// failure to handle the http request
 		if (is_wp_error($response)) {
@@ -1128,13 +1128,13 @@ class GFEwayPlugin {
 	* @param string $class_name name of class to attempt to load
 	*/
 	public static function autoload($class_name) {
-		static $classMap = array (
+		static $classMap = [
 			'GFEwayPayment'						=> 'includes/class.GFEwayPayment.php',
 			'GFEwayRapidAPI'					=> 'includes/class.GFEwayRapidAPI.php',
 			'GFEwayRapidAPIResponse'			=> 'includes/class.GFEwayRapidAPIResponse.php',
 			'GFEwayRecurringPayment'			=> 'includes/class.GFEwayRecurringPayment.php',
 			'GFEwayStoredPayment'				=> 'includes/class.GFEwayStoredPayment.php',
-		);
+		];
 
 		if (isset($classMap[$class_name])) {
 			require GFEWAY_PLUGIN_ROOT . $classMap[$class_name];

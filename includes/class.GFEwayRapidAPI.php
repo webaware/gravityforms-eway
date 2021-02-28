@@ -276,7 +276,7 @@ class GFEwayRapidAPI {
 	* optional additional information for use in shopping carts, etc.
 	* @var array[string] max. 254 characters each
 	*/
-	public $options = array();
+	public $options = [];
 
 	#endregion "payment specific members"
 
@@ -310,7 +310,7 @@ class GFEwayRapidAPI {
 	* validate the data members to ensure that sufficient and valid information has been given
 	*/
 	protected function validate() {
-		$errors = array();
+		$errors = [];
 
 		if (!is_numeric($this->amount) || $this->amount <= 0) {
 			$errors[] = __('amount must be given as a number in dollars and cents', 'gravityforms-eway');
@@ -489,11 +489,11 @@ class GFEwayRapidAPI {
 	* @return array
 	*/
 	protected function getOptionsRecord() {
-		$options = array();
+		$options = [];
 
 		foreach ($this->options as $option) {
 			if (!empty($option)) {
-				$options[] = array('Value' => substr($option, 0, 254));
+				$options[] = ['Value' => substr($option, 0, 254)];
 			}
 		}
 
@@ -513,16 +513,16 @@ class GFEwayRapidAPI {
 		$url		= "$host/$endpoint";
 
 		// execute the request, and retrieve the response
-		$response = wp_remote_post($url, array(
+		$response = wp_remote_post($url, [
 			'user-agent'	=> 'Gravity Forms eWAY ' . GFEWAY_PLUGIN_VERSION,
 			'sslverify'		=> $this->sslVerifyPeer,
 			'timeout'		=> 60,
-			'headers'		=> array(
+			'headers'		=> [
 									'Content-Type'		=> 'application/json',
 									'Authorization'		=> 'Basic ' . base64_encode("{$this->apiKey}:{$this->apiPassword}"),
-							   ),
+							],
 			'body'			=> $request,
-		));
+		]);
 
 		// failure to handle the http request
 		if (is_wp_error($response)) {

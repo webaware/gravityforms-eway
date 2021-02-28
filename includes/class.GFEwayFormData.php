@@ -145,7 +145,7 @@ class GFEwayFormData {
 	* @return string
 	*/
 	private static function cleanCcNumber($ccNumber) {
-		return strtr($ccNumber, array(' ' => '', '-' => ''));
+		return strtr($ccNumber, [' ' => '', '-' => '']);
 	}
 
 	/**

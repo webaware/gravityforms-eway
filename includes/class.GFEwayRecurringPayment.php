@@ -238,7 +238,7 @@ class GFEwayRecurringPayment {
 	* validate the data members to ensure that sufficient and valid information has been given
 	*/
 	private function validate() {
-		$errors = array();
+		$errors = [];
 
 		if (strlen($this->accountID) === 0) {
 			$errors[] = __('CustomerID cannot be empty', 'gravityforms-eway');
@@ -313,7 +313,7 @@ class GFEwayRecurringPayment {
 		if (!is_numeric($this->intervalSize) || $this->intervalSize < 1 || $this->intervalSize > 31) {
 			$errors[] = __('interval must be numeric and between 1 and 31', 'gravityforms-eway');
 		}
-		if (!is_numeric($this->intervalType) || !in_array(intval($this->intervalType), array(self::DAYS, self::WEEKS, self::MONTHS, self::YEARS))) {
+		if (!is_numeric($this->intervalType) || !in_array(intval($this->intervalType), [self::DAYS, self::WEEKS, self::MONTHS, self::YEARS])) {
 			$errors[] = __('interval type is invalid', 'gravityforms-eway');
 		}
 
@@ -343,7 +343,7 @@ class GFEwayRecurringPayment {
 	*/
 	public function getPaymentXML() {
 		// aggregate street address1 & address2 into one string
-		$parts = array($this->address1, $this->address2);
+		$parts = [$this->address1, $this->address2];
 		$address = implode(', ', array_filter($parts, 'strlen'));
 
 		$xml = new XMLWriter();

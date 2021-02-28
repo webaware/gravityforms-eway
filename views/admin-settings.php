@@ -185,13 +185,13 @@ if (!defined('ABSPATH')) {
 		<tr colspan="2">
 			<td colspan="2">
 		<?php
-		$errNames = array (
+		$errNames = [
 			GFEWAY_ERROR_ALREADY_SUBMITTED,
 			GFEWAY_ERROR_NO_AMOUNT,
 			GFEWAY_ERROR_REQ_CARD_HOLDER,
 			GFEWAY_ERROR_REQ_CARD_NAME,
 			GFEWAY_ERROR_EWAY_FAIL,
-		);
+		];
 		foreach ($errNames as $errName) {
 			$defmsg = $this->plugin->getErrMsg($errName, true);
 			$msg    = isset($options[$errName]) ? $options[$errName] : get_option($errName);

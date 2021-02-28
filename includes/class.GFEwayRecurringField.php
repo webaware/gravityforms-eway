@@ -20,27 +20,27 @@ class GFEwayRecurringField {
 	public function __construct($plugin) {
 		$this->plugin = $plugin;
 
-		add_action('init', array($this, 'setDefaults'), 20);
+		add_action('init', [$this, 'setDefaults'], 20);
 
 		// WordPress script hooks -- NB: must happen after Gravity Forms registers scripts
-		add_action('wp_enqueue_scripts', array($this, 'registerScripts'), 20);
-		add_action('admin_enqueue_scripts', array($this, 'registerScripts'), 20);
+		add_action('wp_enqueue_scripts', [$this, 'registerScripts'], 20);
+		add_action('admin_enqueue_scripts', [$this, 'registerScripts'], 20);
 
 		// add Gravity Forms hooks
-		add_action('gform_enqueue_scripts', array($this, 'gformEnqueueScripts'), 20, 2);
-		add_action('gform_editor_js', array($this, 'gformEditorJS'));
-		add_action('gform_field_standard_settings', array($this, 'gformFieldStandardSettings'), 10, 2);
-		add_filter('gform_add_field_buttons', array($this, 'gformAddFieldButtons'));
-		add_filter('gform_field_css_class', array($this, 'gformFieldClasses'), 10, 2);
-		add_filter('gform_field_type_title', array($this, 'gformFieldTypeTitle'), 10, 2);
-		add_filter('gform_field_input', array($this, 'gformFieldInput'), 10, 5);
-		add_filter('gform_pre_validation', array($this, 'gformPreValidation'));
-		add_filter('gform_field_validation', array($this, 'gformFieldValidation'), 10, 4);
-		add_filter('gform_tooltips', array($this, 'gformTooltips'));
-		add_filter('gform_pre_submission', array($this, 'gformPreSubmit'));
+		add_action('gform_enqueue_scripts', [$this, 'gformEnqueueScripts'], 20, 2);
+		add_action('gform_editor_js', [$this, 'gformEditorJS']);
+		add_action('gform_field_standard_settings', [$this, 'gformFieldStandardSettings'], 10, 2);
+		add_filter('gform_add_field_buttons', [$this, 'gformAddFieldButtons']);
+		add_filter('gform_field_css_class', [$this, 'gformFieldClasses'], 10, 2);
+		add_filter('gform_field_type_title', [$this, 'gformFieldTypeTitle'], 10, 2);
+		add_filter('gform_field_input', [$this, 'gformFieldInput'], 10, 5);
+		add_filter('gform_pre_validation', [$this, 'gformPreValidation']);
+		add_filter('gform_field_validation', [$this, 'gformFieldValidation'], 10, 4);
+		add_filter('gform_tooltips', [$this, 'gformTooltips']);
+		add_filter('gform_pre_submission', [$this, 'gformPreSubmit']);
 
 		if (is_admin()) {
-			add_filter('gform_field_css_class', array($this, 'watchFieldType'), 10, 2);
+			add_filter('gform_field_css_class', [$this, 'watchFieldType'], 10, 2);
 		}
 	}
 
@@ -48,14 +48,14 @@ class GFEwayRecurringField {
 	* set default strings; run this after load_plugin_textdomain()
 	*/
 	public function setDefaults() {
-		self::$defaults = array (
+		self::$defaults = [
 			'gfeway_initial_amount_label'		=> _x('Initial Amount',   'recurring field', 'gravityforms-eway'),
 			'gfeway_recurring_amount_label'		=> _x('Recurring Amount', 'recurring field', 'gravityforms-eway'),
 			'gfeway_initial_date_label'			=> _x('Initial Date',     'recurring field', 'gravityforms-eway'),
 			'gfeway_start_date_label'			=> _x('Start Date',       'recurring field', 'gravityforms-eway'),
 			'gfeway_end_date_label'				=> _x('End Date',         'recurring field', 'gravityforms-eway'),
 			'gfeway_interval_type_label'		=> _x('Interval Type',    'recurring field', 'gravityforms-eway'),
-		);
+		];
 	}
 
 	/**
@@ -66,9 +66,9 @@ class GFEwayRecurringField {
 		$min = SCRIPT_DEBUG ? '' : '.min';
 		$ver = SCRIPT_DEBUG ? time() : GFEWAY_PLUGIN_VERSION;
 
-		wp_register_script('gfeway_recurring', plugins_url("js/recurring$min.js", GFEWAY_PLUGIN_FILE), array('gform_datepicker_init'), $ver, true);
+		wp_register_script('gfeway_recurring', plugins_url("js/recurring$min.js", GFEWAY_PLUGIN_FILE), ['gform_datepicker_init'], $ver, true);
 
-		wp_register_style('gfeway', plugins_url('css/style.css', GFEWAY_PLUGIN_FILE), false, $ver);
+		wp_register_style('gfeway', plugins_url('css/style.css', GFEWAY_PLUGIN_FILE), [], $ver);
 	}
 
 	/**
@@ -84,7 +84,7 @@ class GFEwayRecurringField {
 			// add datepicker style if Gravity Forms hasn't done so already
 			if (!wp_style_is('gforms_datepicker_css', 'done')) {
 				wp_enqueue_style('gforms_datepicker_css', GFCommon::get_base_url() . '/css/datepicker.css', null, GFCommon::$version);
-				wp_print_styles(array('gforms_datepicker_css'));
+				wp_print_styles(['gforms_datepicker_css']);
 			}
 
 			// enqueue default styling
@@ -98,9 +98,9 @@ class GFEwayRecurringField {
 	public function gformEditorJS() {
 		$min = SCRIPT_DEBUG ? '' : '.min';
 
-		$strings = array(
+		$strings = [
 			'only_one'	=> __('Only one Recurring field can be added to the form', 'gravityforms-eway'),
-		);
+		];
 
 		echo '<script>';
 		printf('var gfeway_editor_admin_strings_recurring = %s;', json_encode($strings));
@@ -116,12 +116,12 @@ class GFEwayRecurringField {
 	public function gformAddFieldButtons($field_groups) {
 		foreach ($field_groups as &$group) {
 			if ($group['name'] === 'pricing_fields') {
-				$group['fields'][] = array (
+				$group['fields'][] = [
 					'class'		=> 'button',
 					'value'		=> _x('Recurring', 'form editor button label', 'gravityforms-eway'),
 					'data-type'	=> GFEWAY_FIELD_RECURRING,
 					'onclick'	=> sprintf("StartAddField('%s');", GFEWAY_FIELD_RECURRING),
-				);
+				];
 				break;
 			}
 		}
@@ -277,7 +277,7 @@ class GFEwayRecurringField {
 				}
 
 				else {
-					$messages = array();
+					$messages = [];
 
 					if ($value['amountInit'] === false || $value['amountInit'] < 0) {
 						$messages[] = __('Please enter a valid initial amount.', 'gravityforms-eway');
@@ -338,7 +338,7 @@ class GFEwayRecurringField {
 	public function watchFieldType($classes, $field) {
 		// if field type matches, add filters that don't allow testing for field type
 		if ($field->type === GFEWAY_FIELD_RECURRING) {
-			add_filter('gform_duplicate_field_link', array($this, 'gformDuplicateFieldLink'));
+			add_filter('gform_duplicate_field_link', [$this, 'gformDuplicateFieldLink']);
 		}
 
 		return $classes;
@@ -351,7 +351,7 @@ class GFEwayRecurringField {
 	*/
 	public function gformDuplicateFieldLink($duplicate_field_link) {
 		// remove filter once called, only process current field
-		remove_filter('gform_duplicate_field_link', array($this, __FUNCTION__));
+		remove_filter('gform_duplicate_field_link', [$this, __FUNCTION__]);
 
 		// erase duplicate field link for this field
 		return '';
@@ -385,7 +385,7 @@ class GFEwayRecurringField {
 			$input = "<div class='ginput_complex ginput_container gfeway_recurring_complex $css' id='input_{$field->id}'>";
 
 			// initial amount
-			$sub_field = array (
+			$sub_field = [
 				'type'			=> 'donation',
 				'id'			=> $field->id,
 				'sub_id'		=> '1',
@@ -394,11 +394,11 @@ class GFEwayRecurringField {
 				'size'			=> 'medium',
 				'label_class'	=> 'gfeway_initial_amount_label',
 				'hidden'		=> (isset($field->gfeway_initial_setting) ? !$field->gfeway_initial_setting : false),
-			);
+			];
 			$input .= $this->fieldDonation($sub_field, $initial_amount, $lead_id, $form_id);
 
 			// initial date
-			$sub_field = array (
+			$sub_field = [
 				'type'			=> 'date',
 				'id'			=> $field->id,
 				'sub_id'		=> '2',
@@ -412,13 +412,13 @@ class GFEwayRecurringField {
 				'size'			=> 'medium',
 				'label_class'	=> 'gfeway_initial_date_label',
 				'hidden'		=> (isset($field->gfeway_initial_setting) ? !$field->gfeway_initial_setting : false),
-			);
+			];
 			$input .= $this->fieldDate($sub_field, $initial_date, $lead_id, $form_id);
 
 			$input .= '<br />';
 
 			// recurring amount
-			$sub_field = array (
+			$sub_field = [
 				'type'			=> 'donation',
 				'id'			=> $field->id,
 				'sub_id'		=> '3',
@@ -426,11 +426,11 @@ class GFEwayRecurringField {
 				'isRequired'	=> true,
 				'size'			=> 'medium',
 				'label_class'	=> 'gfeway_recurring_amount_label',
-			);
+			];
 			$input .= $this->fieldDonation($sub_field, $recurring_amount, $lead_id, $form_id);
 
 			// start date
-			$sub_field = array (
+			$sub_field = [
 				'type'			=> 'date',
 				'id'			=> $field->id,
 				'sub_id'		=> '4',
@@ -444,11 +444,11 @@ class GFEwayRecurringField {
 				'size'			=> 'medium',
 				'label_class'	=> 'gfeway_start_date_label',
 				'hidden'		=> (empty($field->gfeway_recurring_date_start) && empty($field->gfeway_recurring_date_setting)),
-			);
+			];
 			$input .= $this->fieldDate($sub_field, $start_date, $lead_id, $form_id);
 
 			// end date
-			$sub_field = array (
+			$sub_field = [
 				'type'			=> 'date',
 				'id'			=> $field->id,
 				'sub_id'		=> '5',
@@ -462,13 +462,13 @@ class GFEwayRecurringField {
 				'size'			=> 'medium',
 				'label_class'	=> 'gfeway_end_date_label',
 				'hidden'		=> (empty($field->gfeway_recurring_date_end) && empty($field->gfeway_recurring_date_setting)),
-			);
+			];
 			$input .= $this->fieldDate($sub_field, $end_date, $lead_id, $form_id);
 
 			$input .= '<br />';
 
 			// recurrance interval type drop-down
-			$sub_field = array (
+			$sub_field = [
 				'type'			=> 'number',
 				'id'			=> $field->id,
 				'sub_id'		=> '6',
@@ -476,15 +476,15 @@ class GFEwayRecurringField {
 				'isRequired'	=> true,
 				'size'			=> 'medium',
 				'label_class'	=> 'gfeway_interval_type_label',
-			);
+			];
 			$input .= $this->fieldIntervalType($sub_field, $interval_type, $lead_id, $form_id);
 
 			// concatenated value added to database
-			$sub_field = array (
+			$sub_field = [
 				'type'			=> 'hidden',
 				'id'			=> $field->id,
 				'isRequired'	=> true,
-			);
+			];
 			$input .= $this->fieldConcatenated($sub_field, $interval_type, $lead_id, $form_id);
 
 			$input .= '</div>';
@@ -519,8 +519,8 @@ class GFEwayRecurringField {
 		$icon_url		= empty($field['calendarIconUrl']) ? GFCommon::get_base_url() . '/images/calendar.png' : $field['calendarIconUrl'];
 		$tabindex		= GFCommon::get_tabindex();
 
-		$inputClass		= array($size . $class_suffix, $format, $icon_class);
-		$spanClass		= array('gfeway_recurring_left', 'gfeway_recurring_date');
+		$inputClass		= [$size . $class_suffix, $format, $icon_class];
+		$spanClass		= ['gfeway_recurring_left', 'gfeway_recurring_date'];
 
 		if (empty($field['hidden'])) {
 			$inputClass[] = 'datepicker';
@@ -627,13 +627,13 @@ class GFEwayRecurringField {
 
 		$label			= esc_html($field['label']);
 
-		$interval_labels = array(
+		$interval_labels = [
 			'weekly'		=> _x('weekly', 'recurring interval label', 'gravityforms-eway'),
 			'fortnightly'	=> _x('fortnightly', 'recurring interval label', 'gravityforms-eway'),
 			'monthly'		=> _x('monthly', 'recurring interval label', 'gravityforms-eway'),
 			'quarterly'		=> _x('quarterly', 'recurring interval label', 'gravityforms-eway'),
 			'yearly'		=> _x('yearly', 'recurring interval label', 'gravityforms-eway'),
-		);
+		];
 		$intervals = apply_filters('gfeway_recurring_periods', array_keys($interval_labels), $form_id, $field);
 
 		ob_start();
@@ -725,7 +725,7 @@ class GFEwayRecurringField {
 
 			$today = date_create('now', timezone_open('Australia/Sydney'));
 
-			$recurring = array (
+			$recurring = [
 				'amountInit'			=> empty($recurring[1]) ? 0 : GFCommon::to_number($recurring[1]),
 				'dateInit'				=> empty($recurring[2]) ? $today : self::parseDate($recurring[2]),
 				'amountRecur'			=> GFCommon::to_number($recurring[3]),
@@ -734,7 +734,7 @@ class GFEwayRecurringField {
 				'intervalSize'			=> $intervalSize,
 				'intervalType'			=> $intervalType,
 				'intervalTypeDesc'		=> $recurring[6],
-			);
+			];
 		}
 		else {
 			$recurring = false;

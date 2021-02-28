@@ -169,7 +169,7 @@ class GFEwayPayment {
 	* optional additional information for use in shopping carts, etc.
 	* @var array[string] max. 255 characters, up to 3 elements
 	*/
-	public $options = array();
+	public $options = [];
 
 	/**
 	* Beagle: IP address of purchaser (from REMOTE_ADDR)
@@ -219,7 +219,7 @@ class GFEwayPayment {
 	* validate the data members to ensure that sufficient and valid information has been given
 	*/
 	private function validate() {
-		$errors = array();
+		$errors = [];
 
 		if (strlen($this->accountID) === 0) {
 			$errors[] = __('CustomerID cannot be empty', 'gravityforms-eway');
@@ -294,7 +294,7 @@ class GFEwayPayment {
 	*/
 	public function getPaymentXML() {
 		// aggregate street, city, state, country into a single string
-		$parts = array($this->address1, $this->address2, $this->suburb, $this->state, $this->countryName);
+		$parts = [$this->address1, $this->address2, $this->suburb, $this->state, $this->countryName];
 		$address = implode(', ', array_filter($parts, 'strlen'));
 
 		$xml = new XMLWriter();
@@ -443,11 +443,11 @@ class GFEwayResponse {
 			}
 
 			$this->AuthorisationCode			= (string) $xml->ewayAuthCode;
-			$this->ResponseMessage				= array();
+			$this->ResponseMessage				= [];
 			$this->TransactionStatus			= (strcasecmp((string) $xml->ewayTrxnStatus, 'true') === 0);
 			$this->TransactionID				= (string) $xml->ewayTrxnNumber;
 			$this->BeagleScore					= (string) $xml->ewayBeagleScore;
-			$this->Errors						= array('ERROR' => (string) $xml->ewayTrxnError);
+			$this->Errors						= ['ERROR' => (string) $xml->ewayTrxnError];
 
 			// if we got an amount, convert it back into dollars.cents from just cents
 			$this->Payment						= new stdClass;
