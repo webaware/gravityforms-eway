@@ -7,6 +7,7 @@
     	"consistent-return": "error",
     	"dot-notation": "error",
     	"eqeqeq": ["error", "smart"],
+		"no-console": "error",
     	"no-else-return": "error",
     	"no-eval": "error",
     	"no-extend-native": "error",
@@ -40,10 +41,10 @@
 
 	"env": {
 		"browser": true,
-		"jquery": true,
 	},
 
 	"globals": {
+		"ajaxurl": false,
 		"eCrypt": false,
 		"gform": false,
 		"gfeway_ecrypt_strings": false,
@@ -52,6 +53,8 @@
 		"GetSelectedField": false,
 		"SetFieldProperty": false,
 		"fieldSettings": false,
+		"jQuery": false,
 		"module": false,
+		"require": false,
 	}
 }
