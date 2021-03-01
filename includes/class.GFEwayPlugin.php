@@ -1,19 +1,17 @@
 <?php
 
+use function webaware\gfeway\get_customer_IP;
+use function webaware\gfeway\has_required_gravityforms;
+
 if (!defined('ABSPATH')) {
 	exit;
 }
 
 /**
-* custom exception types
-*/
-class GFEwayException extends Exception {}
-class GFEwayCurlException extends Exception {}
-
-/**
 * class for managing the plugin
 */
 class GFEwayPlugin {
+
 	public $options;                                    // array of plugin options
 
 	protected $txResult = null;                         // results from credit card payment transaction
@@ -28,9 +26,9 @@ class GFEwayPlugin {
 	* @return self
 	*/
 	public static function getInstance() {
-		static $instance = NULL;
+		static $instance = null;
 
-		if (is_null($instance)) {
+		if ($instance === null) {
 			$instance = new self();
 		}
 
@@ -38,13 +36,16 @@ class GFEwayPlugin {
 	}
 
 	/**
+	 * hide the constructor
+	 */
+	private function __construct() { }
+
+	/**
 	* initialise plugin
 	*/
-	private function __construct() {
-		spl_autoload_register(array(__CLASS__, 'autoload'));
-
+	public function addHooks() {
 		add_action('plugins_loaded', [$this, 'load']);
-		add_action('init', array($this, 'loadTextDomain'));
+		add_action('init', 'gfeway_load_text_domain');
 	}
 
 	/**
@@ -70,7 +71,7 @@ class GFEwayPlugin {
 		$this->options = wp_parse_args(get_option(GFEWAY_PLUGIN_OPTIONS, []), $defaults);
 
 		// do nothing if Gravity Forms isn't enabled or doesn't meet required minimum version
-		if (self::hasMinimumGF()) {
+		if (has_required_gravityforms()) {
 			add_action('wp_enqueue_scripts', [$this, 'registerScripts'], 20);
 			add_action('gform_preview_footer', [$this, 'registerScripts'], 5);
 
@@ -98,13 +99,6 @@ class GFEwayPlugin {
 			require GFEWAY_PLUGIN_ROOT . 'includes/class.GFEwayAdmin.php';
 			new GFEwayAdmin($this);
 		}
-	}
-
-	/**
-	* load text translations
-	*/
-	public function loadTextDomain() {
-		load_plugin_textdomain('gravityforms-eway');
 	}
 
 	/**
@@ -472,7 +466,7 @@ class GFEwayPlugin {
 			$eway = $this->getPaymentRequestor('single');
 
 			$eway->sslVerifyPeer			= $this->options['sslVerifyPeer'];
-			$eway->customerIP				= self::getCustomerIP();
+			$eway->customerIP				= get_customer_IP($this->options['useTest']);
 			$eway->invoiceDescription		= get_bloginfo('name') . " -- {$data['form']['title']}";
 			$eway->invoiceReference			= $data['form']['id'];
 			$eway->currencyCode				= GFCommon::get_currency();
@@ -1023,122 +1017,6 @@ class GFEwayPlugin {
 		$message = preg_replace('#eCrypted:\S+#', '[encrypted]', $message);
 
 		return $message;
-	}
-
-	/**
-	* compare Gravity Forms version against target
-	* @param string $target
-	* @param string $operator
-	* @return bool
-	*/
-	public static function versionCompareGF($target, $operator) {
-		if (class_exists('GFCommon')) {
-			return version_compare(GFCommon::$version, $target, $operator);
-		}
-
-		return false;
-	}
-
-	/**
-	* compare Gravity Forms version against minimum required version
-	* @return bool
-	*/
-	public static function hasMinimumGF() {
-		return self::versionCompareGF(self::MIN_VERSION_GF, '>=');
-	}
-
-	/**
-	* send data via HTTP and return response
-	* @deprecated only used now for legacy Direct API and its friends
-	* @param string $url
-	* @param string $data
-	* @param bool $sslVerifyPeer whether to validate the SSL certificate
-	* @return string $response
-	* @throws GFEwayCurlException
-	*/
-	public static function curlSendRequest($url, $data, $sslVerifyPeer = true) {
-		// send data via HTTPS and receive response
-		$response = wp_remote_post($url, [
-			'user-agent'	=> 'Gravity Forms eWAY ' . GFEWAY_PLUGIN_VERSION,
-			'sslverify'		=> $sslVerifyPeer,
-			'timeout'		=> 60,
-			'headers'		=> ['Content-Type' => 'text/xml; charset=utf-8'],
-			'body'			=> $data,
-		]);
-
-		// failure to handle the http request
-		if (is_wp_error($response)) {
-			throw new GFEwayCurlException($response->get_error_message());
-		}
-
-		// error code returned by request
-		$code = wp_remote_retrieve_response_code($response);
-		if ($code !== 200) {
-			$msg = wp_remote_retrieve_response_message($response);
-
-			if (empty($msg)) {
-				$msg = sprintf(__('Error posting eWAY request: %s', 'gravityforms-eway'), $code);
-			}
-			else {
-				$msg = sprintf(__('Error posting eWAY request: %1$s, %2$s', 'gravityforms-eway'), $code, $msg);
-			}
-			throw new GFEwayException($msg);
-		}
-
-		return wp_remote_retrieve_body($response);
-	}
-
-	/**
-	* get the customer's IP address dynamically from server variables
-	* @return string
-	*/
-	public static function getCustomerIP() {
-		// if test mode and running on localhost, then kludge to an Aussie IP address
-		$plugin = self::getInstance();
-		if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] === '127.0.0.1' && $plugin->options['useTest']) {
-			return '210.1.199.10';
-		}
-
-		// check for remote address, ignore all other headers as they can be spoofed easily
-		if (isset($_SERVER['REMOTE_ADDR']) && self::isIpAddress($_SERVER['REMOTE_ADDR'])) {
-			return $_SERVER['REMOTE_ADDR'];
-		}
-
-		return '';
-	}
-
-	/**
-	* check whether a given string is an IP address
-	* @param string $maybeIP
-	* @return bool
-	*/
-	protected static function isIpAddress($maybeIP) {
-		if (function_exists('inet_pton')) {
-			// check for IPv4 and IPv6 addresses
-			return !!inet_pton($maybeIP);
-		}
-
-		// just check for IPv4 addresses
-		return !!ip2long($maybeIP);
-	}
-
-	/**
-	* autoload classes as/when needed
-	*
-	* @param string $class_name name of class to attempt to load
-	*/
-	public static function autoload($class_name) {
-		static $classMap = [
-			'GFEwayPayment'						=> 'includes/class.GFEwayPayment.php',
-			'GFEwayRapidAPI'					=> 'includes/class.GFEwayRapidAPI.php',
-			'GFEwayRapidAPIResponse'			=> 'includes/class.GFEwayRapidAPIResponse.php',
-			'GFEwayRecurringPayment'			=> 'includes/class.GFEwayRecurringPayment.php',
-			'GFEwayStoredPayment'				=> 'includes/class.GFEwayStoredPayment.php',
-		];
-
-		if (isset($classMap[$class_name])) {
-			require GFEWAY_PLUGIN_ROOT . $classMap[$class_name];
-		}
 	}
 
 }

@@ -2,6 +2,11 @@
 
 ## Changelog
 
+### 2.3.0, soon...
+
+* changed: requires PHP version 7.0+
+* changed: refactor some PHP code
+
 ### 2.2.8, 2018-11-17
 
 * added: validates credit card number before running Client Side Encryption

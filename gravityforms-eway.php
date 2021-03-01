@@ -34,19 +34,15 @@ if (!defined('ABSPATH')) {
 define('GFEWAY_PLUGIN_FILE', __FILE__);
 define('GFEWAY_PLUGIN_ROOT', dirname(__FILE__) . '/');
 define('GFEWAY_PLUGIN_NAME', basename(dirname(__FILE__)) . '/' . basename(__FILE__));
-define('GFEWAY_PLUGIN_OPTIONS', 'gfeway_plugin');
+define('GFEWAY_PLUGIN_MIN_PHP', '7.0');
 define('GFEWAY_PLUGIN_VERSION', '2.3.0-dev');
 
-// error message names
-define('GFEWAY_ERROR_ALREADY_SUBMITTED',	'gfeway_err_already');
-define('GFEWAY_ERROR_NO_AMOUNT',			'gfeway_err_no_amount');
-define('GFEWAY_ERROR_REQ_CARD_HOLDER',		'gfeway_err_req_card_holder');
-define('GFEWAY_ERROR_REQ_CARD_NAME',		'gfeway_err_req_card_name');
-define('GFEWAY_ERROR_EWAY_FAIL',			'gfeway_err_eway_fail');
+require GFEWAY_PLUGIN_ROOT . 'includes/functions-global.php';
+require GFEWAY_PLUGIN_ROOT . 'includes/class.Requires.php';
 
-// custom fields
-define('GFEWAY_FIELD_RECURRING', 'gfewayrecurring');
+if (version_compare(PHP_VERSION, GFEWAY_PLUGIN_MIN_PHP, '<')) {
+	add_action('admin_notices', 'gfeway_fail_php_version');
+	return;
+}
 
-// instantiate the plug-in
-require GFEWAY_PLUGIN_ROOT . 'includes/class.GFEwayPlugin.php';
-GFEwayPlugin::getInstance();
+require GFEWAY_PLUGIN_ROOT . 'includes/bootstrap.php';

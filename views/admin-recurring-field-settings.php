@@ -23,7 +23,7 @@ if (!defined('ABSPATH')) {
 		<?php gform_tooltip('gfeway_initial_date_label_html') ?>
 	</label>
 	<input type="text" id="gfeway_initial_date_label" class="fieldwidth-3 gfeway-field-label" size="35"
-		data-gfeway-field-label="<?php echo esc_attr(self::$defaults['gfeway_initial_date_label']); ?>" />
+		data-gfeway-field-label="<?= esc_attr(self::$defaults['gfeway_initial_date_label']); ?>" />
 
 	<label for="gfeway_initial_amount_label">
 		<?php _ex('Initial Amount Label', 'form editor subfield label', 'gravityforms-eway'); ?>
@@ -31,7 +31,7 @@ if (!defined('ABSPATH')) {
 		<?php gform_tooltip('gfeway_initial_amount_label_html') ?>
 	</label>
 	<input type="text" id="gfeway_initial_amount_label" class="fieldwidth-3 gfeway-field-label" size="35"
-		data-gfeway-field-label="<?php echo esc_attr(self::$defaults['gfeway_initial_amount_label']); ?>" />
+		data-gfeway-field-label="<?= esc_attr(self::$defaults['gfeway_initial_amount_label']); ?>" />
 
 	</div>
 
@@ -41,7 +41,7 @@ if (!defined('ABSPATH')) {
 		<?php gform_tooltip('gfeway_recurring_amount_label_html') ?>
 	</label>
 	<input type="text" id="gfeway_recurring_amount_label" class="fieldwidth-3 gfeway-field-label" size="35"
-		data-gfeway-field-label="<?php echo esc_attr(self::$defaults['gfeway_recurring_amount_label']); ?>" />
+		data-gfeway-field-label="<?= esc_attr(self::$defaults['gfeway_recurring_amount_label']); ?>" />
 
 	<p>
 	<input type="checkbox" id="gfeway_recurring_date_start" />
@@ -60,7 +60,7 @@ if (!defined('ABSPATH')) {
 		<?php gform_tooltip('gfeway_start_date_label_html') ?>
 	</label>
 	<input type="text" id="gfeway_start_date_label" class="fieldwidth-3 gfeway-field-label" size="35"
-		data-gfeway-field-label="<?php echo esc_attr(self::$defaults['gfeway_start_date_label']); ?>" />
+		data-gfeway-field-label="<?= esc_attr(self::$defaults['gfeway_start_date_label']); ?>" />
 
 	</div>
 
@@ -81,7 +81,7 @@ if (!defined('ABSPATH')) {
 		<?php gform_tooltip('gfeway_end_date_label_html') ?>
 	</label>
 	<input type="text" id="gfeway_end_date_label" class="fieldwidth-3 gfeway-field-label" size="35"
-		data-gfeway-field-label="<?php echo esc_attr(self::$defaults['gfeway_end_date_label']); ?>" />
+		data-gfeway-field-label="<?= esc_attr(self::$defaults['gfeway_end_date_label']); ?>" />
 
 	</div>
 
@@ -91,7 +91,7 @@ if (!defined('ABSPATH')) {
 		<?php gform_tooltip('gfeway_interval_type_label_html') ?>
 	</label>
 	<input type="text" id="gfeway_interval_type_label" class="fieldwidth-3 gfeway-field-label" size="35"
-		data-gfeway-field-label="<?php echo esc_attr(self::$defaults['gfeway_interval_type_label']); ?>" />
+		data-gfeway-field-label="<?= esc_attr(self::$defaults['gfeway_interval_type_label']); ?>" />
 
 </li>
 

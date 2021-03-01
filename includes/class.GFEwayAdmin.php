@@ -1,5 +1,9 @@
 <?php
 
+use GfEwayRequires as Requires;
+
+use function webaware\gfeway\has_required_gravityforms;
+
 if (!defined('ABSPATH')) {
 	exit;
 }
@@ -21,13 +25,13 @@ class GFEwayAdmin {
 
 		// handle basic plugin actions and filters
 		add_action('admin_init', [$this, 'adminInit']);
-		add_action('admin_notices', [$this, 'checkPrerequisites']);
+		add_action('admin_init', [$this, 'checkPrerequisites']);
 		add_filter('plugin_row_meta', [$this, 'addPluginDetailsLinks'], 10, 2);
 		add_filter('admin_enqueue_scripts', [$this, 'enqueueScripts']);
 		add_action('wp_ajax_gfeway_dismiss', [$this, 'dismissNotice']);
 
 		// only if Gravity Forms is activated and of minimum version
-		if (GFEwayPlugin::hasMinimumGF()) {
+		if (has_required_gravityforms()) {
 			// add settings link to Plugins page
 			if (current_user_can('gform_full_access') || current_user_can('gravityforms_edit_settings')) {
 				add_action('plugin_action_links_' . GFEWAY_PLUGIN_NAME, [$this, 'addPluginActionLinks']);
@@ -90,22 +94,10 @@ class GFEwayAdmin {
 	* check for required PHP extensions, tell admin if any are missing
 	*/
 	public function checkPrerequisites() {
-		// only bother admins / plugin installers / option setters with this stuff
-		if (!current_user_can('activate_plugins') && !current_user_can('manage_options')) {
-			return;
-		}
+		$requires = new Requires();
 
-		$options = $this->plugin->options;
-		$gfSettingsURL = admin_url('admin.php?page=gf_settings');
-		$ewaySettingsURL = admin_url('admin.php?page=gf_settings&subview=' . urlencode($this->slug));
-
-		// need at least PHP 5.2.11 for libxml_disable_entity_loader()
-		$php_min = '5.2.11';
-		if (version_compare(PHP_VERSION, $php_min, '<')) {
-			include GFEWAY_PLUGIN_ROOT . 'views/requires-php.php';
-		}
-
-		// need these PHP extensions too
+		// need these PHP extensions
+		// NB: libxml / SimpleXML used for version update functions
 		$prereqs = ['libxml', 'pcre', 'SimpleXML', 'xmlwriter'];
 		$missing = [];
 		foreach ($prereqs as $ext) {
@@ -114,30 +106,59 @@ class GFEwayAdmin {
 			}
 		}
 		if (!empty($missing)) {
+			ob_start();
 			include GFEWAY_PLUGIN_ROOT . 'views/requires-extensions.php';
+			$requires->addNotice(ob_get_clean());
 		}
 
 		// and PCRE needs to be v8+ or we break! e.g. \K not present until v7.2 and some sites still use v6.6!
 		$pcre_min = '8';
 		if (defined('PCRE_VERSION') && version_compare(PCRE_VERSION, $pcre_min, '<')) {
-			include GFEWAY_PLUGIN_ROOT . 'views/requires-pcre.php';
+			$requires->addNotice(
+				gfeway_external_link(
+					sprintf(esc_html__('Requires {{a}}PCRE{{/a}} version %1$s or higher; your website has PCRE version %2$s.', 'gravityforms-eway'),
+						esc_html($pcre_min), esc_html(PCRE_VERSION)),
+					'https://www.php.net/manual/en/book.pcre.php'
+				)
+			);
 		}
 
 		// and of course, we need Gravity Forms
-		if (!class_exists('GFCommon')) {
-			include GFEWAY_PLUGIN_ROOT . 'views/requires-gravity-forms.php';
+		if (!class_exists('GFCommon', false)) {
+			$requires->addNotice(
+				gfeway_external_link(
+					esc_html__('Requires {{a}}Gravity Forms{{/a}} to be installed and activated.', 'gravityforms-eway'),
+					'https://webaware.com.au/get-gravity-forms'
+				)
+			);
 		}
-		elseif (!GFEwayPlugin::hasMinimumGF()) {
-			include GFEWAY_PLUGIN_ROOT . 'views/requires-gravity-forms-upgrade.php';
+		elseif (!has_required_gravityforms()) {
+			$requires->addNotice(
+				gfeway_external_link(
+					sprintf(esc_html__('Requires {{a}}Gravity Forms{{/a}} version %1$s or higher; your website has Gravity Forms version %2$s', 'gravityforms-eway'),
+						esc_html(GFEWAY_MIN_VERSION_GF), esc_html(GFCommon::$version)),
+					'https://webaware.com.au/get-gravity-forms'
+				)
+			);
 		}
 
 		$noticeFlags = $this->getNoticeFlags();
 
 		// if we upgraded from 1.x, tell admins about upgrade changes and checks to perform
 		if (!empty($noticeFlags['upgrade_from_v1'])) {
-			include GFEWAY_PLUGIN_ROOT . 'views/notice-upgrade-from-v1.php';
+			add_action('admin_notice', [$this, 'showUpgradeNotice1']);
 			add_action('admin_print_footer_scripts', [$this, 'footerDismissableNotices']);
 		}
+	}
+
+	/**
+	 * display 1.x upgrade notice
+	 */
+	public function showUpgradeNotice1() {
+		$options = $this->plugin->options;
+		$gfSettingsURL = admin_url('admin.php?page=gf_settings');
+		$ewaySettingsURL = admin_url('admin.php?page=gf_settings&subview=' . urlencode($this->slug));
+		include GFEWAY_PLUGIN_ROOT . 'views/notice-upgrade-from-v1.php';
 	}
 
 	/**

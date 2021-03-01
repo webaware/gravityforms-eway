@@ -1,4 +1,7 @@
 <?php
+
+use function webaware\gfeway\send_xml_request;
+
 /**
 * Classes for dealing with eWAY recurring payments
 */
@@ -417,7 +420,7 @@ class GFEwayRecurringPayment {
 
 		// execute the cURL request, and retrieve the response
 		try {
-			$responseXML = GFEwayPlugin::curlSendRequest($url, $xml, $this->sslVerifyPeer);
+			$responseXML = send_xml_request($url, $xml, $this->sslVerifyPeer);
 		}
 		catch (GFEwayCurlException $e) {
 			throw new GFEwayException(sprintf(__('Error posting eWAY recurring payment to %1$s: %2$s', 'gravityforms-eway'), $url, $e->getMessage()));

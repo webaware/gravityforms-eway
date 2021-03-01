@@ -36,16 +36,16 @@
 		</properties>
 	</rule>
 
-	<rule ref="Generic.Arrays.DisallowLongArraySyntax">
-		<exclude-pattern>gravityforms-eway.php</exclude-pattern>
-		<exclude-pattern>includes/functions-global.php</exclude-pattern>
-		<exclude-pattern>views/requires-php.php</exclude-pattern>
-	</rule>
-
 	<rule ref="Generic.WhiteSpace.ArbitraryParenthesesSpacing">
 		<properties>
 			<property name="ignoreNewlines" value="true" />
 		</properties>
+	</rule>
+
+	<rule ref="Generic.Arrays.DisallowLongArraySyntax">
+		<exclude-pattern>gravityforms-eway.php</exclude-pattern>
+		<exclude-pattern>includes/class.Requires.php</exclude-pattern>
+		<exclude-pattern>includes/functions-global.php</exclude-pattern>
 	</rule>
 
 	<rule ref="Generic.WhiteSpace.ScopeIndent">
