@@ -64,6 +64,7 @@ class GFEwayAdmin {
 				'tab_label'		=> $title,
 				'title'			=> $title,
 				'handler'		=> [$this, 'settingsPage'],
+				'icon'			=> 'fa-credit-card',
 			]);
 		}
 
