@@ -7,6 +7,7 @@
 * changed: requires PHP version 7.0+
 * changed: refactor / moddernise the PHP code
 * changed: don't call `libxml_disable_entity_loader()` in PHP 8.0 (now deprecated)
+* tested: Gravity Forms 2.5
 
 ### 2.2.8, 2018-11-17
 
