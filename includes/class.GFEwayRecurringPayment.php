@@ -474,7 +474,7 @@ class GFEwayRecurringResponse {
 		}
 
 		// prevent XML injection attacks, and handle errors without warnings
-		$oldDisableEntityLoader = libxml_disable_entity_loader(true);
+		$oldDisableEntityLoader = PHP_VERSION_ID >= 80000 ? true : libxml_disable_entity_loader(true);
 		$oldUseInternalErrors = libxml_use_internal_errors(true);
 
 		try {
