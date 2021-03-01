@@ -2,10 +2,10 @@
 
 ## Changelog
 
-### 2.3.0, soon...
+### 2.3.0, 2021-03-01
 
 * changed: requires PHP version 7.0+
-* changed: refactor / moddernise the PHP code
+* changed: refactor / modernise the PHP code
 * changed: don't call `libxml_disable_entity_loader()` in PHP 8.0 (now deprecated)
 * tested: Gravity Forms 2.5
 

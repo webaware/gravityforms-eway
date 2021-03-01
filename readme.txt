@@ -8,7 +8,7 @@ Tags: gravity forms, eway, donations, payment, payment gateway, ecommerce
 Requires at least: 4.2
 Tested up to: 5.6
 Requires PHP: 7.0
-Stable tag: 2.2.8
+Stable tag: 2.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -39,7 +39,7 @@ Gravity Forms eWAY integrates the [eWAY credit card payment gateway](https://ewa
 
 ### Sponsorships
 
-* recurring payments generously sponsored by [Castle Design](http://castledesign.com.au/)
+* recurring payments generously sponsored by [Castle Design](https://www.castledesign.com.au/)
 
 Thanks for sponsoring new features on Gravity Forms eWAY!
 
@@ -204,20 +204,21 @@ Developers can use these [filter hooks to modify some eWAY invoice properties](h
 
 ## Upgrade Notice
 
-### 2.2.8
+### 2.3.0
 
-validates credit card number before running Client Side Encryption, then shows placeholders when field values are hidden
+requires PHP version 7.0+; don't call `libxml_disable_entity_loader()` in PHP 8.0 (deprecated); tested in Gravity Forms 2.5
 
 ## Changelog
 
-> [Gravity Forms eWAY Pro is now available!](https://gfeway.webaware.net.au/)
+> Get [Gravity Forms eWAY Pro](https://gfeway.webaware.net.au/) for extra features, greater flexibility
 
 The full changelog for Gravity Forms eWAY can be found [on GitHub](https://github.com/webaware/gravityforms-eway/blob/master/changelog.md). Recent entries:
 
-### 2.2.8
+### 2.3.0
 
-Released 2018-11-17
+Released 2021-03-01
 
-* added: validates credit card number before running Client Side Encryption
-* added: show placeholders when field values are hidden during Client Side Encryption
-* tested: WordPress 5.0, Gravity Forms 2.4
+* changed: requires PHP version 7.0+
+* changed: refactor / modernise the PHP code
+* changed: don't call `libxml_disable_entity_loader()` in PHP 8.0 (now deprecated)
+* tested: Gravity Forms 2.5
