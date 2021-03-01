@@ -423,12 +423,16 @@ class GFEwayStoredResponse {
 			$this->Payment->InvoiceReference	= (string) $xml->ewayTrxnReference;
 
 			// restore old libxml settings
-			libxml_disable_entity_loader($oldDisableEntityLoader);
+			if (!$oldDisableEntityLoader) {
+				libxml_disable_entity_loader($oldDisableEntityLoader);
+			}
 			libxml_use_internal_errors($oldUseInternalErrors);
 		}
 		catch (Exception $e) {
 			// restore old libxml settings
-			libxml_disable_entity_loader($oldDisableEntityLoader);
+			if (!$oldDisableEntityLoader) {
+				libxml_disable_entity_loader($oldDisableEntityLoader);
+			}
 			libxml_use_internal_errors($oldUseInternalErrors);
 
 			throw new GFEwayException(sprintf(__('Error parsing eWAY response: %s', 'gravityforms-eway'), $e->getMessage()));

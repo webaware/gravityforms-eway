@@ -492,12 +492,16 @@ class GFEwayRecurringResponse {
 			$this->error = (string) $xml->ErrorDetails;
 
 			// restore old libxml settings
-			libxml_disable_entity_loader($oldDisableEntityLoader);
+			if (!$oldDisableEntityLoader) {
+				libxml_disable_entity_loader($oldDisableEntityLoader);
+			}
 			libxml_use_internal_errors($oldUseInternalErrors);
 		}
 		catch (Exception $e) {
 			// restore old libxml settings
-			libxml_disable_entity_loader($oldDisableEntityLoader);
+			if (!$oldDisableEntityLoader) {
+				libxml_disable_entity_loader($oldDisableEntityLoader);
+			}
 			libxml_use_internal_errors($oldUseInternalErrors);
 
 			throw new GFEwayException(sprintf(__('Error parsing eWAY recurring payments response: %s', 'gravityforms-eway'), $e->getMessage()));
