@@ -1,6 +1,6 @@
 {
   "name": "gravityforms-eway",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Gravity Forms eWAY",
   "main": "Gruntfile.js",
   "browserslist": [
