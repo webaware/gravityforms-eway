@@ -2,6 +2,11 @@
 
 ## Changelog
 
+### 2.3.1, 2021-04-27
+
+* fixed: icon colour in Gravity Forms 2.5 settings
+* changed: use masked password fields for API passwords in settings
+
 ### 2.3.0, 2021-03-01
 
 * changed: requires PHP version 7.0+

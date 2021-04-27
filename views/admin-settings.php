@@ -25,7 +25,9 @@ if (!defined('ABSPATH')) {
 				<?php gform_tooltip(esc_html__('eWAY Rapid API key, from your MYeWAY console.', 'gravityforms-eway')); ?>
 			</th>
 			<td>
-				<input type="text" class="large-text" name="gfeway_plugin[apiKey]" id="gfeway_plugin_apiKey" value="<?= esc_attr($options['apiKey']); ?>" />
+				<input type="text" class="large-text" name="gfeway_plugin[apiKey]" id="gfeway_plugin_apiKey"
+					autocorrect="off" autocapitalize="off" spellcheck="false"
+					value="<?= esc_attr($options['apiKey']); ?>" />
 			</td>
 		</tr>
 
@@ -35,7 +37,9 @@ if (!defined('ABSPATH')) {
 				<?php gform_tooltip(esc_html__('eWAY Rapid API password, from your MYeWAY console.', 'gravityforms-eway')); ?>
 			</th>
 			<td>
-				<input type="text" class="regular-text" name="gfeway_plugin[apiPassword]" id="gfeway_plugin_apiPassword" value="<?= esc_attr($options['apiPassword']); ?>" />
+				<input type="password" class="regular-text" name="gfeway_plugin[apiPassword]" id="gfeway_plugin_apiPassword"
+					autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false"
+					value="<?= esc_attr($options['apiPassword']); ?>" />
 			</td>
 		</tr>
 
@@ -45,7 +49,8 @@ if (!defined('ABSPATH')) {
 				<?php gform_tooltip(esc_html__("Securely encrypts sensitive credit card information in the customer's browser, so that you can accept credit cards on your website without full PCI certification.", 'gravityforms-eway')); ?>
 			</th>
 			<td>
-				<textarea name="gfeway_plugin[ecryptKey]" id="gfeway_plugin_ecryptKey" rows="5" class="large-text"><?= esc_attr($options['ecryptKey']); ?></textarea>
+				<textarea name="gfeway_plugin[ecryptKey]" id="gfeway_plugin_ecryptKey" rows="5" class="large-text"
+					autocorrect="off" autocapitalize="off" spellcheck="false"><?= esc_attr($options['ecryptKey']); ?></textarea>
 			</td>
 		</tr>
 
@@ -71,7 +76,9 @@ if (!defined('ABSPATH')) {
 				<?php gform_tooltip(esc_html__('eWAY Rapid API key, from your MYeWAY console.', 'gravityforms-eway')); ?>
 			</th>
 			<td>
-				<input type="text" class="large-text" name="gfeway_plugin[sandboxApiKey]" id="gfeway_plugin_sandboxApiKey" value="<?= esc_attr($options['sandboxApiKey']); ?>" />
+				<input type="text" class="large-text" name="gfeway_plugin[sandboxApiKey]" id="gfeway_plugin_sandboxApiKey"
+					autocorrect="off" autocapitalize="off" spellcheck="false"
+					value="<?= esc_attr($options['sandboxApiKey']); ?>" />
 			</td>
 		</tr>
 
@@ -81,7 +88,9 @@ if (!defined('ABSPATH')) {
 				<?php gform_tooltip(esc_html__('eWAY Rapid API password, from your MYeWAY console.', 'gravityforms-eway')); ?>
 			</th>
 			<td>
-				<input type="text" class="regular-text" name="gfeway_plugin[sandboxPassword]" id="gfeway_plugin_sandboxPassword" value="<?= esc_attr($options['sandboxPassword']); ?>" />
+				<input type="password" class="regular-text" name="gfeway_plugin[sandboxPassword]" id="gfeway_plugin_sandboxPassword"
+					autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false"
+					value="<?= esc_attr($options['sandboxPassword']); ?>" />
 			</td>
 		</tr>
 
@@ -91,7 +100,8 @@ if (!defined('ABSPATH')) {
 				<?php gform_tooltip(esc_html__("Securely encrypts sensitive credit card information in the customer's browser, so that you can accept credit cards on your website without full PCI certification.", 'gravityforms-eway')); ?>
 			</th>
 			<td>
-				<textarea name="gfeway_plugin[sandboxEcryptKey]" id="gfeway_plugin_sandboxEcryptKey" rows="5" class="large-text"><?= esc_attr($options['sandboxEcryptKey']); ?></textarea>
+				<textarea name="gfeway_plugin[sandboxEcryptKey]" id="gfeway_plugin_sandboxEcryptKey" rows="5" class="large-text"
+					autocorrect="off" autocapitalize="off" spellcheck="false"><?= esc_attr($options['sandboxEcryptKey']); ?></textarea>
 			</td>
 		</tr>
 
