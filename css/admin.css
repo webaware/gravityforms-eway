@@ -42,3 +42,9 @@
 	font-weight: bold;
 	color: black;
 }
+
+/* GF 2.5+ admin settings button */
+.gform-settings__wrapper #tab_gravityforms-eway .button-primary {
+	background: #3E7DA6;
+	color: white;
+}
