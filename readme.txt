@@ -6,7 +6,7 @@ Author URI: https://shop.webaware.com.au/
 Donate link: https://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+eWAY
 Tags: gravity forms, eway, donations, payment, payment gateway, ecommerce
 Requires at least: 4.2
-Tested up to: 5.7
+Tested up to: 5.8
 Requires PHP: 7.0
 Stable tag: 2.3.1
 License: GPLv2 or later
@@ -111,7 +111,7 @@ Authorize checks to see that the transaction would be approved, but does not pro
 
 You need to add your eWAY API key and password to see PreAuth transactions in the sandbox, so that the Rapid API is used. The old Stored Payments XML API does not have a sandbox.
 
-NB: PreAuth is currently only available for Australian, Singapore, Malaysian, & Hong Kong merchants.
+**NB: PreAuth is currently only available for Australian, Singapore, Malaysian, & Hong Kong merchants. Do not select Authorize if you are a New Zealand merchant!**
 
 ### Do I need to set the Client-Side Encryption Key?
 
