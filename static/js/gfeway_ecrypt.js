@@ -1,5 +1,3 @@
-"use strict";
-
 // gravityforms-eway: Client Side Encryption
 (function ($) {
   /**

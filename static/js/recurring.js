@@ -1,5 +1,3 @@
-"use strict";
-
 // gravityforms-eway: Recurring Payments field
 // initialise form on page load
 (function ($) {
