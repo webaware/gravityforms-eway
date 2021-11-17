@@ -2,9 +2,11 @@
 <ruleset name="PHP_CodeSniffer">
 	<description>Some basic coding standards sniffs for this project.</description>
 
-	<file>gravityforms-eway.php</file>
-	<file>includes</file>
-	<file>views</file>
+	<file>.</file>
+	<exclude-pattern>node_modules/</exclude-pattern>
+	<exclude-pattern>vendor/</exclude-pattern>
+	<exclude-pattern>\.dist/</exclude-pattern>
+	<exclude-pattern>\.wordpress\.org/</exclude-pattern>
 
 	<arg name="basepath" value="." />
 	<arg name="colors" />
@@ -24,6 +26,7 @@
 	<rule ref="Generic.PHP.DisallowShortOpenTag.Found" />
 	<rule ref="Generic.PHP.NoSilencedErrors" />
 	<rule ref="Generic.Strings.UnnecessaryStringConcat" />
+	<rule ref="Generic.WhiteSpace.DisallowSpaceIndent"/>
 
 	<rule ref="Generic.PHP.ForbiddenFunctions">
 		<properties>
@@ -36,20 +39,20 @@
 		</properties>
 	</rule>
 
+	<rule ref="Generic.Arrays.DisallowLongArraySyntax">
+		<exclude-pattern>includes/class.Requires.php</exclude-pattern>
+		<exclude-pattern>includes/functions-global.php</exclude-pattern>
+	</rule>
+
 	<rule ref="Generic.WhiteSpace.ArbitraryParenthesesSpacing">
 		<properties>
 			<property name="ignoreNewlines" value="true" />
 		</properties>
 	</rule>
 
-	<rule ref="Generic.Arrays.DisallowLongArraySyntax">
-		<exclude-pattern>gravityforms-eway.php</exclude-pattern>
-		<exclude-pattern>includes/class.Requires.php</exclude-pattern>
-		<exclude-pattern>includes/functions-global.php</exclude-pattern>
-	</rule>
-
 	<rule ref="Generic.WhiteSpace.ScopeIndent">
 		<properties>
+			<property name="indent" value="4"/>
 			<property name="tabIndent" value="true" />
 		</properties>
 	</rule>

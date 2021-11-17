@@ -66,9 +66,9 @@ class GFEwayRecurringField {
 		$min = SCRIPT_DEBUG ? '' : '.min';
 		$ver = SCRIPT_DEBUG ? time() : GFEWAY_PLUGIN_VERSION;
 
-		wp_register_script('gfeway_recurring', plugins_url("js/recurring$min.js", GFEWAY_PLUGIN_FILE), ['gform_datepicker_init'], $ver, true);
+		wp_register_script('gfeway_recurring', plugins_url("static/js/recurring$min.js", GFEWAY_PLUGIN_FILE), ['gform_datepicker_init'], $ver, true);
 
-		wp_register_style('gfeway', plugins_url('css/style.css', GFEWAY_PLUGIN_FILE), [], $ver);
+		wp_register_style('gfeway', plugins_url('static/css/style.css', GFEWAY_PLUGIN_FILE), [], $ver);
 	}
 
 	/**
@@ -104,7 +104,7 @@ class GFEwayRecurringField {
 
 		echo '<script>';
 		printf('var gfeway_editor_admin_strings_recurring = %s;', json_encode($strings));
-		readfile(GFEWAY_PLUGIN_ROOT . "js/admin-recurring$min.js");
+		readfile(GFEWAY_PLUGIN_ROOT . "static/js/admin-recurring$min.js");
 		echo '</script>';
 	}
 

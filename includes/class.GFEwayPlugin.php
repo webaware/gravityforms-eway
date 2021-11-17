@@ -108,7 +108,7 @@ class GFEwayPlugin {
 	public function registerScripts() {
 		$min = SCRIPT_DEBUG ? '' : '.min';
 		wp_register_script('eway-ecrypt', "https://secure.ewaypayments.com/scripts/eCrypt$min.js", [], null, true);
-		wp_register_script('gfeway-ecrypt', plugins_url("js/gfeway_ecrypt$min.js", GFEWAY_PLUGIN_FILE), ['jquery','eway-ecrypt'], null, true);
+		wp_register_script('gfeway-ecrypt', plugins_url("static/js/gfeway_ecrypt$min.js", GFEWAY_PLUGIN_FILE), ['jquery','eway-ecrypt'], null, true);
 		wp_localize_script('gfeway-ecrypt', 'gfeway_ecrypt_strings', [
 			/* translators: when a card number or security code is encrypted before being submitted to the server, its field is emptied and a string of these characters is displayed as a placeholder */
 			'ecrypt_mask'			=> _x('•', 'encrypted field mask character', 'gravityforms-eway'),
