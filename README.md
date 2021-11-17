@@ -1,6 +1,6 @@
-# Gravity Forms eWAY #
+# Gravity Forms Eway #
 
-Integrate [Gravity Forms](https://webaware.com.au/get-gravity-forms) with eWAY payment gateway, enabling end users to purchase goods and services through Gravity Forms.
+Integrate [Gravity Forms](https://webaware.com.au/get-gravity-forms) with Eway payment gateway, enabling end users to purchase goods and services through Gravity Forms.
 
 * [Home](https://shop.webaware.com.au/downloads/gravity-forms-eway/)
 * [GitHub](https://github.com/webaware/gravityforms-eway/)
@@ -10,4 +10,4 @@ Integrate [Gravity Forms](https://webaware.com.au/get-gravity-forms) with eWAY p
 * [Documentation](https://wordpress.org/plugins/gravityforms-eway/faq/)
 * [Support](https://wordpress.org/support/plugin/gravityforms-eway)
 * [Translate](https://translate.wordpress.org/projects/wp-plugins/gravityforms-eway)
-* [Donate](https://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+eWAY)
+* [Donate](https://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+Eway)

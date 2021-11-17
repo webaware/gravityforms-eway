@@ -3,7 +3,7 @@
 use function webaware\gfeway\send_xml_request;
 
 /**
-* Classes for dealing with eWAY recurring payments
+* Classes for dealing with Eway recurring payments
 */
 
 if (!defined('ABSPATH')) {
@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
-* Class for dealing with an eWAY recurring payment request
+* Class for dealing with an Eway recurring payment request
 *
 * @link https://www.eway.com.au/eway-partner-portal/resources/eway-api/recurring-payments
 */
@@ -21,7 +21,7 @@ class GFEwayRecurringPayment {
 
 	// environment / website specific members
 	/**
-	* default FALSE, use eWAY sandbox unless set to TRUE
+	* default FALSE, use Eway sandbox unless set to TRUE
 	* @var boolean
 	*/
 	public $isLiveSite;
@@ -34,7 +34,7 @@ class GFEwayRecurringPayment {
 
 	// payment specific members
 	/**
-	* account name / email address at eWAY
+	* account name / email address at Eway
 	* @var string max. 8 characters
 	*/
 	public $accountID;
@@ -209,9 +209,9 @@ class GFEwayRecurringPayment {
 	/** interval type Years */
 	const YEARS  = 4;
 
-	/** host for the eWAY Real Time API in the developer sandbox environment */
+	/** host for the Eway Real Time API in the developer sandbox environment */
 	const REALTIME_API_SANDBOX = 'https://www.eway.com.au/gateway/rebill/test/upload_test.aspx';
-	/** host for the eWAY Real Time API in the production environment */
+	/** host for the Eway Real Time API in the production environment */
 	const REALTIME_API_LIVE    = 'https://www.eway.com.au/gateway/rebill/upload.aspx';
 
 	#endregion
@@ -219,7 +219,7 @@ class GFEwayRecurringPayment {
 	/**
 	* populate members with defaults, and set account and environment information
 	*
-	* @param string $accountID eWAY account ID
+	* @param string $accountID Eway account ID
 	* @param boolean $isLiveSite running on the live (production) website
 	*/
 	public function __construct($accountID, $isLiveSite = false) {
@@ -229,7 +229,7 @@ class GFEwayRecurringPayment {
 	}
 
 	/**
-	* process a payment against eWAY; throws exception on error with error described in exception message.
+	* process a payment against Eway; throws exception on error with error described in exception message.
 	*/
 	public function processPayment() {
 		$this->validate();
@@ -410,9 +410,9 @@ class GFEwayRecurringPayment {
 	}
 
 	/**
-	* send the eWAY payment request and retrieve and parse the response
+	* send the Eway payment request and retrieve and parse the response
 	* @return GFEwayRecurringResponse
-	* @param string $xml eWAY payment request as an XML document, per eWAY specifications
+	* @param string $xml Eway payment request as an XML document, per Eway specifications
 	*/
 	private function sendPayment($xml) {
 		// use sandbox if not from live website
@@ -423,7 +423,7 @@ class GFEwayRecurringPayment {
 			$responseXML = send_xml_request($url, $xml, $this->sslVerifyPeer);
 		}
 		catch (GFEwayCurlException $e) {
-			throw new GFEwayException(sprintf(__('Error posting eWAY recurring payment to %1$s: %2$s', 'gravityforms-eway'), $url, $e->getMessage()));
+			throw new GFEwayException(sprintf(__('Error posting Eway recurring payment to %1$s: %2$s', 'gravityforms-eway'), $url, $e->getMessage()));
 		}
 
 		$response = new GFEwayRecurringResponse();
@@ -434,7 +434,7 @@ class GFEwayRecurringPayment {
 }
 
 /**
-* Class for dealing with an eWAY recurring payment response
+* Class for dealing with an Eway recurring payment response
 */
 class GFEwayRecurringResponse {
 
@@ -461,16 +461,16 @@ class GFEwayRecurringResponse {
 	#endregion
 
 	/**
-	* load eWAY response data as XML string
+	* load Eway response data as XML string
 	*
-	* @param string $response eWAY response as a string (hopefully of XML data)
+	* @param string $response Eway response as a string (hopefully of XML data)
 	*/
 	public function loadResponseXML($response) {
-		GFEwayPlugin::log_debug(sprintf('%s: eWAY says "%s"', __METHOD__, $response));
+		GFEwayPlugin::log_debug(sprintf('%s: Eway says "%s"', __METHOD__, $response));
 
-		// make sure we actually got something from eWAY
+		// make sure we actually got something from Eway
 		if (strlen($response) === 0) {
-			throw new GFEwayException(__('eWAY payment request returned nothing; please check your card details', 'gravityforms-eway'));
+			throw new GFEwayException(__('Eway payment request returned nothing; please check your card details', 'gravityforms-eway'));
 		}
 
 		// prevent XML injection attacks, and handle errors without warnings
@@ -504,7 +504,7 @@ class GFEwayRecurringResponse {
 			}
 			libxml_use_internal_errors($oldUseInternalErrors);
 
-			throw new GFEwayException(sprintf(__('Error parsing eWAY recurring payments response: %s', 'gravityforms-eway'), $e->getMessage()));
+			throw new GFEwayException(sprintf(__('Error parsing Eway recurring payments response: %s', 'gravityforms-eway'), $e->getMessage()));
 		}
 	}
 

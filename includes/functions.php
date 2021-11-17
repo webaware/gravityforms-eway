@@ -86,7 +86,7 @@ function is_IP_address($maybeIP) {
 function send_xml_request($url, $data, $sslVerifyPeer = true) {
 	// send data via HTTPS and receive response
 	$response = wp_remote_post($url, [
-		'user-agent'	=> 'Gravity Forms eWAY ' . GFEWAY_PLUGIN_VERSION,
+		'user-agent'	=> 'Gravity Forms Eway ' . GFEWAY_PLUGIN_VERSION,
 		'sslverify'		=> $sslVerifyPeer,
 		'timeout'		=> 60,
 		'headers'		=> ['Content-Type' => 'text/xml; charset=utf-8'],
@@ -104,10 +104,10 @@ function send_xml_request($url, $data, $sslVerifyPeer = true) {
 		$msg = wp_remote_retrieve_response_message($response);
 
 		if (empty($msg)) {
-			$msg = sprintf(__('Error posting eWAY request: %s', 'gravityforms-eway'), $code);
+			$msg = sprintf(__('Error posting Eway request: %s', 'gravityforms-eway'), $code);
 		}
 		else {
-			$msg = sprintf(__('Error posting eWAY request: %1$s, %2$s', 'gravityforms-eway'), $code, $msg);
+			$msg = sprintf(__('Error posting Eway request: %1$s, %2$s', 'gravityforms-eway'), $code, $msg);
 		}
 		throw new GFEwayException($msg);
 	}

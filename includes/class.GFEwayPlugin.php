@@ -151,13 +151,13 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* set form modifiers for eWAY client side encryption
+	* set form modifiers for Eway client side encryption
 	* @param array $form
 	* @return array
 	*/
 	public function ecryptModifyForm($form) {
 		if ($this->canEncryptCardDetails($form)) {
-			// inject eWAY Client Side Encryption
+			// inject Eway Client Side Encryption
 			add_filter('gform_form_tag', [$this, 'ecryptFormTag'], 10, 2);
 			add_filter('gform_field_content', [$this, 'ecryptCcField'], 10, 5);
 			add_filter('gform_get_form_filter_' . $form['id'], [$this, 'ecryptEndRender'], 10, 2);
@@ -185,7 +185,7 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* stop injecting eWAY Client Side Encryption
+	* stop injecting Eway Client Side Encryption
 	* @param string $html form html
 	* @param array $form
 	* @return string
@@ -198,7 +198,7 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* inject eWAY Client Side Encryption into form tag
+	* inject Eway Client Side Encryption into form tag
 	* @param string $tag
 	* @param array $form
 	* @return string
@@ -211,7 +211,7 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* inject eWAY Client Side Encryption into credit card field
+	* inject Eway Client Side Encryption into credit card field
 	* @param string $field_content
 	* @param GF_Field $field
 	* @param string $value
@@ -234,7 +234,7 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* put something back into Credit Card field inputs, to enable validation when using eWAY Client Side Encryption
+	* put something back into Credit Card field inputs, to enable validation when using Eway Client Side Encryption
 	* @param array $form
 	* @return array
 	*/
@@ -422,7 +422,7 @@ class GFEwayPlugin {
 			// Recurring XML API
 			$customerID = $this->options['useTest'] ? '87654321' : $creds['customerID'];
 			if (empty($customerID)) {
-				throw new GFEwayException(__("Can't request recurring payment; no eWAY customer ID.", 'gravityforms-eway'));
+				throw new GFEwayException(__("Can't request recurring payment; no Eway customer ID.", 'gravityforms-eway'));
 			}
 			$eway = new GFEwayRecurringPayment($customerID, $isLiveSite);
 			self::log_debug(sprintf('%s: %s gateway, Recurring Payments XML API', __FUNCTION__, $isLiveSite ? 'live' : 'test'));
@@ -439,7 +439,7 @@ class GFEwayPlugin {
 				// legacy XML APIs
 				$customerID = ($this->options['useTest'] && $this->options['forceTestAccount']) ? '87654321' : $creds['customerID'];
 				if (empty($customerID)) {
-					throw new GFEwayException(__("Can't request payment; no eWAY credentials.", 'gravityforms-eway'));
+					throw new GFEwayException(__("Can't request payment; no Eway credentials.", 'gravityforms-eway'));
 				}
 				if ($this->options['useStored']) {
 					$eway = new GFEwayStoredPayment($customerID, $isLiveSite);
@@ -491,7 +491,7 @@ class GFEwayPlugin {
 			$eway->country					= $formData->address_country ? GFCommon::get_country_code($formData->address_country) : '';
 			$eway->cardVerificationNumber	= $formData->ccCVN;
 
-			// generate a unique transaction ID to avoid collisions, e.g. between different installations using the same eWAY account
+			// generate a unique transaction ID to avoid collisions, e.g. between different installations using the same Eway account
 			// uniqid() generates 13-character string, trim back to last 12 characters which is max for field
 			$eway->transactionNumber = substr(uniqid(), -12);
 
@@ -506,7 +506,7 @@ class GFEwayPlugin {
 												apply_filters('gfeway_invoice_option3', '', $data['form'], false),
 											], 'strlen');
 
-			// if live, pass through amount exactly, but if using test site, round up to whole dollars or eWAY will fail
+			// if live, pass through amount exactly, but if using test site, round up to whole dollars or Eway will fail
 			if ($this->options['useTest'] && $this->options['roundTestAmounts']) {
 				$eway->amount = ceil($formData->total);
 				if ($eway->amount != $formData->total) {
@@ -865,7 +865,7 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* see if form is an eWAY credit card form
+	* see if form is an Eway credit card form
 	* @param int $form_id
 	* @param array $fields
 	* @return bool
@@ -906,7 +906,7 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* get eWAY credentials
+	* get Eway credentials
 	* @return string
 	*/
 	protected function getEwayCredentials() {
@@ -977,7 +977,7 @@ class GFEwayPlugin {
 	* @return array
 	*/
 	public function enableLogging($plugins) {
-		$plugins['gfeway'] = __('Gravity Forms eWAY', 'gravityforms-eway');
+		$plugins['gfeway'] = __('Gravity Forms Eway', 'gravityforms-eway');
 
 		return $plugins;
 	}

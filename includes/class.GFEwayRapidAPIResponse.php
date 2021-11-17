@@ -5,7 +5,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
-* Class for dealing with an eWAY Rapid API response
+* Class for dealing with an Eway Rapid API response
 * @link https://eway.io/api-v3/
 */
 class GFEwayRapidAPIResponse {
@@ -31,19 +31,19 @@ class GFEwayRapidAPIResponse {
 	public $ResponseMessage;
 
 	/**
-	* eWAY transacation ID
+	* Eway transacation ID
 	* @var string
 	*/
 	public $TransactionID;
 
 	/**
-	* eWAY transaction status: true for success
+	* Eway transaction status: true for success
 	* @var boolean
 	*/
 	public $TransactionStatus;
 
 	/**
-	* eWAY transaction type
+	* Eway transaction type
 	* @var string
 	*/
 	public $TransactionType;
@@ -81,14 +81,14 @@ class GFEwayRapidAPIResponse {
 	#endregion
 
 	/**
-	* load eWAY response data as JSON string
-	* @param string $json eWAY response as a string (hopefully of JSON data)
+	* load Eway response data as JSON string
+	* @param string $json Eway response as a string (hopefully of JSON data)
 	*/
 	public function loadResponse($json) {
 		$response = json_decode($json);
 
 		if (is_null($response)) {
-			$errmsg = __('invalid response from eWAY for Direct payment', 'gravityforms-eway');
+			$errmsg = __('invalid response from Eway for Direct payment', 'gravityforms-eway');
 			throw new GFEwayException($errmsg);
 		}
 

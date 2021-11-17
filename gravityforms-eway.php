@@ -1,8 +1,8 @@
 <?php
 /*
-Plugin Name: Gravity Forms eWAY
+Plugin Name: Gravity Forms Eway
 Plugin URI: https://shop.webaware.com.au/downloads/gravity-forms-eway/
-Description: Easily create online payment forms with Gravity Forms and eWAY.
+Description: Easily create online payment forms with Gravity Forms and Eway.
 Version: 2.3.1
 Author: WebAware
 Author URI: https://shop.webaware.com.au/

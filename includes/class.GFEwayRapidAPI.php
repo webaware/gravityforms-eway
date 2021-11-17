@@ -5,7 +5,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
-* Class for dealing with an eWAY Rapid API payment
+* Class for dealing with an Eway Rapid API payment
 * @link https://eway.io/api-v3/
 */
 class GFEwayRapidAPI {
@@ -37,7 +37,7 @@ class GFEwayRapidAPI {
 	#region "connection specific members"
 
 	/**
-	* use eWAY sandbox
+	* use Eway sandbox
 	* @var boolean
 	*/
 	public $useSandbox;
@@ -284,9 +284,9 @@ class GFEwayRapidAPI {
 
 	/**
 	* populate members with defaults, and set account and environment information
-	* @param string $apiKey eWAY API key
-	* @param string $apiPassword eWAY API password
-	* @param boolean $useSandbox use eWAY sandbox
+	* @param string $apiKey Eway API key
+	* @param string $apiPassword Eway API password
+	* @param boolean $useSandbox use Eway sandbox
 	* @param boolean $capture capture payment now, or authorise for later capture
 	*/
 	public function __construct($apiKey, $apiPassword, $useSandbox = true, $capture = true) {
@@ -297,7 +297,7 @@ class GFEwayRapidAPI {
 	}
 
 	/**
-	* process a payment against eWAY; throws exception on error with error described in exception message.
+	* process a payment against Eway; throws exception on error with error described in exception message.
 	* @throws GFEwayException
 	*/
 	public function processPayment() {
@@ -501,8 +501,8 @@ class GFEwayRapidAPI {
 	}
 
 	/**
-	* send the eWAY payment request and retrieve and parse the response
-	* @param string $request eWAY payment request as a JSON document, per eWAY specifications
+	* send the Eway payment request and retrieve and parse the response
+	* @param string $request Eway payment request as a JSON document, per Eway specifications
 	* @return GFEwayRapidAPIResponse
 	* @throws GFEwayException
 	*/
@@ -514,7 +514,7 @@ class GFEwayRapidAPI {
 
 		// execute the request, and retrieve the response
 		$response = wp_remote_post($url, [
-			'user-agent'	=> 'Gravity Forms eWAY ' . GFEWAY_PLUGIN_VERSION,
+			'user-agent'	=> 'Gravity Forms Eway ' . GFEWAY_PLUGIN_VERSION,
 			'sslverify'		=> $this->sslVerifyPeer,
 			'timeout'		=> 60,
 			'headers'		=> [
@@ -527,7 +527,7 @@ class GFEwayRapidAPI {
 		// failure to handle the http request
 		if (is_wp_error($response)) {
 			$msg = $response->get_error_message();
-			throw new GFEwayException(sprintf(__('Error posting eWAY request: %s', 'gravityforms-eway'), $msg));
+			throw new GFEwayException(sprintf(__('Error posting Eway request: %s', 'gravityforms-eway'), $msg));
 		}
 
 		// error code returned by request
@@ -536,11 +536,11 @@ class GFEwayRapidAPI {
 			$msg = wp_remote_retrieve_response_message($response);
 
 			if (empty($msg)) {
-				$msg = sprintf(__('Error posting eWAY request: %s', 'gravityforms-eway'), $code);
+				$msg = sprintf(__('Error posting Eway request: %s', 'gravityforms-eway'), $code);
 			}
 			else {
 				/* translators: 1. the error code; 2. the error message */
-				$msg = sprintf(__('Error posting eWAY request: %1$s, %2$s', 'gravityforms-eway'), $code, $msg);
+				$msg = sprintf(__('Error posting Eway request: %1$s, %2$s', 'gravityforms-eway'), $code, $msg);
 			}
 			throw new GFEwayException($msg);
 		}

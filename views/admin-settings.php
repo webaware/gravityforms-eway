@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) {
 	<a rel="noopener" target="_blank" href="https://gfeway.webaware.net.au/"><?php esc_html_e('Go Pro for more flexibility!', 'gravityforms-eway'); ?></a>
 </div>
 
-<h3><span><i class="fa fa-credit-card"></i> <?= esc_html_x('eWAY Payments', 'settings page', 'gravityforms-eway'); ?></span></h3>
+<h3><span><i class="fa fa-credit-card"></i> <?= esc_html_x('Eway Payments', 'settings page', 'gravityforms-eway'); ?></span></h3>
 
 <form action="<?= admin_url('options.php'); ?>" method="POST" id="eway-settings-form">
 	<?php settings_fields(GFEWAY_PLUGIN_OPTIONS); ?>
@@ -22,7 +22,7 @@ if (!defined('ABSPATH')) {
 		<tr>
 			<th scope="row">
 				<label for="gfeway_plugin_apiKey"><?= esc_html_x('API Key', 'settings field', 'gravityforms-eway'); ?></label>
-				<?php gform_tooltip(esc_html__('eWAY Rapid API key, from your MYeWAY console.', 'gravityforms-eway')); ?>
+				<?php gform_tooltip(esc_html__('Eway Rapid API key, from your MyEway console.', 'gravityforms-eway')); ?>
 			</th>
 			<td>
 				<input type="text" class="large-text" name="gfeway_plugin[apiKey]" id="gfeway_plugin_apiKey"
@@ -34,7 +34,7 @@ if (!defined('ABSPATH')) {
 		<tr>
 			<th scope="row">
 				<label for="gfeway_plugin_apiPassword"><?= esc_html_x('API Password', 'settings field', 'gravityforms-eway'); ?></label>
-				<?php gform_tooltip(esc_html__('eWAY Rapid API password, from your MYeWAY console.', 'gravityforms-eway')); ?>
+				<?php gform_tooltip(esc_html__('Eway Rapid API password, from your MyEway console.', 'gravityforms-eway')); ?>
 			</th>
 			<td>
 				<input type="password" class="regular-text" name="gfeway_plugin[apiPassword]" id="gfeway_plugin_apiPassword"
@@ -57,7 +57,7 @@ if (!defined('ABSPATH')) {
 		<tr>
 			<th scope="row">
 				<label for="gfeway_plugin_customerID"><?= esc_html_x('Customer ID', 'settings field', 'gravityforms-eway'); ?></label>
-				<?php gform_tooltip(esc_html__('eWAY customer ID, required for Recurring Payments and legacy XML API; from your MYeWAY console.', 'gravityforms-eway')); ?>
+				<?php gform_tooltip(esc_html__('Eway customer ID, required for Recurring Payments and legacy XML API; from your MyEway console.', 'gravityforms-eway')); ?>
 			</th>
 			<td>
 				<input type="text" class="regular-text" name="gfeway_plugin[customerID]" id="gfeway_plugin_customerID" value="<?= esc_attr($options['customerID']); ?>" />
@@ -73,7 +73,7 @@ if (!defined('ABSPATH')) {
 		<tr>
 			<th scope="row">
 				<label for="gfeway_plugin_sandboxApiKey"><?= esc_html_x('API Key', 'settings field', 'gravityforms-eway'); ?></label>
-				<?php gform_tooltip(esc_html__('eWAY Rapid API key, from your MYeWAY console.', 'gravityforms-eway')); ?>
+				<?php gform_tooltip(esc_html__('Eway Rapid API key, from your MyEway console.', 'gravityforms-eway')); ?>
 			</th>
 			<td>
 				<input type="text" class="large-text" name="gfeway_plugin[sandboxApiKey]" id="gfeway_plugin_sandboxApiKey"
@@ -85,7 +85,7 @@ if (!defined('ABSPATH')) {
 		<tr>
 			<th scope="row">
 				<label for="gfeway_plugin_sandboxPassword"><?= esc_html_x('API Password', 'settings field', 'gravityforms-eway'); ?></label>
-				<?php gform_tooltip(esc_html__('eWAY Rapid API password, from your MYeWAY console.', 'gravityforms-eway')); ?>
+				<?php gform_tooltip(esc_html__('Eway Rapid API password, from your MyEway console.', 'gravityforms-eway')); ?>
 			</th>
 			<td>
 				<input type="password" class="regular-text" name="gfeway_plugin[sandboxPassword]" id="gfeway_plugin_sandboxPassword"
@@ -108,7 +108,7 @@ if (!defined('ABSPATH')) {
 		<tr>
 			<th scope="row">
 				<label for="gfeway_plugin_sandboxCustomerID"><?= esc_html_x('Customer ID', 'settings field', 'gravityforms-eway'); ?></label>
-				<?php gform_tooltip(esc_html__('eWAY customer ID, for the legacy XML API sandbox (not used for the Recurring Payments sandbox); from your MYeWAY console.', 'gravityforms-eway')); ?>
+				<?php gform_tooltip(esc_html__('Eway customer ID, for the legacy XML API sandbox (not used for the Recurring Payments sandbox); from your MyEway console.', 'gravityforms-eway')); ?>
 			</th>
 			<td>
 				<input type="text" class="regular-text" name="gfeway_plugin[sandboxCustomerID]" id="gfeway_plugin_sandboxCustomerID" value="<?= esc_attr($options['sandboxCustomerID']); ?>" />

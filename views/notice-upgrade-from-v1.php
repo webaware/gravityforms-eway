@@ -5,12 +5,12 @@ if (!defined('ABSPATH')) {
 ?>
 
 <div class="notice notice-error gfeway-dismissable" data-gfeway-dismiss="upgrade_from_v1">
-	<p><?php esc_html_e('Gravity Forms eWAY has been upgraded. Please check your settings.', 'gravityforms-eway'); ?></p>
+	<p><?php esc_html_e('Gravity Forms Eway has been upgraded. Please check your settings.', 'gravityforms-eway'); ?></p>
 
 	<ul style="list-style-type:circle;padding-left:1em;margin-left:0">
 		<?php if (empty($options['apiKey']) && empty($options['apiPassword'])):  ?>
 			<li><?= gfeway_internal_link(
-					esc_html__('upgrade to Rapid API by entering your eWAY API key and password, and Client Side Encryption Key, at {{a}}eWAY Payments settings{{/a}}', 'gravityforms-eway'),
+					esc_html__('upgrade to Rapid API by entering your Eway API key and password, and Client Side Encryption Key, at {{a}}Eway Payments settings{{/a}}', 'gravityforms-eway'),
 					$ewaySettingsURL
 				); ?></li>
 		<?php endif; ?>

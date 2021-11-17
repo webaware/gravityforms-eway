@@ -1,4 +1,4 @@
-# Gravity Forms eWAY
+# Gravity Forms Eway
 
 ## Changelog
 
@@ -46,17 +46,17 @@
 ### 2.2.3, 2016-12-08
 
 * fixed: don't attempt card processing if form validation fails (validation in other plugins; honeypot failure; save and continue heartbeat)
-* fixed: conflict between eWAY's Client Side Encryption script and File Upload fields
+* fixed: conflict between Eway's Client Side Encryption script and File Upload fields
 * fixed: undefined index errors on `gform_replace_merge_tags` hook, e.g. with GF User Registration login widget
 
 ### 2.2.2, 2016-07-24
 
 * fixed: no confirmation message after saving settings
-* changed: use the minified version of the eWAY Client Side Encryption script, unless `SCRIPT_DEBUG` is enabled
+* changed: use the minified version of the Eway Client Side Encryption script, unless `SCRIPT_DEBUG` is enabled
 * changed: use `wp_remote_retrieve_*()` functions instead of response array access (WP4.6 compatibility)
 * changed: use Gravity Forms `get_order_total()` to calculate form total (fixes T2T Toolkit conflict with Coupons add-on)
 * added: check for PCRE (regular expression library) minimum version
-* added: new error message strings for eWAY Rapid API response codes
+* added: new error message strings for Eway Rapid API response codes
 * added: prevent multiple instances of Recurring field on form
 
 ### 2.2.1, 2016-05-06
@@ -92,22 +92,22 @@
 
 ### 2.1.1, 2016-02-02
 
-* added: partner ID sent to eWAY with payment requests (improved traceability)
+* added: partner ID sent to Eway with payment requests (improved traceability)
 * changed: some words on upgrade notices
 
 ### 2.1.0, 2016-02-01
 
-* added: [support for eWAY Client Side Encryption](https://shop.webaware.com.au/gravity-forms-eway-client-side-encryption), allowing sites without PCI compliance to use Rapid 3.1 API
+* added: [support for Eway Client Side Encryption](https://shop.webaware.com.au/gravity-forms-eway-client-side-encryption), allowing sites without PCI compliance to use Rapid 3.1 API
 
 ### 2.0.0, 2016-01-27
 
-* changed: uses eWAY Rapid API if API key and password are set (not applicable for Recurring Payments)
+* changed: uses Eway Rapid API if API key and password are set (not applicable for Recurring Payments)
 * changed: minimum Gravity Forms version is now 1.9
 * changed: currency is no longer limited to AUD
 * changed: don't restrict credit cards, let user select; please review your forms after upgrading, and ensure that the correct credit cards are enabled in your forms
 * changed: use WordPress post date format for recurring payments reported dates
 * fixed: don't attempt to use real Customer ID for Recurring Payments sandbox (only 87654321 works)
-* fixed: only need `gravityforms_edit_settings` to save eWAY settings
+* fixed: only need `gravityforms_edit_settings` to save Eway settings
 * added: strings are localized and ready for [translation](https://translate.wordpress.org/projects/wp-plugins/gravityforms-eway)!
 
 ### 1.8.0, 2015-06-20
@@ -130,7 +130,7 @@
 
 ### 1.6.3, 2014-08-25
 
-* added: filter `gfeway_form_is_eway` for telling Gravity Forms eWAY to ignore a form
+* added: filter `gfeway_form_is_eway` for telling Gravity Forms Eway to ignore a form
 
 ### 1.6.2, 2014-08-15
 
@@ -173,7 +173,7 @@
 * fixed: settings wouldn't save in WordPress multisite installations
 * fixed: doco / settings page didn't explain that Beagle requires an Address field
 * fixed: Beagle IP address 127.0.0.1 for form submitted on server (substitutes with an Australian IP address)
-* changed: eWAY settings page is now a Gravity Forms settings subpage, like other addons
+* changed: Eway settings page is now a Gravity Forms settings subpage, like other addons
 
 ### 1.5.7, 2013-08-23
 
@@ -224,13 +224,13 @@
 
 ### 1.4.0, 2013-01-17
 
-* added: can now use eWAY Stored Payments, e.g. for merchants who do drop-shipping
+* added: can now use Eway Stored Payments, e.g. for merchants who do drop-shipping
 * added: merge tags for transaction_id and payment_amount, for notification emails
 
 ### 1.3.0, 2012-10-22
 
 * fixed: can't submit form multiple times and get multiple payments
-* added: can now customise the eWAY credit card error messages
+* added: can now customise the Eway credit card error messages
 
 ### 1.2.2, 2012-10-03
 
@@ -239,20 +239,20 @@
 
 ### 1.2.1, 2012-10-02
 
-* fixed: address on one-off eWAY invoice was getting "0, " prepended when PHP < 5.3
+* fixed: address on one-off Eway invoice was getting "0, " prepended when PHP < 5.3
 * fixed: address line 2 combined with line 1 when provided
 
 ### 1.2.0, 2012-09-21
 
 * added: option to disable whether remote SSL certificate must be verified (only disable if your website can't be correctly configured!)
-* added: prevent XML injection attacks when loading eWAY response (security hardening)
+* added: prevent XML injection attacks when loading Eway response (security hardening)
 * added: recurring payments (sponsored by [Castle Design](http://castledesign.com.au/) -- thanks!)
-* added: if a name field is added to the form, it will be used for the eWAY customer name (NB: not cardholder name)
+* added: if a name field is added to the form, it will be used for the Eway customer name (NB: not cardholder name)
 * added: filter hooks for invoice description and reference
 
 ### 1.1.0, 2012-06-17
 
-* added: options for extending use of eWAY sandbox (testing) environment capabilities
+* added: options for extending use of Eway sandbox (testing) environment capabilities
 * added: more documentation (thanks, [gymbaroo.net.au](http://gymbaroo.net.au/) and samwoods!)
 
 ### 1.0.3, 2012-05-24
@@ -264,13 +264,13 @@
 
 * fixed: correctly handle quantity for singleproduct fields
 * fixed: don't validate or process credit card if credit card field is hidden (e.g. other payment option selected)
-* fixed: form ID recorded in eWAY invoice reference field
-* added: cardholder's name recorded in eWAY last name field (for reference on eWAY email notification)
-* added: remove spaces/dashes from credit card numbers so that "valid" numbers can be passed to eWAY with spaces removed
+* fixed: form ID recorded in Eway invoice reference field
+* added: cardholder's name recorded in Eway last name field (for reference on Eway email notification)
+* added: remove spaces/dashes from credit card numbers so that "valid" numbers can be passed to Eway with spaces removed
 
 ### 1.0.1, 2012-05-05
 
-* fixed: optional fields for address, email are no longer required for eWAY payment
+* fixed: optional fields for address, email are no longer required for Eway payment
 
 ### 1.0.0, 2012-04-16
 

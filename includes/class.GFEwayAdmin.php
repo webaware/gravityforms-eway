@@ -58,7 +58,7 @@ class GFEwayAdmin {
 
 		if ($plugin_page === 'gf_settings') {
 			// add our settings page to the Gravity Forms settings menu
-			$title = esc_html_x('eWAY Payments', 'settings page', 'gravityforms-eway');
+			$title = esc_html_x('Eway Payments', 'settings page', 'gravityforms-eway');
 			GFForms::add_settings_page([
 				'name'			=> $this->slug,
 				'tab_label'		=> $title,
@@ -235,7 +235,7 @@ class GFEwayAdmin {
 			$links[] = sprintf('<a href="https://wordpress.org/support/plugin/gravityforms-eway" rel="noopener" target="_blank">%s</a>', _x('Get help', 'plugin details links', 'gravityforms-eway'));
 			$links[] = sprintf('<a href="https://wordpress.org/plugins/gravityforms-eway/" rel="noopener" target="_blank">%s</a>', _x('Rating', 'plugin details links', 'gravityforms-eway'));
 			$links[] = sprintf('<a href="https://translate.wordpress.org/projects/wp-plugins/gravityforms-eway" rel="noopener" target="_blank">%s</a>', _x('Translate', 'plugin details links', 'gravityforms-eway'));
-			$links[] = sprintf('<a href="https://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+eWAY" rel="noopener" target="_blank">%s</a>', _x('Donate', 'plugin details links', 'gravityforms-eway'));
+			$links[] = sprintf('<a href="https://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+Eway" rel="noopener" target="_blank">%s</a>', _x('Donate', 'plugin details links', 'gravityforms-eway'));
 		}
 
 		return $links;
