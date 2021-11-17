@@ -123,7 +123,7 @@ If you get the following error, you *must* add your Client-Side Encryption key:
 
 You will find your Client-Side Encryption key in MyEway where you created your API key and password. Copy it from MyEway and paste into the Eway Payments settings page.
 
-### Why do I get an error "Invalid TransactionType"?
+### Why do I get an "Invalid TransactionType" error?
 
 > V6010: Invalid TransactionType, account not certified for eCome only MOTO or Recurring available
 
@@ -163,7 +163,7 @@ Browse to your Gravity Form, select [Notifications](https://www.gravityhelp.com/
 
 When the sandbox is enabled, the payment amount is rounded up by default, because the Eway sandbox server can return different error codes when the amount has cents. This can be a useful feature for testing how your website displays errors, but you normally don't want it when testing a payment form.
 
-### Why do I get an error "This page is unsecured"?
+### Why do I get a "This page is unsecured" error?
 
 When your form has a Credit Card field, it accepts very sensitive details from your customers and these must be encrypted. You must have an SSL/TLS certificate installed on your website, and your page must be accessed via HTTPS (i.e. the page address must start with "https:"). You can force a page with a credit card form to be accessed via HTTPS by ticking Force SSL on the [Credit Card field advanced settings page](https://www.gravityhelp.com/documentation/article/credit-card-field/#advanced); see [screenshots](https://wordpress.org/plugins/gravityforms-eway/screenshots/).
 
