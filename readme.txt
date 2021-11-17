@@ -8,7 +8,7 @@ Tags: gravity forms, eway, donations, payment, payment gateway, ecommerce
 Requires at least: 4.2
 Tested up to: 5.8
 Requires PHP: 7.0
-Stable tag: 2.3.1
+Stable tag: 2.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -204,9 +204,9 @@ Developers can use these [filter hooks to modify some Eway invoice properties](h
 
 ## Upgrade Notice
 
-### 2.3.1
+### 2.4.0
 
-fixed icon colour in Gravity Forms 2.5 settings; use masked password fields for API passwords in settings
+updated with new Eway branding
 
 ## Changelog
 
@@ -214,18 +214,8 @@ fixed icon colour in Gravity Forms 2.5 settings; use masked password fields for 
 
 The full changelog for Gravity Forms Eway can be found [on GitHub](https://github.com/webaware/gravityforms-eway/blob/master/changelog.md). Recent entries:
 
-### 2.3.1
+### 2.4.0
 
-Released 2021-04-27
+Released 2021-11-17
 
-* fixed: icon colour in Gravity Forms 2.5 settings
-* changed: use masked password fields for API passwords in settings
-
-### 2.3.0
-
-Released 2021-03-01
-
-* changed: requires PHP version 7.0+
-* changed: refactor / modernise the PHP code
-* changed: don't call `libxml_disable_entity_loader()` in PHP 8.0 (now deprecated)
-* tested: Gravity Forms 2.5
+* changed: update with new Eway branding

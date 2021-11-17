@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 2.4.0, 2021-11-17
+
+* changed: update with new Eway branding
+
 ### 2.3.1, 2021-04-27
 
 * fixed: icon colour in Gravity Forms 2.5 settings
