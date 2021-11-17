@@ -213,7 +213,7 @@ class GFEwayRecurringField {
 	* @return array
 	*/
 	public function gformPreValidation($form) {
-        foreach($form['fields'] as $field) {
+		foreach($form['fields'] as $field) {
 			if ($field->type === GFEWAY_FIELD_RECURRING && !GFFormsModel::is_field_hidden($form, $field, GFForms::post('gform_field_values'))) {
 				$recurring = self::getPost($field->id);
 				if ($recurring) {

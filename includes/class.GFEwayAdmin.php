@@ -332,7 +332,7 @@ class GFEwayAdmin {
 	* @param array $lead
 	* @return string
 	*/
-    public function gformPaymentStatus($payment_status, $form, $lead) {
+	public function gformPaymentStatus($payment_status, $form, $lead) {
 		// make sure payment is not Approved, and that we're editing the lead
 		if ($payment_status === 'Approved' || strtolower(rgpost('save')) <> 'edit') {
 			return $payment_status;
@@ -355,7 +355,7 @@ class GFEwayAdmin {
 		$input = ob_get_clean();
 
 		return $input;
-    }
+	}
 
 	/**
 	* update payment status if it has changed
