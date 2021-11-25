@@ -8,7 +8,7 @@ Tags: gravity forms, eway, donations, payment, payment gateway, ecommerce
 Requires at least: 4.2
 Tested up to: 5.8
 Requires PHP: 7.0
-Stable tag: 2.4.0
+Stable tag: 2.4.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -204,15 +204,21 @@ Developers can use these [filter hooks to modify some Eway invoice properties](h
 
 ## Upgrade Notice
 
-### 2.4.0
+### 2.4.1
 
-updated with new Eway branding
+hide subfields of Recurring field for new forms without Gravity Forms legacy markup
 
 ## Changelog
 
 > Get [Gravity Forms Eway Pro](https://gfeway.webaware.net.au/) for extra features, greater flexibility
 
 The full changelog for Gravity Forms Eway can be found [on GitHub](https://github.com/webaware/gravityforms-eway/blob/master/changelog.md). Recent entries:
+
+### 2.4.1
+
+Released 2021-11-25
+
+* fixed: hide subfields of Recurring field for new forms without Gravity Forms legacy markup
 
 ### 2.4.0
 

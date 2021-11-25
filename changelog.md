@@ -4,7 +4,7 @@
 
 ### 2.4.1, 2021-11-25
 
-* fixed: Recurring field not hiding subfields on new forms without Gravity Forms legacy markup
+* fixed: hide subfields of Recurring field for new forms without Gravity Forms legacy markup
 
 ### 2.4.0, 2021-11-17
 
