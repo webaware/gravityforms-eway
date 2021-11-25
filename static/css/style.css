@@ -25,6 +25,12 @@
     vertical-align: middle;
 }
 
+.gravity-theme .gfeway_recurring_complex .gf_hidden {
+	display: none !important;
+	max-height: 1px !important;
+	overflow: hidden;
+}
+
 .ui-datepicker-next label, .ui-datepicker-prev label {
 	display: none;
 }

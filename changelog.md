@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 2.4.1, 2021-11-25
+
+* fixed: Recurring field not hiding subfields on new forms without Gravity Forms legacy markup
+
 ### 2.4.0, 2021-11-17
 
 * changed: update with new Eway branding
