@@ -87,7 +87,8 @@ class GFEwayAdmin {
 
 		if (($plugin_page === 'gf_settings' && $subview === $this->slug) || $plugin_page === 'gf_edit_forms') {
 			$ver = SCRIPT_DEBUG ? time() : GFEWAY_PLUGIN_VERSION;
-			wp_enqueue_style('gfeway-admin', plugins_url('static/css/admin.css', GFEWAY_PLUGIN_FILE), false, $ver);
+			$min = SCRIPT_DEBUG ? '.dev' : '.min';
+			wp_enqueue_style('gfeway-admin', plugins_url("static/css/admin$min.css", GFEWAY_PLUGIN_FILE), false, $ver);
 		}
 	}
 

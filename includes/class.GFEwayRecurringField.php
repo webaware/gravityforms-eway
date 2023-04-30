@@ -68,7 +68,8 @@ class GFEwayRecurringField {
 
 		wp_register_script('gfeway_recurring', plugins_url("static/js/recurring$min.js", GFEWAY_PLUGIN_FILE), ['gform_datepicker_init'], $ver, true);
 
-		wp_register_style('gfeway', plugins_url('static/css/style.css', GFEWAY_PLUGIN_FILE), [], $ver);
+		$min = SCRIPT_DEBUG ? '.dev' : '.min';
+		wp_register_style('gfeway', plugins_url("static/css/style$min.css", GFEWAY_PLUGIN_FILE), [], $ver);
 	}
 
 	/**

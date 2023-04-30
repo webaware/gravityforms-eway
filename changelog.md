@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 2.5.0, soon...
+
+* changed: updated build system, production CSS is now minified
+
 ### 2.4.1, 2021-11-25
 
 * fixed: hide subfields of Recurring field for new forms without Gravity Forms legacy markup

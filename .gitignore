@@ -2,5 +2,6 @@
 /.vscode
 /.wordpress.org
 /.dist
+/.make-flag*
 /node_modules
 /vendor

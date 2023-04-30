@@ -1,0 +1,52 @@
+.gfeway_recurring_complex .gf_hidden {
+	display: none;
+}
+
+#gfeway-opt-admin-stored-beagle,
+#gfeway-opt-admin-stored-test {
+	color: #c00;
+	font-weight: bold;
+
+	.no-js & {
+		display: none;
+	}
+}
+
+#eway-settings-form {
+
+	fieldset {
+		border: 1px dotted #ccc;
+		margin-bottom: 1em;
+		padding: 0.5em;
+
+		legend {
+			margin-left: 0.5em;
+			padding: 0 0.5em;
+		}
+
+		input[type="radio"] + label {
+			padding-left: 0.3em;
+			padding-right: 1.2em;
+		}
+	}
+}
+
+.gfeway-settings-promote {
+	float: right;
+	background-color: #FFAF00;
+	padding: 1em;
+	border-radius: 3px;
+
+	a,
+	a:link,
+	a:visited {
+		font-weight: bold;
+		color: black;
+	}
+}
+
+/* GF 2.5+ admin settings button */
+.gform-settings__wrapper #tab_gravityforms-eway .button-primary {
+	background: #3E7DA6;
+	color: white;
+}

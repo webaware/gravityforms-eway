@@ -1,0 +1,10 @@
+extends: stylelint-config-standard-scss
+
+# @link https://stylelint.io/user-guide/rules/
+# @link https://github.com/kristerkari/stylelint-scss
+rules:
+  no-descending-specificity: ~
+  rule-empty-line-before: ~
+  selector-class-pattern: ~
+  selector-id-pattern: ~
+  selector-list-comma-newline-after: ~
