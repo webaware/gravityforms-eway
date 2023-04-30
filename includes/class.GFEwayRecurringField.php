@@ -242,17 +242,20 @@ class GFEwayRecurringField {
 			$amountRecur = '';
 		}
 
-		if ($recurring['dateEnd']->format('Y-m-d') === '2099-12-31') {
-			// start but no defined end
-			// translators: %1$s = amount; %2$s = interval; %3$s = start date
-			$desc = sprintf(_x('%1$s %2$s from %3$s', 'recurring payment description', 'gravityforms-eway'),
-						$amountRecur, $interval, $recurring['dateStart']->format(get_option('date_format')));
-		}
-		else {
-			// defined start and end
-			// translators: %1$s = amount; %2$s = interval; %3$s = start date; %4$s = end date
-			$desc = sprintf(_x('%1$s %2$s from %3$s until %4$s', 'recurring payment description', 'gravityforms-eway'),
-						$amountRecur, $interval, $recurring['dateStart']->format(get_option('date_format')), $recurring['dateEnd']->format(get_option('date_format')));
+		$desc = '';
+		if ($recurring['dateStart'] && $recurring['dateEnd']) {
+			if ($recurring['dateEnd']->format('Y-m-d') === '2099-12-31') {
+				// start but no defined end
+				// translators: %1$s = amount; %2$s = interval; %3$s = start date
+				$desc = sprintf(_x('%1$s %2$s from %3$s', 'recurring payment description', 'gravityforms-eway'),
+							$amountRecur, $interval, $recurring['dateStart']->format(get_option('date_format')));
+			}
+			else {
+				// defined start and end
+				// translators: %1$s = amount; %2$s = interval; %3$s = start date; %4$s = end date
+				$desc = sprintf(_x('%1$s %2$s from %3$s until %4$s', 'recurring payment description', 'gravityforms-eway'),
+							$amountRecur, $interval, $recurring['dateStart']->format(get_option('date_format')), $recurring['dateEnd']->format(get_option('date_format')));
+			}
 		}
 
 		return $desc;
@@ -263,7 +266,7 @@ class GFEwayRecurringField {
 	* @param array $validation_result an array with elements is_valid (boolean) and form (array of form elements)
 	* @param string $value
 	* @param array $form
-	* @param array $field
+	* @param GF_Field $field
 	* @return array
 	*/
 	public function gformFieldValidation($validation_result, $value, $form, $field) {
@@ -319,7 +322,7 @@ class GFEwayRecurringField {
 	/**
 	* add custom classes to field container
 	* @param string $classes
-	* @param array $field
+	* @param GF_Field $field
 	* @return string
 	*/
 	public function gformFieldClasses($classes, $field) {
@@ -333,7 +336,7 @@ class GFEwayRecurringField {
 	/**
 	* watch the field type so that we can use hooks that don't pass enough information
 	* @param string $classes
-	* @param array $field
+	* @param GF_Field $field
 	* @return string
 	*/
 	public function watchFieldType($classes, $field) {
@@ -361,7 +364,7 @@ class GFEwayRecurringField {
 	/**
 	* filter hook for modifying a field's input tag (e.g. on custom fields)
 	* @param string $input the input tag before modification
-	* @param array $field
+	* @param GF_Field $field
 	* @param string $value
 	* @param integer $lead_id
 	* @param integer $form_id
