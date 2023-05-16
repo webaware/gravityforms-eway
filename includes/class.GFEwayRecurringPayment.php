@@ -3,197 +3,197 @@
 use function webaware\gfeway\send_xml_request;
 
 /**
-* Classes for dealing with Eway recurring payments
-*/
+ * Classes for dealing with Eway recurring payments
+ */
 
 if (!defined('ABSPATH')) {
 	exit;
 }
 
 /**
-* Class for dealing with an Eway recurring payment request
-*
-* @link https://www.eway.com.au/eway-partner-portal/resources/eway-api/recurring-payments
-*/
+ * Class for dealing with an Eway recurring payment request
+ *
+ * @link https://www.eway.com.au/eway-partner-portal/resources/eway-api/recurring-payments
+ */
 class GFEwayRecurringPayment {
 
 	#region members
 
 	// environment / website specific members
 	/**
-	* default FALSE, use Eway sandbox unless set to TRUE
-	* @var boolean
-	*/
+	 * default FALSE, use Eway sandbox unless set to TRUE
+	 * @var boolean
+	 */
 	public $isLiveSite;
 
 	/**
-	* default TRUE, whether to validate the remote SSL certificate
-	* @var boolean
-	*/
+	 * default TRUE, whether to validate the remote SSL certificate
+	 * @var boolean
+	 */
 	public $sslVerifyPeer;
 
 	// payment specific members
 	/**
-	* account name / email address at Eway
-	* @var string max. 8 characters
-	*/
+	 * account name / email address at Eway
+	 * @var string max. 8 characters
+	 */
 	public $accountID;
 
 	/**
-	* customer's title
-	* @var string max. 20 characters
-	*/
+	 * customer's title
+	 * @var string max. 20 characters
+	 */
 	public $title;
 
 	/**
-	* customer's first name
-	* @var string max. 50 characters
-	*/
+	 * customer's first name
+	 * @var string max. 50 characters
+	 */
 	public $firstName;
 
 	/**
-	* customer's last name
-	* @var string max. 50 characters
-	*/
+	 * customer's last name
+	 * @var string max. 50 characters
+	 */
 	public $lastName;
 
 	/**
-	* customer's email address
-	* @var string max. 50 characters
-	*/
+	 * customer's email address
+	 * @var string max. 50 characters
+	 */
 	public $emailAddress;
 
 	/**
-	* customer's address line 1
-	* @var string (combined max. 255 for line1 + line2)
-	*/
+	 * customer's address line 1
+	 * @var string (combined max. 255 for line1 + line2)
+	 */
 	public $address1;
 
 	/**
-	* customer's address line 2
-	* @var string
-	*/
+	 * customer's address line 2
+	 * @var string
+	 */
 	public $address2;
 
 	/**
-	* customer's suburb/city/town
-	* @var string max. 50 characters
-	*/
+	 * customer's suburb/city/town
+	 * @var string max. 50 characters
+	 */
 	public $suburb;
 
 	/**
-	* customer's state/province
-	* @var string max. 50 characters
-	*/
+	 * customer's state/province
+	 * @var string max. 50 characters
+	 */
 	public $state;
 
 	/**
-	* customer's postcode
-	* @var string max. 6 characters
-	*/
+	 * customer's postcode
+	 * @var string max. 6 characters
+	 */
 	public $postcode;
 
 	/**
-	* customer's country
-	* @var string max. 50 characters
-	*/
+	 * customer's country
+	 * @var string max. 50 characters
+	 */
 	public $country;
 
 	/**
-	* customer's phone number
-	* @var string max. 20 characters
-	*/
+	 * customer's phone number
+	 * @var string max. 20 characters
+	 */
 	public $phone;
 
 	/**
-	* customer's comments
-	* @var string max. 255 characters
-	*/
+	 * customer's comments
+	 * @var string max. 255 characters
+	 */
 	public $customerComments;
 
 	/**
-	* an customer reference to track by (NB: see also invoiceReference)
-	* @var string max. 20 characters
-	*/
+	 * an customer reference to track by (NB: see also invoiceReference)
+	 * @var string max. 20 characters
+	 */
 	public $customerReference;
 
 	/**
-	* an invoice reference to track by
-	* @var string max. 50 characters
-	*/
+	 * an invoice reference to track by
+	 * @var string max. 50 characters
+	 */
 	public $invoiceReference;
 
 	/**
-	* description of what is being purchased / paid for
-	* @var string max. 10000 characters
-	*/
+	 * description of what is being purchased / paid for
+	 * @var string max. 10000 characters
+	 */
 	public $invoiceDescription;
 
 	/**
-	* name on credit card
-	* @var string max. 50 characters
-	*/
+	 * name on credit card
+	 * @var string max. 50 characters
+	 */
 	public $cardHoldersName;
 
 	/**
-	* credit card number, with no spaces
-	* @var string max. 20 characters
-	*/
+	 * credit card number, with no spaces
+	 * @var string max. 20 characters
+	 */
 	public $cardNumber;
 
 	/**
-	* month of expiry, numbered from 1=January
-	* @var integer max. 2 digits
-	*/
+	 * month of expiry, numbered from 1=January
+	 * @var integer max. 2 digits
+	 */
 	public $cardExpiryMonth;
 
 	/**
-	* year of expiry
-	* @var integer will be truncated to 2 digits, can accept 4 digits
-	*/
+	 * year of expiry
+	 * @var integer will be truncated to 2 digits, can accept 4 digits
+	 */
 	public $cardExpiryYear;
 
 	/**
-	* total amount of intial payment, in dollars and cents as a floating-point number (will be converted to just cents for transmission)
-	* may be 0 (i.e. nothing upfront, only on recurring billings)
-	* @var float
-	*/
+	 * total amount of intial payment, in dollars and cents as a floating-point number (will be converted to just cents for transmission)
+	 * may be 0 (i.e. nothing upfront, only on recurring billings)
+	 * @var float
+	 */
 	public $amountInit;
 
 	/**
-	* total amount of recurring payment, in dollars and cents as a floating-point number (will be converted to just cents for transmission)
-	* @var float
-	*/
+	 * total amount of recurring payment, in dollars and cents as a floating-point number (will be converted to just cents for transmission)
+	 * @var float
+	 */
 	public $amountRecur;
 
 	/**
-	* the date of the initial payment (e.g. today, when the customer signed up)
-	* @var DateTime
-	*/
+	 * the date of the initial payment (e.g. today, when the customer signed up)
+	 * @var DateTime
+	 */
 	public $dateInit;
 
 	/**
-	* the date of the first recurring payment
-	* @var DateTime
-	*/
+	 * the date of the first recurring payment
+	 * @var DateTime
+	 */
 	public $dateStart;
 
 	/**
-	* the date of the last recurring payment
-	* @var DateTime
-	*/
+	 * the date of the last recurring payment
+	 * @var DateTime
+	 */
 	public $dateEnd;
 
 	/**
-	* size of the interval between recurring payments (be it days, months, years, etc.) in range 1-31
-	* @var integer
-	*/
+	 * size of the interval between recurring payments (be it days, months, years, etc.) in range 1-31
+	 * @var integer
+	 */
 	public $intervalSize;
 
 	/**
-	* type of interval (see interval type constants below)
-	* @var integer
-	*/
+	 * type of interval (see interval type constants below)
+	 * @var integer
+	 */
 	public $intervalType;
 
 	#endregion
@@ -217,11 +217,11 @@ class GFEwayRecurringPayment {
 	#endregion
 
 	/**
-	* populate members with defaults, and set account and environment information
-	*
-	* @param string $accountID Eway account ID
-	* @param boolean $isLiveSite running on the live (production) website
-	*/
+	 * populate members with defaults, and set account and environment information
+	 *
+	 * @param string $accountID Eway account ID
+	 * @param boolean $isLiveSite running on the live (production) website
+	 */
 	public function __construct($accountID, $isLiveSite = false) {
 		$this->sslVerifyPeer = true;
 		$this->isLiveSite = $isLiveSite;
@@ -229,8 +229,8 @@ class GFEwayRecurringPayment {
 	}
 
 	/**
-	* process a payment against Eway; throws exception on error with error described in exception message.
-	*/
+	 * process a payment against Eway; throws exception on error with error described in exception message.
+	 */
 	public function processPayment() {
 		$this->validate();
 		$xml = $this->getPaymentXML();
@@ -238,8 +238,8 @@ class GFEwayRecurringPayment {
 	}
 
 	/**
-	* validate the data members to ensure that sufficient and valid information has been given
-	*/
+	 * validate the data members to ensure that sufficient and valid information has been given
+	 */
 	private function validate() {
 		$errors = [];
 
@@ -340,10 +340,10 @@ class GFEwayRecurringPayment {
 	}
 
 	/**
-	* create XML request document for payment parameters
-	*
-	* @return string
-	*/
+	 * create XML request document for payment parameters
+	 *
+	 * @return string
+	 */
 	public function getPaymentXML() {
 		// aggregate street address1 & address2 into one string
 		$parts = [$this->address1, $this->address2];
@@ -401,19 +401,19 @@ class GFEwayRecurringPayment {
 	}
 
 	/**
-	* clean phone number field value for legacy XML API
-	* @param string $phone
-	* @return string
-	*/
+	 * clean phone number field value for legacy XML API
+	 * @param string $phone
+	 * @return string
+	 */
 	protected static function cleanPhone($phone) {
 		return preg_replace('#[^0-9 +-]#', '', $phone);
 	}
 
 	/**
-	* send the Eway payment request and retrieve and parse the response
-	* @return GFEwayRecurringResponse
-	* @param string $xml Eway payment request as an XML document, per Eway specifications
-	*/
+	 * send the Eway payment request and retrieve and parse the response
+	 * @return GFEwayRecurringResponse
+	 * @param string $xml Eway payment request as an XML document, per Eway specifications
+	 */
 	private function sendPayment($xml) {
 		// use sandbox if not from live website
 		$url = $this->isLiveSite ? self::REALTIME_API_LIVE : self::REALTIME_API_SANDBOX;
@@ -441,30 +441,30 @@ class GFEwayRecurringResponse {
 	#region members
 
 	/**
-	* For a successful transaction "True" is passed and for a failed transaction "False" is passed.
-	* @var boolean
-	*/
+	 * For a successful transaction "True" is passed and for a failed transaction "False" is passed.
+	 * @var boolean
+	 */
 	public $status;
 
 	/**
-	* the error severity, either Error or Warning
-	* @var string max. 16 characters
-	*/
+	 * the error severity, either Error or Warning
+	 * @var string max. 16 characters
+	 */
 	public $errorType;
 
 	/**
-	* the error response returned by the bank
-	* @var string max. 255 characters
-	*/
+	 * the error response returned by the bank
+	 * @var string max. 255 characters
+	 */
 	public $error;
 
 	#endregion
 
 	/**
-	* load Eway response data as XML string
-	*
-	* @param string $response Eway response as a string (hopefully of XML data)
-	*/
+	 * load Eway response data as XML string
+	 *
+	 * @param string $response Eway response as a string (hopefully of XML data)
+	 */
 	public function loadResponseXML($response) {
 		GFEwayPlugin::log_debug(sprintf('%s: Eway says "%s"', __METHOD__, $response));
 

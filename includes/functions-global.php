@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
 }
 
 /**
-* maybe show notice of minimum PHP version failure
-*/
+ * maybe show notice of minimum PHP version failure
+ */
 function gfeway_fail_php_version() {
 	gfeway_load_text_domain();
 
@@ -27,18 +27,18 @@ function gfeway_fail_php_version() {
 }
 
 /**
-* load text translations
-*/
+ * load text translations
+ */
 function gfeway_load_text_domain() {
 	load_plugin_textdomain('gravityforms-eway');
 }
 
 /**
-* replace link placeholders with an external link
-* @param string $template
-* @param string $url
-* @return string
-*/
+ * replace link placeholders with an external link
+ * @param string $template
+ * @param string $url
+ * @return string
+ */
 function gfeway_external_link($template, $url) {
 	$search = array(
 		'{{a}}',
@@ -52,11 +52,11 @@ function gfeway_external_link($template, $url) {
 }
 
 /**
-* replace link placeholders with an internal link
-* @param string $template
-* @param string $url
-* @return string
-*/
+ * replace link placeholders with an internal link
+ * @param string $template
+ * @param string $url
+ * @return string
+ */
 function gfeway_internal_link($template, $url) {
 	$search = array(
 		'{{a}}',

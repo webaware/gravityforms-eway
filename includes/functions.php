@@ -1,20 +1,20 @@
 <?php
 namespace webaware\gfeway;
 
-use \GFCommon;
-use \GFEwayException;
-use \GFEwayCurlException;
+use GFCommon;
+use GFEwayException;
+use GFEwayCurlException;
 
 if (!defined('ABSPATH')) {
 	exit;
 }
 
 /**
-* compare Gravity Forms version against target
-* @param string $target
-* @param string $operator
-* @return bool
-*/
+ * compare Gravity Forms version against target
+ * @param string $target
+ * @param string $operator
+ * @return bool
+ */
 function gform_version_compare($target, $operator) {
 	if (class_exists('GFCommon', false)) {
 		return version_compare(GFCommon::$version, $target, $operator);
@@ -24,18 +24,18 @@ function gform_version_compare($target, $operator) {
 }
 
 /**
-* test whether the minimum required Gravity Forms is installed / activated
-* @return bool
-*/
+ * test whether the minimum required Gravity Forms is installed / activated
+ * @return bool
+ */
 function has_required_gravityforms() {
 	return gform_version_compare(GFEWAY_MIN_VERSION_GF, '>=');
 }
 
 /**
-* get the customer's IP address dynamically from server variables
-* @param bool $is_test_site
-* @return string
-*/
+ * get the customer's IP address dynamically from server variables
+ * @param bool $is_test_site
+ * @return string
+ */
 function get_customer_IP($is_test_site) {
 	$ip = '';
 
@@ -65,24 +65,24 @@ function get_customer_IP($is_test_site) {
 }
 
 /**
-* check whether a given string is an IP address
-* @param string $maybeIP
-* @return bool
-*/
+ * check whether a given string is an IP address
+ * @param string $maybeIP
+ * @return bool
+ */
 function is_IP_address($maybeIP) {
 	// check for IPv4 and IPv6 addresses
 	return !!inet_pton($maybeIP);
 }
 
 /**
-* send data via HTTP and return response
-* @deprecated only used now for legacy Direct API and its friends
-* @param string $url
-* @param string $data
-* @param bool $sslVerifyPeer whether to validate the SSL certificate
-* @return string $response
-* @throws GFEwayCurlException
-*/
+ * send data via HTTP and return response
+ * @deprecated only used now for legacy Direct API and its friends
+ * @param string $url
+ * @param string $data
+ * @param bool $sslVerifyPeer whether to validate the SSL certificate
+ * @return string $response
+ * @throws GFEwayCurlException
+ */
 function send_xml_request($url, $data, $sslVerifyPeer = true) {
 	// send data via HTTPS and receive response
 	$response = wp_remote_post($url, [

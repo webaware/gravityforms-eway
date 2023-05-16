@@ -47,8 +47,8 @@ class GfEwayRequires {
 	}
 
 	/**
-	* show plugin page row with requires notices
-	*/
+	 * show plugin page row with requires notices
+	 */
 	public function showPluginRowNotices() {
 		global $wp_list_table;
 
@@ -61,9 +61,9 @@ class GfEwayRequires {
 	}
 
 	/**
-	* test whether we can show admin-related notices
-	* @return bool
-	*/
+	 * test whether we can show admin-related notices
+	 * @return bool
+	 */
 	protected function canShowAdminNotices() {
 		global $hook_suffix;
 

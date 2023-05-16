@@ -5,9 +5,9 @@ if (!defined('ABSPATH')) {
 }
 
 /**
-* Class for dealing with an Eway Rapid API payment
-* @link https://eway.io/api-v3/
-*/
+ * Class for dealing with an Eway Rapid API payment
+ * @link https://eway.io/api-v3/
+ */
 class GFEwayRapidAPI {
 
 	#region "constants"
@@ -37,45 +37,45 @@ class GFEwayRapidAPI {
 	#region "connection specific members"
 
 	/**
-	* use Eway sandbox
-	* @var boolean
-	*/
+	 * use Eway sandbox
+	 * @var boolean
+	 */
 	public $useSandbox;
 
 	/**
-	* capture payment (alternative is just authorise, no capture)
-	* @var boolean
-	*/
+	 * capture payment (alternative is just authorise, no capture)
+	 * @var boolean
+	 */
 	public $capture;
 
 	/**
-	* default TRUE, whether to validate the remote SSL certificate
-	* @var boolean
-	*/
+	 * default TRUE, whether to validate the remote SSL certificate
+	 * @var boolean
+	 */
 	public $sslVerifyPeer;
 
 	/**
-	* API key
-	* @var string
-	*/
+	 * API key
+	 * @var string
+	 */
 	public $apiKey;
 
 	/**
-	* API password
-	* @var string
-	*/
+	 * API password
+	 * @var string
+	 */
 	public $apiPassword;
 
 	/**
-	* Beagle: IP address of purchaser (from REMOTE_ADDR)
-	* @var string max. 50 characters
-	*/
+	 * Beagle: IP address of purchaser (from REMOTE_ADDR)
+	 * @var string max. 50 characters
+	 */
 	public $customerIP;
 
 	/**
-	* ID of device or application processing the transaction
-	* @var string max. 50 characters
-	*/
+	 * ID of device or application processing the transaction
+	 * @var string max. 50 characters
+	 */
 	public $deviceID;
 
 	#endregion // "connection specific members"
@@ -83,199 +83,199 @@ class GFEwayRapidAPI {
 	#region "payment specific members"
 
 	/**
-	* action to perform: one of the METHOD_* values
-	* @var string
-	*/
+	 * action to perform: one of the METHOD_* values
+	 * @var string
+	 */
 	public $method;
 
 	/**
-	* a unique transaction number from your site
-	* @var string max. 12 characters
-	*/
+	 * a unique transaction number from your site
+	 * @var string max. 12 characters
+	 */
 	public $transactionNumber;
 
 	/**
-	* an invoice reference to track by (NB: see transactionNumber which is intended for invoice number or similar)
-	* @var string max. 50 characters
-	*/
+	 * an invoice reference to track by (NB: see transactionNumber which is intended for invoice number or similar)
+	 * @var string max. 50 characters
+	 */
 	public $invoiceReference;
 
 	/**
-	* description of what is being purchased / paid for
-	* @var string max. 64 characters
-	*/
+	 * description of what is being purchased / paid for
+	 * @var string max. 64 characters
+	 */
 	public $invoiceDescription;
 
 	/**
-	* total amount of payment, in dollars and cents as a floating-point number (will be converted to just cents for transmission)
-	* @var float
-	*/
+	 * total amount of payment, in dollars and cents as a floating-point number (will be converted to just cents for transmission)
+	 * @var float
+	 */
 	public $amount;
 
 	/**
-	* ISO 4217 currency code
-	* @var string 3 characters in uppercase
-	*/
+	 * ISO 4217 currency code
+	 * @var string 3 characters in uppercase
+	 */
 	public $currencyCode;
 
 	// customer and billing details
 
 	/**
-	* customer's title
-	* @var string max. 5 characters
-	*/
+	 * customer's title
+	 * @var string max. 5 characters
+	 */
 	public $title;
 
 	/**
-	* customer's first name
-	* @var string max. 50 characters
-	*/
+	 * customer's first name
+	 * @var string max. 50 characters
+	 */
 	public $firstName;
 
 	/**
-	* customer's last name
-	* @var string max. 50 characters
-	*/
+	 * customer's last name
+	 * @var string max. 50 characters
+	 */
 	public $lastName;
 
 	/**
-	* customer's company name
-	* @var string max. 50 characters
-	*/
+	 * customer's company name
+	 * @var string max. 50 characters
+	 */
 	public $companyName;
 
 	/**
-	* customer's job description (e.g. position)
-	* @var string max. 50 characters
-	*/
+	 * customer's job description (e.g. position)
+	 * @var string max. 50 characters
+	 */
 	public $jobDescription;
 
 	/**
-	* customer's address line 1
-	* @var string max. 50 characters
-	*/
+	 * customer's address line 1
+	 * @var string max. 50 characters
+	 */
 	public $address1;
 
 	/**
-	* customer's address line 2
-	* @var string max. 50 characters
-	*/
+	 * customer's address line 2
+	 * @var string max. 50 characters
+	 */
 	public $address2;
 
 	/**
-	* customer's suburb/city/town
-	* @var string max. 50 characters
-	*/
+	 * customer's suburb/city/town
+	 * @var string max. 50 characters
+	 */
 	public $suburb;
 
 	/**
-	* customer's state/province
-	* @var string max. 50 characters
-	*/
+	 * customer's state/province
+	 * @var string max. 50 characters
+	 */
 	public $state;
 
 	/**
-	* customer's postcode
-	* @var string max. 30 characters
-	*/
+	 * customer's postcode
+	 * @var string max. 30 characters
+	 */
 	public $postcode;
 
 	/**
-	* customer's country code
-	* @var string 2 characters lowercase
-	*/
+	 * customer's country code
+	 * @var string 2 characters lowercase
+	 */
 	public $country;
 
 	/**
-	* customer's email address
-	* @var string max. 50 characters
-	*/
+	 * customer's email address
+	 * @var string max. 50 characters
+	 */
 	public $emailAddress;
 
 	/**
-	* customer's phone number
-	* @var string max. 32 characters
-	*/
+	 * customer's phone number
+	 * @var string max. 32 characters
+	 */
 	public $phone;
 
 	/**
-	* customer's mobile phone number
-	* @var string max. 32 characters
-	*/
+	 * customer's mobile phone number
+	 * @var string max. 32 characters
+	 */
 	public $mobile;
 
 	/**
-	* customer's fax number
-	* @var string max. 32 characters
-	*/
+	 * customer's fax number
+	 * @var string max. 32 characters
+	 */
 	public $fax;
 
 	/**
-	* customer's website URL
-	* @var string max. 512 characters
-	*/
+	 * customer's website URL
+	 * @var string max. 512 characters
+	 */
 	public $website;
 
 	/**
-	* comments about the customer
-	* @var string max. 255 characters
-	*/
+	 * comments about the customer
+	 * @var string max. 255 characters
+	 */
 	public $comments;
 
 	// card details
 
 	/**
-	* name on credit card
-	* @var string max. 50 characters
-	*/
+	 * name on credit card
+	 * @var string max. 50 characters
+	 */
 	public $cardHoldersName;
 
 	/**
-	* credit card number, with no spaces
-	* @var string max. 50 characters
-	*/
+	 * credit card number, with no spaces
+	 * @var string max. 50 characters
+	 */
 	public $cardNumber;
 
 	/**
-	* month of expiry, numbered from 1=January
-	* @var integer max. 2 digits
-	*/
+	 * month of expiry, numbered from 1=January
+	 * @var integer max. 2 digits
+	 */
 	public $cardExpiryMonth;
 
 	/**
-	* year of expiry
-	* @var integer will be truncated to 2 digits, can accept 4 digits
-	*/
+	 * year of expiry
+	 * @var integer will be truncated to 2 digits, can accept 4 digits
+	 */
 	public $cardExpiryYear;
 
 	/**
-	* start month, numbered from 1=January
-	* @var integer max. 2 digits
-	*/
+	 * start month, numbered from 1=January
+	 * @var integer max. 2 digits
+	 */
 	public $cardStartMonth;
 
 	/**
-	* start year
-	* @var integer will be truncated to 2 digits, can accept 4 digits
-	*/
+	 * start year
+	 * @var integer will be truncated to 2 digits, can accept 4 digits
+	 */
 	public $cardStartYear;
 
 	/**
-	* card issue number
-	* @var string
-	*/
+	 * card issue number
+	 * @var string
+	 */
 	public $cardIssueNumber;
 
 	/**
-	* CVN (Creditcard Verification Number) for verifying physical card is held by buyer
-	* @var string max. 3 or 4 characters (depends on type of card)
-	*/
+	 * CVN (Creditcard Verification Number) for verifying physical card is held by buyer
+	 * @var string max. 3 or 4 characters (depends on type of card)
+	 */
 	public $cardVerificationNumber;
 
 	/**
-	* optional additional information for use in shopping carts, etc.
-	* @var array[string] max. 254 characters each
-	*/
+	 * optional additional information for use in shopping carts, etc.
+	 * @var array[string] max. 254 characters each
+	 */
 	public $options = [];
 
 	#endregion "payment specific members"
@@ -283,12 +283,12 @@ class GFEwayRapidAPI {
 	#endregion "members"
 
 	/**
-	* populate members with defaults, and set account and environment information
-	* @param string $apiKey Eway API key
-	* @param string $apiPassword Eway API password
-	* @param boolean $useSandbox use Eway sandbox
-	* @param boolean $capture capture payment now, or authorise for later capture
-	*/
+	 * populate members with defaults, and set account and environment information
+	 * @param string $apiKey Eway API key
+	 * @param string $apiPassword Eway API password
+	 * @param boolean $useSandbox use Eway sandbox
+	 * @param boolean $capture capture payment now, or authorise for later capture
+	 */
 	public function __construct($apiKey, $apiPassword, $useSandbox = true, $capture = true) {
 		$this->apiKey		= $apiKey;
 		$this->apiPassword	= $apiPassword;
@@ -297,9 +297,9 @@ class GFEwayRapidAPI {
 	}
 
 	/**
-	* process a payment against Eway; throws exception on error with error described in exception message.
-	* @throws GFEwayException
-	*/
+	 * process a payment against Eway; throws exception on error with error described in exception message.
+	 * @throws GFEwayException
+	 */
 	public function processPayment() {
 		$this->validate();
 		$json = $this->getPayment();
@@ -307,8 +307,8 @@ class GFEwayRapidAPI {
 	}
 
 	/**
-	* validate the data members to ensure that sufficient and valid information has been given
-	*/
+	 * validate the data members to ensure that sufficient and valid information has been given
+	 */
 	protected function validate() {
 		$errors = [];
 
@@ -376,9 +376,9 @@ class GFEwayRapidAPI {
 	}
 
 	/**
-	* create JSON request document for payment
-	* @return string
-	*/
+	 * create JSON request document for payment
+	 * @return string
+	 */
 	public function getPayment() {
 		$request = new stdClass();
 
@@ -401,9 +401,9 @@ class GFEwayRapidAPI {
 	}
 
 	/**
-	* build Customer record for request
-	* @return stdClass
-	*/
+	 * build Customer record for request
+	 * @return stdClass
+	 */
 	protected function getCustomerRecord() {
 		$record = new stdClass;
 
@@ -451,11 +451,11 @@ class GFEwayRapidAPI {
 	}
 
 	/**
-	* build CardDetails record for request
-	* NB: TODO: does not currently handle StartMonth, StartYear, IssueNumber (used in UK)
-	* NB: card number and CVN can be very lengthy encrypted values
-	* @return stdClass
-	*/
+	 * build CardDetails record for request
+	 * NB: TODO: does not currently handle StartMonth, StartYear, IssueNumber (used in UK)
+	 * NB: card number and CVN can be very lengthy encrypted values
+	 * @return stdClass
+	 */
 	protected function getCardDetailsRecord() {
 		$record = new stdClass;
 
@@ -469,9 +469,9 @@ class GFEwayRapidAPI {
 	}
 
 	/**
-	* build Payment record for request
-	* @return stdClass
-	*/
+	 * build Payment record for request
+	 * @return stdClass
+	 */
 	protected function getPaymentRecord() {
 		$record = new stdClass;
 
@@ -485,9 +485,9 @@ class GFEwayRapidAPI {
 	}
 
 	/**
-	* build Options record for request
-	* @return array
-	*/
+	 * build Options record for request
+	 * @return array
+	 */
 	protected function getOptionsRecord() {
 		$options = [];
 
@@ -501,11 +501,11 @@ class GFEwayRapidAPI {
 	}
 
 	/**
-	* send the Eway payment request and retrieve and parse the response
-	* @param string $request Eway payment request as a JSON document, per Eway specifications
-	* @return GFEwayRapidAPIResponse
-	* @throws GFEwayException
-	*/
+	 * send the Eway payment request and retrieve and parse the response
+	 * @param string $request Eway payment request as a JSON document, per Eway specifications
+	 * @return GFEwayRapidAPIResponse
+	 * @throws GFEwayException
+	 */
 	protected function sendPaymentDirect($request) {
 		// select host and endpoint
 		$host		= $this->useSandbox ? self::API_HOST_SANDBOX : self::API_HOST_LIVE;
@@ -553,11 +553,11 @@ class GFEwayRapidAPI {
 	}
 
 	/**
-	* format amount per currency
-	* @param float $amount
-	* @param string $currencyCode
-	* @return string
-	*/
+	 * format amount per currency
+	 * @param float $amount
+	 * @param string $currencyCode
+	 * @return string
+	 */
 	protected static function formatCurrency($amount, $currencyCode) {
 		switch ($currencyCode) {
 
@@ -576,10 +576,10 @@ class GFEwayRapidAPI {
 	}
 
 	/**
-	* sanitise the customer title, to avoid error V6058: Invalid Customer Title
-	* @param string $title
-	* @return string
-	*/
+	 * sanitise the customer title, to avoid error V6058: Invalid Customer Title
+	 * @param string $title
+	 * @return string
+	 */
 	protected static function sanitiseCustomerTitle($title) {
 		$valid = [
 			'mr'			=> 'Mr.',

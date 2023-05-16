@@ -8,8 +8,8 @@ if (!defined('ABSPATH')) {
 }
 
 /**
-* class for managing the plugin
-*/
+ * class for managing the plugin
+ */
 class GFEwayPlugin {
 
 	public $options;                                    // array of plugin options
@@ -22,9 +22,9 @@ class GFEwayPlugin {
 	const MIN_VERSION_GF	= '1.9.15';
 
 	/**
-	* static method for getting the instance of this singleton object
-	* @return self
-	*/
+	 * static method for getting the instance of this singleton object
+	 * @return self
+	 */
 	public static function getInstance() {
 		static $instance = null;
 
@@ -41,16 +41,16 @@ class GFEwayPlugin {
 	private function __construct() { }
 
 	/**
-	* initialise plugin
-	*/
+	 * initialise plugin
+	 */
 	public function addHooks() {
 		add_action('plugins_loaded', [$this, 'load']);
 		add_action('init', 'gfeway_load_text_domain');
 	}
 
 	/**
-	* handle the plugins_loaded action
-	*/
+	 * handle the plugins_loaded action
+	 */
 	public function load() {
 		// grab options, setting new defaults for any that are missing
 		$defaults = [
@@ -102,9 +102,9 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* register and enqueue required scripts
-	* NB: must happen after Gravity Forms registers scripts
-	*/
+	 * register and enqueue required scripts
+	 * NB: must happen after Gravity Forms registers scripts
+	 */
 	public function registerScripts() {
 		$min = SCRIPT_DEBUG ? '' : '.min';
 		wp_register_script('eway-ecrypt', "https://secure.ewaypayments.com/scripts/eCrypt$min.js", [], null, true);
@@ -117,10 +117,10 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* enqueue additional scripts if required by form
-	* @param array $form
-	* @param boolean $ajax
-	*/
+	 * enqueue additional scripts if required by form
+	 * @param array $form
+	 * @param boolean $ajax
+	 */
 	public function gformEnqueueScripts($form, $ajax) {
 		if ($this->canEncryptCardDetails($form)) {
 			wp_enqueue_script('gfeway-ecrypt');
@@ -129,8 +129,8 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* register inline scripts for client-side encryption if form posts with AJAX
-	*/
+	 * register inline scripts for client-side encryption if form posts with AJAX
+	 */
 	public function ecryptInitScript() {
 		// when previewing form, will not have printed footer scripts
 		if (!wp_script_is('gfeway-ecrypt', 'done')) {
@@ -139,10 +139,10 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* check current form for information (front-end and admin)
-	* @param array $form
-	* @return array
-	*/
+	 * check current form for information (front-end and admin)
+	 * @param array $form
+	 * @return array
+	 */
 	public function gformPreRenderSniff($form) {
 		// test whether form has a credit card field
 		$this->formHasCcField = self::isEwayForm($form['id'], $form['fields']);
@@ -151,10 +151,10 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* set form modifiers for Eway client side encryption
-	* @param array $form
-	* @return array
-	*/
+	 * set form modifiers for Eway client side encryption
+	 * @param array $form
+	 * @return array
+	 */
 	public function ecryptModifyForm($form) {
 		if ($this->canEncryptCardDetails($form)) {
 			// inject Eway Client Side Encryption
@@ -185,11 +185,11 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* stop injecting Eway Client Side Encryption
-	* @param string $html form html
-	* @param array $form
-	* @return string
-	*/
+	 * stop injecting Eway Client Side Encryption
+	 * @param string $html form html
+	 * @param array $form
+	 * @return string
+	 */
 	public function ecryptEndRender($html, $form) {
 		remove_filter('gform_form_tag', [$this, 'ecryptFormTag'], 10, 2);
 		remove_filter('gform_field_content', [$this, 'ecryptCcField'], 10, 5);
@@ -198,11 +198,11 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* inject Eway Client Side Encryption into form tag
-	* @param string $tag
-	* @param array $form
-	* @return string
-	*/
+	 * inject Eway Client Side Encryption into form tag
+	 * @param string $tag
+	 * @param array $form
+	 * @return string
+	 */
 	public function ecryptFormTag($tag, $form) {
 		$attr = sprintf('data-gfeway-encrypt-key="%s"', esc_attr($this->ecryptKey));
 		$tag = str_replace('<form ', "<form $attr ", $tag);
@@ -211,14 +211,14 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* inject Eway Client Side Encryption into credit card field
-	* @param string $field_content
-	* @param GF_Field $field
-	* @param string $value
-	* @param int $zero
-	* @param int $form_id
-	* @return string
-	*/
+	 * inject Eway Client Side Encryption into credit card field
+	 * @param string $field_content
+	 * @param GF_Field $field
+	 * @param string $value
+	 * @param int $zero
+	 * @param int $form_id
+	 * @return string
+	 */
 	public function ecryptCcField($field_content, $field, $value, $zero, $form_id) {
 		if (GFFormsModel::get_input_type($field) === 'creditcard') {
 			$field_id    = "input_{$form_id}_{$field->id}";
@@ -234,10 +234,10 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* put something back into Credit Card field inputs, to enable validation when using Eway Client Side Encryption
-	* @param array $form
-	* @return array
-	*/
+	 * put something back into Credit Card field inputs, to enable validation when using Eway Client Side Encryption
+	 * @param array $form
+	 * @return array
+	 */
 	public function ecryptPreValidation($form) {
 		if ($this->canEncryptCardDetails($form)) {
 
@@ -266,14 +266,14 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* change the credit card field value so that it doesn't imply an incorrect card type when using Client Side Encryption
-	* @param string $value
-	* @param array $lead
-	* @param GF_Field $field
-	* @param array $form
-	* @param string $input_id
-	* @return string
-	*/
+	 * change the credit card field value so that it doesn't imply an incorrect card type when using Client Side Encryption
+	 * @param string $value
+	 * @param array $lead
+	 * @param GF_Field $field
+	 * @param array $form
+	 * @param string $input_id
+	 * @return string
+	 */
 	public function ecryptSaveCreditCard($value, $lead, $field, $form, $input_id) {
 		switch (substr($input_id, -2, 2)) {
 
@@ -294,10 +294,10 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* find a test card number for a supported credit card, for faking card number validation when encrypting card details
-	* @param array $supportedCards
-	* @return string
-	*/
+	 * find a test card number for a supported credit card, for faking card number validation when encrypting card details
+	 * @param array $supportedCards
+	 * @return string
+	 */
 	protected function getTestCardNumber($supportedCards) {
 		if (empty($supportedCards)) {
 			$cardType = 'visa';
@@ -317,10 +317,10 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* process a form validation filter hook; if last page and has credit card field and total, attempt to bill it
-	* @param array $data an array with elements is_valid (boolean) and form (array of form elements)
-	* @return array
-	*/
+	 * process a form validation filter hook; if last page and has credit card field and total, attempt to bill it
+	 * @param array $data an array with elements is_valid (boolean) and form (array of form elements)
+	 * @return array
+	 */
 	public function gformValidation($data) {
 
 		// make sure all other validations passed
@@ -385,10 +385,10 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* check whether this form entry's unique ID has already been used; if so, we've already done a payment attempt.
-	* @param array $form
-	* @return boolean
-	*/
+	 * check whether this form entry's unique ID has already been used; if so, we've already done a payment attempt.
+	 * @param array $form
+	 * @return boolean
+	 */
 	protected function hasFormBeenProcessed($form) {
 		$unique_id = GFFormsModel::get_form_unique_id($form['id']);
 
@@ -407,11 +407,11 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* get payment object
-	* @param string $type either 'single' or 'recurring'
-	* @return object
-	* @throws GFEwayException
-	*/
+	 * get payment object
+	 * @param string $type either 'single' or 'recurring'
+	 * @return object
+	 * @throws GFEwayException
+	 */
 	protected function getPaymentRequestor($type) {
 		$eway = null;
 		$isLiveSite = !$this->options['useTest'];
@@ -456,11 +456,11 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* process regular one-off payment
-	* @param array $data an array with elements is_valid (boolean) and form (array of form elements)
-	* @param GFEwayFormData $formData pre-parsed data from $data
-	* @return array
-	*/
+	 * process regular one-off payment
+	 * @param array $data an array with elements is_valid (boolean) and form (array of form elements)
+	 * @param GFEwayFormData $formData pre-parsed data from $data
+	 * @return array
+	 */
 	protected function processSinglePayment($data, $formData) {
 		try {
 			$eway = $this->getPaymentRequestor('single');
@@ -580,11 +580,11 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* process recurring payments
-	* @param array $data an array with elements is_valid (boolean) and form (array of form elements)
-	* @param GFEwayFormData $formData pre-parsed data from $data
-	* @return array
-	*/
+	 * process recurring payments
+	 * @param array $data an array with elements is_valid (boolean) and form (array of form elements)
+	 * @param GFEwayFormData $formData pre-parsed data from $data
+	 * @return array
+	 */
 	protected function processRecurringPayment($data, $formData) {
 		try {
 			$eway = $this->getPaymentRequestor('recurring');
@@ -675,11 +675,11 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* form entry post-submission processing
-	* @param array $entry
-	* @param array $form
-	* @return array
-	*/
+	 * form entry post-submission processing
+	 * @param array $entry
+	 * @param array $form
+	 * @return array
+	 */
 	public function gformEntryPostSave($entry, $form) {
 		if (!empty($this->txResult['payment_status'])) {
 
@@ -711,13 +711,13 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* add custom merge tags
-	* @param array $merge_tags
-	* @param int $form_id
-	* @param array $fields
-	* @param int $element_id
-	* @return array
-	*/
+	 * add custom merge tags
+	 * @param array $merge_tags
+	 * @param int $form_id
+	 * @param array $fields
+	 * @param int $element_id
+	 * @return array
+	 */
 	public function gformCustomMergeTags($merge_tags, $form_id, $fields, $element_id) {
 		if ($fields && self::isEwayForm($form_id, $fields)) {
 			$tags = array_flip(wp_list_pluck($merge_tags, 'tag'));
@@ -742,16 +742,16 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* replace custom merge tags
-	* @param string $text
-	* @param array $form
-	* @param array $lead
-	* @param bool $url_encode
-	* @param bool $esc_html
-	* @param bool $nl2br
-	* @param string $format
-	* @return string
-	*/
+	 * replace custom merge tags
+	 * @param string $text
+	 * @param array $form
+	 * @param array $lead
+	 * @param bool $url_encode
+	 * @param bool $esc_html
+	 * @param bool $nl2br
+	 * @param string $format
+	 * @return string
+	 */
 	public function gformReplaceMergeTags($text, $form, $lead, $url_encode, $esc_html, $nl2br, $format) {
 		// check for invalid calls, e.g. Gravity Forms User Registration login form widget
 		if (empty($form) || empty($lead)) {
@@ -813,11 +813,11 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* activate and configure custom entry meta
-	* @param array $entry_meta
-	* @param int $form_id
-	* @return array
-	*/
+	 * activate and configure custom entry meta
+	 * @param array $entry_meta
+	 * @param int $form_id
+	 * @return array
+	 */
 	public function gformEntryMeta($entry_meta, $form_id) {
 
 		$entry_meta['payment_gateway'] = [
@@ -842,10 +842,10 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* look at config to see whether client-side encryption is possible
-	* @param array $form
-	* @return bool
-	*/
+	 * look at config to see whether client-side encryption is possible
+	 * @param array $form
+	 * @return bool
+	 */
 	protected function canEncryptCardDetails($form) {
 		$creds = $this->getEwayCredentials();
 
@@ -865,11 +865,11 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* see if form is an Eway credit card form
-	* @param int $form_id
-	* @param array $fields
-	* @return bool
-	*/
+	 * see if form is an Eway credit card form
+	 * @param int $form_id
+	 * @param array $fields
+	 * @return bool
+	 */
 	public static function isEwayForm($form_id, $fields) {
 		static $mapFormsHaveCC = [];
 
@@ -889,11 +889,11 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* check form to see if it has a field of specified type
-	* @param array $fields array of fields
-	* @param string $type name of field type
-	* @return boolean
-	*/
+	 * check form to see if it has a field of specified type
+	 * @param array $fields array of fields
+	 * @param string $type name of field type
+	 * @return boolean
+	 */
 	public static function hasFieldType($fields, $type) {
 		if (is_array($fields)) {
 			foreach ($fields as $field) {
@@ -906,9 +906,9 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* get Eway credentials
-	* @return string
-	*/
+	 * get Eway credentials
+	 * @return string
+	 */
 	protected function getEwayCredentials() {
 		// get defaults from add-on settings
 		$creds = [
@@ -933,11 +933,11 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* get nominated error message, checking for custom error message in WP options
-	* @param string $errName the fixed name for the error message (a constant)
-	* @param boolean $useDefault whether to return the default, or check for a custom message
-	* @return string
-	*/
+	 * get nominated error message, checking for custom error message in WP options
+	 * @param string $errName the fixed name for the error message (a constant)
+	 * @param boolean $useDefault whether to return the default, or check for a custom message
+	 * @return string
+	 */
 	public function getErrMsg($errName, $useDefault = false) {
 		static $messages = false;
 
@@ -972,10 +972,10 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* enable Gravity Forms Logging Add-On support for this plugin
-	* @param array $plugins
-	* @return array
-	*/
+	 * enable Gravity Forms Logging Add-On support for this plugin
+	 * @param array $plugins
+	 * @return array
+	 */
 	public function enableLogging($plugins) {
 		$plugins['gfeway'] = __('Gravity Forms Eway', 'gravityforms-eway');
 
@@ -983,9 +983,9 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* write an error log via the Gravity Forms Logging Add-On
-	* @param string $message
-	*/
+	 * write an error log via the Gravity Forms Logging Add-On
+	 * @param string $message
+	 */
 	public static function log_error($message) {
 		if (class_exists('GFLogging')) {
 			GFLogging::include_logger();
@@ -994,9 +994,9 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* write an debug message log via the Gravity Forms Logging Add-On
-	* @param string $message
-	*/
+	 * write an debug message log via the Gravity Forms Logging Add-On
+	 * @param string $message
+	 */
 	public static function log_debug($message) {
 		if (class_exists('GFLogging')) {
 			GFLogging::include_logger();
@@ -1005,10 +1005,10 @@ class GFEwayPlugin {
 	}
 
 	/**
-	* sanitise a logging message to obfuscate credit card details before storing in plain text!
-	* @param string $message
-	* @return string
-	*/
+	 * sanitise a logging message to obfuscate credit card details before storing in plain text!
+	 * @param string $message
+	 * @return string
+	 */
 	protected static function sanitiseLog($message) {
 		// obfuscate anything that looks like credit card number: a string of at least 12 numeric digits
 		$message = preg_replace('#[0-9]{8,}([0-9]{4})#', '************$1', $message);

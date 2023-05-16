@@ -19,14 +19,14 @@ const GFEWAY_FIELD_RECURRING				= 'gfewayrecurring';
 const GFEWAY_MIN_VERSION_GF					= '1.9.15';
 
 /**
-* custom exception types
-*/
+ * custom exception types
+ */
 class GFEwayException extends Exception {}
 class GFEwayCurlException extends Exception {}
 
 /**
-* kick start the plugin
-*/
+ * kick start the plugin
+ */
 add_action('plugins_loaded', function() {
 	require GFEWAY_PLUGIN_ROOT . 'includes/functions.php';
 	require GFEWAY_PLUGIN_ROOT . 'includes/class.GFEwayPlugin.php';
@@ -34,9 +34,9 @@ add_action('plugins_loaded', function() {
 }, 5);
 
 /**
-* autoload classes as/when needed
-* @param string $class_name name of class to attempt to load
-*/
+ * autoload classes as/when needed
+ * @param string $class_name name of class to attempt to load
+ */
 spl_autoload_register(function($class_name) {
 	static $classMap = [
 		'GFEwayPayment'						=> 'includes/class.GFEwayPayment.php',

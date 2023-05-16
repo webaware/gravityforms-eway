@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
 }
 
 /**
-* class for managing form data
-*/
+ * class for managing form data
+ */
 class GFEwayFormData {
 
 	public $total					= 0;
@@ -35,9 +35,9 @@ class GFEwayFormData {
 	private $hasPurchaseFieldsFlag	= false;
 
 	/**
-	* initialise instance
-	* @param array $form
-	*/
+	 * initialise instance
+	 * @param array $form
+	 */
 	public function __construct(&$form) {
 		// check for last page
 		$this->isLastPageFlag = GFFormDisplay::is_last_page($form);
@@ -53,9 +53,9 @@ class GFEwayFormData {
 	}
 
 	/**
-	* load the form data we care about from the form array
-	* @param array $form
-	*/
+	 * load the form data we care about from the form array
+	 * @param array $form
+	 */
 	private function loadForm(&$form) {
 		foreach ($form['fields'] as &$field) {
 			$id = $field->id;
@@ -140,34 +140,34 @@ class GFEwayFormData {
 	}
 
 	/**
-	* clean up credit card number, removing spaces and dashes, so that it should only be digits if correctly submitted
-	* @param string $ccNumber
-	* @return string
-	*/
+	 * clean up credit card number, removing spaces and dashes, so that it should only be digits if correctly submitted
+	 * @param string $ccNumber
+	 * @return string
+	 */
 	private static function cleanCcNumber($ccNumber) {
 		return strtr($ccNumber, [' ' => '', '-' => '']);
 	}
 
 	/**
-	* check whether form can be validated and credit card submitted
-	* @return boolean
-	*/
+	 * check whether form can be validated and credit card submitted
+	 * @return boolean
+	 */
 	public function canValidatePayment() {
 		return $this->isLastPageFlag && !$this->failedHoneypot && !empty($this->ccField) && !$this->isCcHiddenFlag && rgpost('action') !== 'heartbeat';
 	}
 
 	/**
-	* check whether form has any product fields or a recurring payment field (because CC needs something to bill against)
-	* @return boolean
-	*/
+	 * check whether form has any product fields or a recurring payment field (because CC needs something to bill against)
+	 * @return boolean
+	 */
 	public function hasPurchaseFields() {
 		return $this->hasPurchaseFieldsFlag || !!$this->recurring;
 	}
 
 	/**
-	* check whether form a recurring payment field
-	* @return boolean
-	*/
+	 * check whether form a recurring payment field
+	 * @return boolean
+	 */
 	public function hasRecurringPayments() {
 		return !!$this->recurring;
 	}

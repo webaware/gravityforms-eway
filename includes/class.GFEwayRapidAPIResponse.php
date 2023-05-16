@@ -5,85 +5,85 @@ if (!defined('ABSPATH')) {
 }
 
 /**
-* Class for dealing with an Eway Rapid API response
-* @link https://eway.io/api-v3/
-*/
+ * Class for dealing with an Eway Rapid API response
+ * @link https://eway.io/api-v3/
+ */
 class GFEwayRapidAPIResponse {
 
 	#region members
 
 	/**
-	* bank authorisation code
-	* @var string
-	*/
+	 * bank authorisation code
+	 * @var string
+	 */
 	public $AuthorisationCode;
 
 	/**
-	* 2-digit bank response code
-	* @var string
-	*/
+	 * 2-digit bank response code
+	 * @var string
+	 */
 	public $ResponseCode;
 
 	/**
-	* array of codes describing the result (including Beagle failure codes)
-	* @var array
-	*/
+	 * array of codes describing the result (including Beagle failure codes)
+	 * @var array
+	 */
 	public $ResponseMessage;
 
 	/**
-	* Eway transacation ID
-	* @var string
-	*/
+	 * Eway transacation ID
+	 * @var string
+	 */
 	public $TransactionID;
 
 	/**
-	* Eway transaction status: true for success
-	* @var boolean
-	*/
+	 * Eway transaction status: true for success
+	 * @var boolean
+	 */
 	public $TransactionStatus;
 
 	/**
-	* Eway transaction type
-	* @var string
-	*/
+	 * Eway transaction type
+	 * @var string
+	 */
 	public $TransactionType;
 
 	/**
-	* Beagle fraud detection score
-	* @var string
-	*/
+	 * Beagle fraud detection score
+	 * @var string
+	 */
 	public $BeagleScore;
 
 	/**
-	* verification results object
-	* @var object
-	*/
+	 * verification results object
+	 * @var object
+	 */
 	public $Verification;
 
 	/**
-	* customer details object (includes card details object)
-	* @var object
-	*/
+	 * customer details object (includes card details object)
+	 * @var object
+	 */
 	public $Customer;
 
 	/**
-	* payment details object
-	* @var object
-	*/
+	 * payment details object
+	 * @var object
+	 */
 	public $Payment;
 
 	/**
-	* a list of errors
-	* @var array
-	*/
+	 * a list of errors
+	 * @var array
+	 */
 	public $Errors;
 
 	#endregion
 
 	/**
-	* load Eway response data as JSON string
-	* @param string $json Eway response as a string (hopefully of JSON data)
-	*/
+	 * load Eway response data as JSON string
+	 * @param string $json Eway response as a string (hopefully of JSON data)
+	 */
 	public function loadResponse($json) {
 		$response = json_decode($json);
 
@@ -117,10 +117,10 @@ class GFEwayRapidAPIResponse {
 	}
 
 	/**
-	* separate response codes into individual errors
-	* @param string $codes
-	* @return array
-	*/
+	 * separate response codes into individual errors
+	 * @param string $codes
+	 * @return array
+	 */
 	protected function getResponseDetails($codes) {
 		$responses = [];
 
@@ -135,10 +135,10 @@ class GFEwayRapidAPIResponse {
 	}
 
 	/**
-	* get description for response code
-	* @param string $code
-	* @return string
-	*/
+	 * get description for response code
+	 * @param string $code
+	 * @return string
+	 */
 	protected function getCodeDescription($code) {
 		// source @link https://github.com/eWAYPayment/eway-rapid-php/blob/master/resource/lang/en.ini
 		// NB: translated into en_US for consistency with base locale

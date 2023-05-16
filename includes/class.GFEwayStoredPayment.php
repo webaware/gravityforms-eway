@@ -3,167 +3,167 @@
 use function webaware\gfeway\send_xml_request;
 
 /**
-* Classes for dealing with Eway stored payments
-*
-* NB: for testing, the only account number recognised is '87654321' and the only card number seen as valid is '4444333322221111'
-*/
+ * Classes for dealing with Eway stored payments
+ *
+ * NB: for testing, the only account number recognised is '87654321' and the only card number seen as valid is '4444333322221111'
+ */
 
 if (!defined('ABSPATH')) {
 	exit;
 }
 
 /**
-* Class for dealing with an Eway stored payment request
-*/
+ * Class for dealing with an Eway stored payment request
+ */
 class GFEwayStoredPayment {
 
 	#region members
 
 	// environment / website specific members
 	/**
-	* NB: Stored Payments use the Direct Payments sandbox; there is no Stored Payments sandbox
-	* @var boolean
-	*/
+	 * NB: Stored Payments use the Direct Payments sandbox; there is no Stored Payments sandbox
+	 * @var boolean
+	 */
 	public $isLiveSite;
 
 	/**
-	* default TRUE, whether to validate the remote SSL certificate
-	* @var boolean
-	*/
+	 * default TRUE, whether to validate the remote SSL certificate
+	 * @var boolean
+	 */
 	public $sslVerifyPeer;
 
 	// payment specific members
 	/**
-	* account name / email address at Eway
-	* @var string max. 8 characters
-	*/
+	 * account name / email address at Eway
+	 * @var string max. 8 characters
+	 */
 	public $accountID;
 
 	/**
-	* an invoice reference to track by (NB: see transactionNumber which is intended for invoice number or similar)
-	* @var string max. 50 characters
-	*/
+	 * an invoice reference to track by (NB: see transactionNumber which is intended for invoice number or similar)
+	 * @var string max. 50 characters
+	 */
 	public $invoiceReference;
 
 	/**
-	* description of what is being purchased / paid for
-	* @var string max. 10000 characters
-	*/
+	 * description of what is being purchased / paid for
+	 * @var string max. 10000 characters
+	 */
 	public $invoiceDescription;
 
 	/**
-	* total amount of payment, in dollars and cents as a floating-point number (will be converted to just cents for transmission)
-	* @var float
-	*/
+	 * total amount of payment, in dollars and cents as a floating-point number (will be converted to just cents for transmission)
+	 * @var float
+	 */
 	public $amount;
 
 	/**
-	* customer's first name
-	* @var string max. 50 characters
-	*/
+	 * customer's first name
+	 * @var string max. 50 characters
+	 */
 	public $firstName;
 
 	/**
-	* customer's last name
-	* @var string max. 50 characters
-	*/
+	 * customer's last name
+	 * @var string max. 50 characters
+	 */
 	public $lastName;
 
 	/**
-	* customer's email address
-	* @var string max. 50 characters
-	*/
+	 * customer's email address
+	 * @var string max. 50 characters
+	 */
 	public $emailAddress;
 
 	/**
-	* customer's address line 1
-	* @var string max. 50 characters
-	*/
+	 * customer's address line 1
+	 * @var string max. 50 characters
+	 */
 	public $address1;
 
 	/**
-	* customer's address line 2
-	* @var string max. 50 characters
-	*/
+	 * customer's address line 2
+	 * @var string max. 50 characters
+	 */
 	public $address2;
 
 	/**
-	* customer's postcode
-	* @var string max. 6 characters
-	*/
+	 * customer's postcode
+	 * @var string max. 6 characters
+	 */
 	public $postcode;
 
 	/**
-	* customer's suburb/city/town
-	* @var string max. 50 characters
-	*/
+	 * customer's suburb/city/town
+	 * @var string max. 50 characters
+	 */
 	public $suburb;
 
 	/**
-	* customer's state/province
-	* @var string max. 50 characters
-	*/
+	 * customer's state/province
+	 * @var string max. 50 characters
+	 */
 	public $state;
 
 	/**
-	* country name
-	* @var string
-	*/
+	 * country name
+	 * @var string
+	 */
 	public $countryName;
 
 	/**
-	* country code for billing address
-	* @var string 2 characters
-	*/
+	 * country code for billing address
+	 * @var string 2 characters
+	 */
 	public $country;
 
 	/**
-	* name on credit card
-	* @var string max. 50 characters
-	*/
+	 * name on credit card
+	 * @var string max. 50 characters
+	 */
 	public $cardHoldersName;
 
 	/**
-	* credit card number, with no spaces
-	* @var string max. 20 characters
-	*/
+	 * credit card number, with no spaces
+	 * @var string max. 20 characters
+	 */
 	public $cardNumber;
 
 	/**
-	* month of expiry, numbered from 1=January
-	* @var integer max. 2 digits
-	*/
+	 * month of expiry, numbered from 1=January
+	 * @var integer max. 2 digits
+	 */
 	public $cardExpiryMonth;
 
 	/**
-	* year of expiry
-	* @var integer will be truncated to 2 digits, can accept 4 digits
-	*/
+	 * year of expiry
+	 * @var integer will be truncated to 2 digits, can accept 4 digits
+	 */
 	public $cardExpiryYear;
 
 	/**
-	* CVN (Creditcard Verification Number) for verifying physical card is held by buyer
-	* NB: this is ignored for Stored Payments!
-	* @var string max. 3 or 4 characters (depends on type of card)
-	*/
+	 * CVN (Creditcard Verification Number) for verifying physical card is held by buyer
+	 * NB: this is ignored for Stored Payments!
+	 * @var string max. 3 or 4 characters (depends on type of card)
+	 */
 	public $cardVerificationNumber;
 
 	/**
-	* EwayTrxnNumber - This value is returned to your website.
-	*
-	* You can pass a unique transaction number from your site. You can update and track the status of a transaction when Eway
-	* returns to your site.
-	*
-	* NB. This number is returned as 'ewayTrxnReference', member transactionReference of GFEwayStoredResponse.
-	*
-	* @var string max. 16 characters
-	*/
+	 * EwayTrxnNumber - This value is returned to your website.
+	 *
+	 * You can pass a unique transaction number from your site. You can update and track the status of a transaction when Eway
+	 * returns to your site.
+	 *
+	 * NB. This number is returned as 'ewayTrxnReference', member transactionReference of GFEwayStoredResponse.
+	 *
+	 * @var string max. 16 characters
+	 */
 	public $transactionNumber;
 
 	/**
-	* optional additional information for use in shopping carts, etc.
-	* @var array[string] max. 255 characters, up to 3 elements
-	*/
+	 * optional additional information for use in shopping carts, etc.
+	 * @var array[string] max. 255 characters, up to 3 elements
+	 */
 	public $options = [];
 
 	#endregion
@@ -178,11 +178,11 @@ class GFEwayStoredPayment {
 	#endregion
 
 	/**
-	* populate members with defaults, and set account and environment information
-	*
-	* @param string $accountID Eway account ID
-	* @param boolean $isLiveSite running on the live (production) website
-	*/
+	 * populate members with defaults, and set account and environment information
+	 *
+	 * @param string $accountID Eway account ID
+	 * @param boolean $isLiveSite running on the live (production) website
+	 */
 	public function __construct($accountID, $isLiveSite = false) {
 		$this->sslVerifyPeer	= true;
 		$this->isLiveSite		= $isLiveSite;
@@ -190,8 +190,8 @@ class GFEwayStoredPayment {
 	}
 
 	/**
-	* process a payment against Eway; throws exception on error with error described in exception message.
-	*/
+	 * process a payment against Eway; throws exception on error with error described in exception message.
+	 */
 	public function processPayment() {
 		$this->validate();
 		$xml = $this->getPaymentXML();
@@ -199,8 +199,8 @@ class GFEwayStoredPayment {
 	}
 
 	/**
-	* validate the data members to ensure that sufficient and valid information has been given
-	*/
+	 * validate the data members to ensure that sufficient and valid information has been given
+	 */
 	private function validate() {
 		$errors = [];
 
@@ -271,10 +271,10 @@ class GFEwayStoredPayment {
 	}
 
 	/**
-	* create XML request document for payment parameters
-	*
-	* @return string
-	*/
+	 * create XML request document for payment parameters
+	 *
+	 * @return string
+	 */
 	public function getPaymentXML() {
 		// aggregate street, city, state, country into a single string
 		$parts = [$this->address1, $this->address2, $this->suburb, $this->state, $this->countryName];
@@ -309,10 +309,10 @@ class GFEwayStoredPayment {
 	}
 
 	/**
-	* send the Eway payment request and retrieve and parse the response
-	* @return GFEwayStoredResponse
-	* @param string $xml Eway payment request as an XML document, per Eway specifications
-	*/
+	 * send the Eway payment request and retrieve and parse the response
+	 * @return GFEwayStoredResponse
+	 * @param string $xml Eway payment request as an XML document, per Eway specifications
+	 */
 	private function sendPayment($xml) {
 		// use sandbox if not from live website
 		$url = $this->isLiveSite ? self::REALTIME_API_LIVE : self::REALTIME_API_SANDBOX;
@@ -340,54 +340,54 @@ class GFEwayStoredResponse {
 	#region members
 
 	/**
-	* bank authorisation code
-	* @var string
-	*/
+	 * bank authorisation code
+	 * @var string
+	 */
 	public $AuthorisationCode;
 
 	/**
-	* array of codes describing the result (including Beagle failure codes)
-	* @var array
-	*/
+	 * array of codes describing the result (including Beagle failure codes)
+	 * @var array
+	 */
 	public $ResponseMessage;
 
 	/**
-	* Eway transacation ID
-	* @var string
-	*/
+	 * Eway transacation ID
+	 * @var string
+	 */
 	public $TransactionID;
 
 	/**
-	* Eway transaction status: true for success
-	* @var boolean
-	*/
+	 * Eway transaction status: true for success
+	 * @var boolean
+	 */
 	public $TransactionStatus;
 
 	/**
-	* Beagle fraud detection score
-	* @var string
-	*/
+	 * Beagle fraud detection score
+	 * @var string
+	 */
 	public $BeagleScore;
 
 	/**
-	* payment details object
-	* @var object
-	*/
+	 * payment details object
+	 * @var object
+	 */
 	public $Payment;
 
 	/**
-	* a list of errors -- just the one for the Direct API
-	* @var
-	*/
+	 * a list of errors -- just the one for the Direct API
+	 * @var
+	 */
 	public $Errors;
 
 	#endregion
 
 	/**
-	* load Eway response data as XML string
-	*
-	* @param string $response Eway response as a string (hopefully of XML data)
-	*/
+	 * load Eway response data as XML string
+	 *
+	 * @param string $response Eway response as a string (hopefully of XML data)
+	 */
 	public function loadResponseXML($response) {
 		GFEwayPlugin::log_debug(sprintf('%s: Eway says "%s"', __METHOD__, $response));
 
