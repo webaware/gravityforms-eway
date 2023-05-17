@@ -1,5 +1,8 @@
 <?php
 
+use function webaware\gfeway\format_currency_for_eway;
+use function webaware\gfeway\sanitise_customer_title;
+
 if (!defined('ABSPATH')) {
 	exit;
 }
@@ -401,7 +404,7 @@ final class GFEwayRapidAPI {
 	private function getCustomerRecord() : stdClass {
 		$record = new stdClass;
 
-		$record->Title				= $this->title ? substr(self::sanitiseCustomerTitle($this->title), 0, 5) : '';
+		$record->Title				= $this->title ? substr(sanitise_customer_title($this->title), 0, 5) : '';
 		$record->FirstName			= $this->firstName ? substr($this->firstName, 0, 50) : '';
 		$record->LastName			= $this->lastName ? substr($this->lastName, 0, 50) : '';
 		$record->Street1			= $this->address1 ? substr($this->address1, 0, 50) : '';
@@ -467,7 +470,7 @@ final class GFEwayRapidAPI {
 	private function getPaymentRecord() : stdClass {
 		$record = new stdClass;
 
-		$record->TotalAmount		= self::formatCurrency($this->amount, $this->currencyCode);
+		$record->TotalAmount		= format_currency_for_eway($this->amount, $this->currencyCode);
 		$record->InvoiceNumber		= $this->transactionNumber ? substr($this->transactionNumber, 0, 12) : '';
 		$record->InvoiceDescription	= $this->invoiceDescription ? substr($this->invoiceDescription, 0, 64) : '';
 		$record->InvoiceReference	= $this->invoiceReference ? substr($this->invoiceReference, 0, 50) : '';
@@ -539,49 +542,6 @@ final class GFEwayRapidAPI {
 		$response = new GFEwayRapidAPIResponse();
 		$response->loadResponse($responseJSON);
 		return $response;
-	}
-
-	/**
-	 * format amount per currency
-	 */
-	private static function formatCurrency(float $amount, string $currencyCode) : string {
-		switch ($currencyCode) {
-
-			// Japanese Yen already has no decimal fraction
-			case 'JPY':
-				$value = number_format($amount, 0, '', '');
-				break;
-
-			default:
-				$value = number_format($amount * 100, 0, '', '');
-				break;
-
-		}
-
-		return $value;
-	}
-
-	/**
-	 * sanitise the customer title, to avoid error V6058: Invalid Customer Title
-	 */
-	private static function sanitiseCustomerTitle(string $title) : string {
-		$valid = [
-			'mr'			=> 'Mr.',
-			'master'		=> 'Mr.',
-			'ms'			=> 'Ms.',
-			'mrs'			=> 'Mrs.',
-			'missus'		=> 'Mrs.',
-			'miss'			=> 'Miss',
-			'dr'			=> 'Dr.',
-			'doctor'		=> 'Dr.',
-			'sir'			=> 'Sir',
-			'prof'			=> 'Prof.',
-			'professor'		=> 'Prof.',
-		];
-
-		$simple = rtrim(strtolower(trim($title)), '.');
-
-		return $valid[$simple] ?? '';
 	}
 
 }

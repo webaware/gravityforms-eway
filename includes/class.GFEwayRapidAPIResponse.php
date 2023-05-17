@@ -1,5 +1,7 @@
 <?php
 
+use function webaware\gfeway\currency_has_decimals;
+
 if (!defined('ABSPATH')) {
 	exit;
 }
@@ -110,9 +112,12 @@ final class GFEwayRapidAPIResponse {
 		}
 
 		// if we got an amount, convert it back into dollars.cents from just cents
-		// but not if it's in JPY which is already at the target format
-		if (isset($this->Payment) && !empty($this->Payment->TotalAmount) && $this->Payment->CurrencyCode !== 'JPY') {
-			$this->Payment->TotalAmount = floatval($this->Payment->TotalAmount) / 100.0;
+		// but only if it's in a currency that has decimals
+		if (isset($this->Payment) && !empty($this->Payment->TotalAmount)) {
+			$this->Payment->TotalAmount = floatval($this->Payment->TotalAmount);
+			if (currency_has_decimals($this->Payment->CurrencyCode)) {
+				$this->Payment->TotalAmount /= 100.0;
+			}
 		}
 	}
 

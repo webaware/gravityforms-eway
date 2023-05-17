@@ -28,6 +28,33 @@ function has_required_gravityforms() : bool {
 }
 
 /**
+ * sanitise the customer title, to avoid error V6058: Invalid Customer Title
+ */
+function sanitise_customer_title(?string $title) : string {
+	if (empty($title)) {
+		return '';
+	}
+
+	$valid = [
+		'mr'			=> 'Mr.',
+		'master'		=> 'Mr.',
+		'ms'			=> 'Ms.',
+		'mrs'			=> 'Mrs.',
+		'missus'		=> 'Mrs.',
+		'miss'			=> 'Miss',
+		'dr'			=> 'Dr.',
+		'doctor'		=> 'Dr.',
+		'sir'			=> 'Sir',
+		'prof'			=> 'Prof.',
+		'professor'		=> 'Prof.',
+	];
+
+	$simple = rtrim(strtolower(trim($title)), '.');
+
+	return $valid[$simple] ?? '';
+}
+
+/**
  * get the customer's IP address dynamically from server variables
  */
 function get_customer_IP(bool $is_test_site) : string {
@@ -64,6 +91,46 @@ function get_customer_IP(bool $is_test_site) : string {
 function is_IP_address(string $maybeIP) : bool {
 	// check for IPv4 and IPv6 addresses
 	return !!inet_pton($maybeIP);
+}
+
+/**
+ * format amount per currency for the gateway
+ */
+function format_currency_for_eway(float $amount, string $currency) : string {
+	if (currency_has_decimals($currency)) {
+		$value = number_format($amount * 100, 0, '', '');
+	}
+	else {
+		$value = number_format($amount, 0, '', '');
+	}
+
+	return $value;
+}
+
+/**
+ * check for currency with decimal places (e.g. "cents")
+ */
+function currency_has_decimals(string $currencyCode) : bool {
+	$no_decimals = [
+		'BIF',
+		'CLP',
+		'DJF',
+		'GNF',
+		'ISK',
+		'JPY',
+		'KMF',
+		'KRW',
+		'PYG',
+		'RWF',
+		'UGX',
+		'UYI',
+		'VND',
+		'VUV',
+		'XAF',
+		'XOF',
+		'XPF',
+	];
+	return !in_array($currencyCode, $no_decimals);
 }
 
 /**
