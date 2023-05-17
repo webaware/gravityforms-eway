@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 /**
  * class for managing form data
  */
-class GFEwayFormData {
+final class GFEwayFormData {
 
 	public $total					= 0;
 	public $ccName					= '';
@@ -36,9 +36,8 @@ class GFEwayFormData {
 
 	/**
 	 * initialise instance
-	 * @param array $form
 	 */
-	public function __construct(&$form) {
+	public function __construct(array &$form) {
 		// check for last page
 		$this->isLastPageFlag = GFFormDisplay::is_last_page($form);
 
@@ -54,9 +53,8 @@ class GFEwayFormData {
 
 	/**
 	 * load the form data we care about from the form array
-	 * @param array $form
 	 */
-	private function loadForm(&$form) {
+	private function loadForm(array &$form) : void {
 		foreach ($form['fields'] as &$field) {
 			$id = $field->id;
 
@@ -141,35 +139,30 @@ class GFEwayFormData {
 
 	/**
 	 * clean up credit card number, removing spaces and dashes, so that it should only be digits if correctly submitted
-	 * @param string $ccNumber
-	 * @return string
 	 */
-	private static function cleanCcNumber($ccNumber) {
+	private static function cleanCcNumber(string $ccNumber) : string {
 		return strtr($ccNumber, [' ' => '', '-' => '']);
 	}
 
 	/**
 	 * check whether form can be validated and credit card submitted
-	 * @return boolean
 	 */
-	public function canValidatePayment() {
+	public function canValidatePayment() : bool {
 		return $this->isLastPageFlag && !$this->failedHoneypot && !empty($this->ccField) && !$this->isCcHiddenFlag && rgpost('action') !== 'heartbeat';
 	}
 
 	/**
 	 * check whether form has any product fields or a recurring payment field (because CC needs something to bill against)
-	 * @return boolean
 	 */
-	public function hasPurchaseFields() {
-		return $this->hasPurchaseFieldsFlag || !!$this->recurring;
+	public function hasPurchaseFields() : bool {
+		return $this->hasPurchaseFieldsFlag || (bool) $this->recurring;
 	}
 
 	/**
 	 * check whether form a recurring payment field
-	 * @return boolean
 	 */
-	public function hasRecurringPayments() {
-		return !!$this->recurring;
+	public function hasRecurringPayments() : bool {
+		return (bool) $this->recurring;
 	}
 
 }

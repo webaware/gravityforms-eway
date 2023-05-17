@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Class for dealing with an Eway payment
  */
-class GFEwayPayment {
+final class GFEwayPayment {
 
 	#region members
 
@@ -197,12 +197,8 @@ class GFEwayPayment {
 
 	/**
 	 * populate members with defaults, and set account and environment information
-	 *
-	 * @param string $accountID Eway account ID
-	 * @param boolean $isLiveSite running on the live (production) website
-	 * @param boolean $useBeagle
 	 */
-	public function __construct($accountID, $isLiveSite = false, $useBeagle = false) {
+	public function __construct(string $accountID, bool $isLiveSite = false, bool $useBeagle = false) {
 		$this->sslVerifyPeer	= true;
 		$this->isLiveSite		= $isLiveSite;
 		$this->useBeagle		= $useBeagle;
@@ -212,7 +208,7 @@ class GFEwayPayment {
 	/**
 	 * process a payment against Eway; throws exception on error with error described in exception message.
 	 */
-	public function processPayment() {
+	public function processPayment() : GFEwayResponse {
 		$this->validate();
 		$xml = $this->getPaymentXML();
 		return $this->sendPayment($xml);
@@ -221,7 +217,7 @@ class GFEwayPayment {
 	/**
 	 * validate the data members to ensure that sufficient and valid information has been given
 	 */
-	private function validate() {
+	private function validate() : void {
 		$errors = [];
 
 		if (strlen($this->accountID) === 0) {
@@ -292,10 +288,8 @@ class GFEwayPayment {
 
 	/**
 	 * create XML request document for payment parameters
-	 *
-	 * @return string
 	 */
-	public function getPaymentXML() {
+	public function getPaymentXML() : string {
 		// aggregate street, city, state, country into a single string
 		$parts = [$this->address1, $this->address2, $this->suburb, $this->state, $this->countryName];
 		$address = implode(', ', array_filter($parts, 'strlen'));
@@ -337,11 +331,8 @@ class GFEwayPayment {
 
 	/**
 	 * send the Eway payment request and retrieve and parse the response
-	 *
-	 * @return GFEwayResponse
-	 * @param string $xml Eway payment request as an XML document, per Eway specifications
 	 */
-	private function sendPayment($xml) {
+	private function sendPayment(string $xml) : GFEwayResponse {
 		// select endpoint URL, use sandbox if not from live website
 		if ($this->useBeagle) {
 			// use Beagle anti-fraud endpoints
@@ -370,7 +361,7 @@ class GFEwayPayment {
 /**
 * Class for dealing with an Eway payment response
 */
-class GFEwayResponse {
+final class GFEwayResponse {
 
 	#region members
 
@@ -420,10 +411,8 @@ class GFEwayResponse {
 
 	/**
 	 * load Eway response data as XML string
-	 *
-	 * @param string $response Eway response as a string (hopefully of XML data)
 	 */
-	public function loadResponseXML($response) {
+	public function loadResponseXML(string $response) : void {
 		GFEwayPlugin::log_debug(sprintf('%s: Eway says "%s"', __METHOD__, $response));
 
 		// make sure we actually got something from Eway

@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) {
  * Class for dealing with an Eway Rapid API response
  * @link https://eway.io/api-v3/
  */
-class GFEwayRapidAPIResponse {
+final class GFEwayRapidAPIResponse {
 
 	#region members
 
@@ -82,9 +82,9 @@ class GFEwayRapidAPIResponse {
 
 	/**
 	 * load Eway response data as JSON string
-	 * @param string $json Eway response as a string (hopefully of JSON data)
+	 * @throws GFEwayException
 	 */
-	public function loadResponse($json) {
+	public function loadResponse(string $json) : void {
 		$response = json_decode($json);
 
 		if (is_null($response)) {
@@ -119,9 +119,8 @@ class GFEwayRapidAPIResponse {
 	/**
 	 * separate response codes into individual errors
 	 * @param string $codes
-	 * @return array
 	 */
-	protected function getResponseDetails($codes) {
+	private function getResponseDetails($codes) : array {
 		$responses = [];
 
 		if (!empty($codes)) {
@@ -136,10 +135,8 @@ class GFEwayRapidAPIResponse {
 
 	/**
 	 * get description for response code
-	 * @param string $code
-	 * @return string
 	 */
-	protected function getCodeDescription($code) {
+	private function getCodeDescription(string $code) : string {
 		// source @link https://github.com/eWAYPayment/eway-rapid-php/blob/master/resource/lang/en.ini
 		// NB: translated into en_US for consistency with base locale
 		switch ($code) {

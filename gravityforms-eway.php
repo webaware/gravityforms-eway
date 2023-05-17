@@ -34,7 +34,7 @@ if (!defined('ABSPATH')) {
 define('GFEWAY_PLUGIN_FILE', __FILE__);
 define('GFEWAY_PLUGIN_ROOT', dirname(__FILE__) . '/');
 define('GFEWAY_PLUGIN_NAME', basename(dirname(__FILE__)) . '/' . basename(__FILE__));
-define('GFEWAY_PLUGIN_MIN_PHP', '7.0');
+define('GFEWAY_PLUGIN_MIN_PHP', '7.3');
 define('GFEWAY_PLUGIN_VERSION', '2.5.0-dev');
 
 require GFEWAY_PLUGIN_ROOT . 'includes/functions-global.php';

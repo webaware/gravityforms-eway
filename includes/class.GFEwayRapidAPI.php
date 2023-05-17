@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) {
  * Class for dealing with an Eway Rapid API payment
  * @link https://eway.io/api-v3/
  */
-class GFEwayRapidAPI {
+final class GFEwayRapidAPI {
 
 	#region "constants"
 
@@ -284,12 +284,8 @@ class GFEwayRapidAPI {
 
 	/**
 	 * populate members with defaults, and set account and environment information
-	 * @param string $apiKey Eway API key
-	 * @param string $apiPassword Eway API password
-	 * @param boolean $useSandbox use Eway sandbox
-	 * @param boolean $capture capture payment now, or authorise for later capture
 	 */
-	public function __construct($apiKey, $apiPassword, $useSandbox = true, $capture = true) {
+	public function __construct(string $apiKey, string $apiPassword, bool $useSandbox = true, bool $capture = true) {
 		$this->apiKey		= $apiKey;
 		$this->apiPassword	= $apiPassword;
 		$this->useSandbox	= $useSandbox;
@@ -300,7 +296,7 @@ class GFEwayRapidAPI {
 	 * process a payment against Eway; throws exception on error with error described in exception message.
 	 * @throws GFEwayException
 	 */
-	public function processPayment() {
+	public function processPayment() : GFEwayRapidAPIResponse {
 		$this->validate();
 		$json = $this->getPayment();
 		return $this->sendPaymentDirect($json);
@@ -309,7 +305,7 @@ class GFEwayRapidAPI {
 	/**
 	 * validate the data members to ensure that sufficient and valid information has been given
 	 */
-	protected function validate() {
+	private function validate() : void {
 		$errors = [];
 
 		if (!is_numeric($this->amount) || $this->amount <= 0) {
@@ -377,9 +373,8 @@ class GFEwayRapidAPI {
 
 	/**
 	 * create JSON request document for payment
-	 * @return string
 	 */
-	public function getPayment() {
+	public function getPayment() : string {
 		$request = new stdClass();
 
 		$request->Customer				= $this->getCustomerRecord();
@@ -402,9 +397,8 @@ class GFEwayRapidAPI {
 
 	/**
 	 * build Customer record for request
-	 * @return stdClass
 	 */
-	protected function getCustomerRecord() {
+	private function getCustomerRecord() : stdClass {
 		$record = new stdClass;
 
 		$record->Title				= $this->title ? substr(self::sanitiseCustomerTitle($this->title), 0, 5) : '';
@@ -454,9 +448,8 @@ class GFEwayRapidAPI {
 	 * build CardDetails record for request
 	 * NB: TODO: does not currently handle StartMonth, StartYear, IssueNumber (used in UK)
 	 * NB: card number and CVN can be very lengthy encrypted values
-	 * @return stdClass
 	 */
-	protected function getCardDetailsRecord() {
+	private function getCardDetailsRecord() : stdClass {
 		$record = new stdClass;
 
 		$record->Name				= $this->cardHoldersName ? substr($this->cardHoldersName, 0, 50) : '';
@@ -470,9 +463,8 @@ class GFEwayRapidAPI {
 
 	/**
 	 * build Payment record for request
-	 * @return stdClass
 	 */
-	protected function getPaymentRecord() {
+	private function getPaymentRecord() : stdClass {
 		$record = new stdClass;
 
 		$record->TotalAmount		= self::formatCurrency($this->amount, $this->currencyCode);
@@ -486,9 +478,8 @@ class GFEwayRapidAPI {
 
 	/**
 	 * build Options record for request
-	 * @return array
 	 */
-	protected function getOptionsRecord() {
+	private function getOptionsRecord() : array {
 		$options = [];
 
 		foreach ($this->options as $option) {
@@ -502,11 +493,9 @@ class GFEwayRapidAPI {
 
 	/**
 	 * send the Eway payment request and retrieve and parse the response
-	 * @param string $request Eway payment request as a JSON document, per Eway specifications
-	 * @return GFEwayRapidAPIResponse
 	 * @throws GFEwayException
 	 */
-	protected function sendPaymentDirect($request) {
+	private function sendPaymentDirect(string $request) : GFEwayRapidAPIResponse {
 		// select host and endpoint
 		$host		= $this->useSandbox ? self::API_HOST_SANDBOX : self::API_HOST_LIVE;
 		$endpoint	= self::API_DIRECT_PAYMENT;
@@ -518,9 +507,9 @@ class GFEwayRapidAPI {
 			'sslverify'		=> $this->sslVerifyPeer,
 			'timeout'		=> 60,
 			'headers'		=> [
-									'Content-Type'		=> 'application/json',
-									'Authorization'		=> 'Basic ' . base64_encode("{$this->apiKey}:{$this->apiPassword}"),
-							],
+				'Content-Type'		=> 'application/json',
+				'Authorization'		=> 'Basic ' . base64_encode("{$this->apiKey}:{$this->apiPassword}"),
+			],
 			'body'			=> $request,
 		]);
 
@@ -554,11 +543,8 @@ class GFEwayRapidAPI {
 
 	/**
 	 * format amount per currency
-	 * @param float $amount
-	 * @param string $currencyCode
-	 * @return string
 	 */
-	protected static function formatCurrency($amount, $currencyCode) {
+	private static function formatCurrency(float $amount, string $currencyCode) : string {
 		switch ($currencyCode) {
 
 			// Japanese Yen already has no decimal fraction
@@ -577,10 +563,8 @@ class GFEwayRapidAPI {
 
 	/**
 	 * sanitise the customer title, to avoid error V6058: Invalid Customer Title
-	 * @param string $title
-	 * @return string
 	 */
-	protected static function sanitiseCustomerTitle($title) {
+	private static function sanitiseCustomerTitle(string $title) : string {
 		$valid = [
 			'mr'			=> 'Mr.',
 			'master'		=> 'Mr.',
@@ -597,7 +581,7 @@ class GFEwayRapidAPI {
 
 		$simple = rtrim(strtolower(trim($title)), '.');
 
-		return isset($valid[$simple]) ? $valid[$simple] : '';
+		return $valid[$simple] ?? '';
 	}
 
 }

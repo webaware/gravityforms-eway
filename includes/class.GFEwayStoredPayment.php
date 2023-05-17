@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
 /**
  * Class for dealing with an Eway stored payment request
  */
-class GFEwayStoredPayment {
+final class GFEwayStoredPayment {
 
 	#region members
 
@@ -335,7 +335,7 @@ class GFEwayStoredPayment {
 /**
 * Class for dealing with an Eway stored payment response
 */
-class GFEwayStoredResponse {
+final class GFEwayStoredResponse {
 
 	#region members
 

@@ -8,18 +8,14 @@ if (!defined('ABSPATH')) {
  * with thanks to Travis Smith's excellent tutorial:
  * @link http://wpsmith.net/2011/plugins/how-to-create-a-custom-form-field-in-gravity-forms-with-a-terms-of-service-form-field-example/
  */
-class GFEwayRecurringField {
+final class GFEwayRecurringField {
 
-	protected $plugin;
-
-	protected static $defaults;
+	private static $defaults;
 
 	/**
 	 * @param GFEwayPlugin $plugin
 	 */
-	public function __construct($plugin) {
-		$this->plugin = $plugin;
-
+	public function __construct() {
 		add_action('init', [$this, 'setDefaults'], 20);
 
 		// WordPress script hooks -- NB: must happen after Gravity Forms registers scripts
@@ -27,9 +23,9 @@ class GFEwayRecurringField {
 		add_action('admin_enqueue_scripts', [$this, 'registerScripts'], 20);
 
 		// add Gravity Forms hooks
-		add_action('gform_enqueue_scripts', [$this, 'gformEnqueueScripts'], 20, 2);
+		add_action('gform_enqueue_scripts', [$this, 'gformEnqueueScripts'], 20);
 		add_action('gform_editor_js', [$this, 'gformEditorJS']);
-		add_action('gform_field_standard_settings', [$this, 'gformFieldStandardSettings'], 10, 2);
+		add_action('gform_field_standard_settings', [$this, 'gformFieldStandardSettings']);
 		add_filter('gform_add_field_buttons', [$this, 'gformAddFieldButtons']);
 		add_filter('gform_field_css_class', [$this, 'gformFieldClasses'], 10, 2);
 		add_filter('gform_field_type_title', [$this, 'gformFieldTypeTitle'], 10, 2);
@@ -47,7 +43,7 @@ class GFEwayRecurringField {
 	/**
 	 * set default strings; run this after load_plugin_textdomain()
 	 */
-	public function setDefaults() {
+	public function setDefaults() : void {
 		self::$defaults = [
 			'gfeway_initial_amount_label'		=> _x('Initial Amount',   'recurring field', 'gravityforms-eway'),
 			'gfeway_recurring_amount_label'		=> _x('Recurring Amount', 'recurring field', 'gravityforms-eway'),
@@ -62,7 +58,7 @@ class GFEwayRecurringField {
 	 * register and enqueue required scripts
 	 * NB: must happen after Gravity Forms registers scripts
 	 */
-	public function registerScripts() {
+	public function registerScripts() : void {
 		$min = SCRIPT_DEBUG ? '' : '.min';
 		$ver = SCRIPT_DEBUG ? time() : GFEWAY_PLUGIN_VERSION;
 
@@ -75,9 +71,8 @@ class GFEwayRecurringField {
 	/**
 	 * enqueue additional scripts if required by form
 	 * @param array $form
-	 * @param boolean $ajax
 	 */
-	public function gformEnqueueScripts($form, $ajax) {
+	public function gformEnqueueScripts($form) : void {
 		if (GFEwayPlugin::hasFieldType($form['fields'], GFEWAY_FIELD_RECURRING)) {
 			// enqueue script for field
 			wp_enqueue_script('gfeway_recurring');
@@ -96,7 +91,7 @@ class GFEwayRecurringField {
 	/**
 	 * load custom script for editor form
 	 */
-	public function gformEditorJS() {
+	public function gformEditorJS() : void {
 		$min = SCRIPT_DEBUG ? '' : '.min';
 
 		$strings = [
@@ -111,10 +106,8 @@ class GFEwayRecurringField {
 
 	/**
 	 * filter hook for modifying the field buttons on the forms editor
-	 * @param array $field_groups array of field groups; each element is an array of button definitions
-	 * @return array
 	 */
-	public function gformAddFieldButtons($field_groups) {
+	public function gformAddFieldButtons(array $field_groups) : array {
 		foreach ($field_groups as &$group) {
 			if ($group['name'] === 'pricing_fields') {
 				$group['fields'][] = [
@@ -131,11 +124,8 @@ class GFEwayRecurringField {
 
 	/**
 	 * filter hook for modifying the field title (e.g. on custom fields)
-	 * @param string $title
-	 * @param string $field_type
-	 * @return string
 	 */
-	public function gformFieldTypeTitle($title, $field_type) {
+	public function gformFieldTypeTitle(string $title, string $field_type) : string {
 		if ($field_type === GFEWAY_FIELD_RECURRING) {
 			$title = _x('Recurring Payments', 'form editor field label', 'gravityforms-eway');
 		}
@@ -145,10 +135,8 @@ class GFEwayRecurringField {
 
 	/**
 	 * add custom fields to form editor
-	 * @param integer $position
-	 * @param integer $form_id
 	 */
-	public function gformFieldStandardSettings($position, $form_id) {
+	public function gformFieldStandardSettings(int $position) : void {
 		// add inputs for labels right after the field label input
 		if ($position == 25) {
 			require GFEWAY_PLUGIN_ROOT . 'views/admin-recurring-field-settings.php';
@@ -157,10 +145,8 @@ class GFEwayRecurringField {
 
 	/**
 	 * add custom tooltips for fields on form editor
-	 * @param array $tooltips
-	 * @return array
 	 */
-	public function gformTooltips($tooltips) {
+	public function gformTooltips(array $tooltips) : array {
 		$tooltips['gfeway_initial_setting']			= sprintf('<h6>%s</h6>%s',
 														_x('Show Initial Amount', 'form editor tooltip heading', 'gravityforms-eway'),
 														__('Select this option to show Initial Amount and Initial Date fields.', 'gravityforms-eway'));
@@ -194,9 +180,8 @@ class GFEwayRecurringField {
 
 	/**
 	 * grab values and concatenate into a string before submission is accepted
-	 * @param array $form
 	 */
-	public function gformPreSubmit($form) {
+	public function gformPreSubmit(array $form) : void {
 		foreach ($form['fields'] as $field) {
 			if ($field->type === GFEWAY_FIELD_RECURRING && !GFFormsModel::is_field_hidden($form, $field, GFForms::post('gform_field_values'))) {
 				$recurring = self::getPost($field->id);
@@ -210,10 +195,8 @@ class GFEwayRecurringField {
 	/**
 	 * prime the inputs that will be checked by standard validation tests,
 	 * e.g. so that "required" fields don't fail
-	 * @param array $form
-	 * @return array
 	 */
-	public function gformPreValidation($form) {
+	public function gformPreValidation(array $form) : array {
 		foreach($form['fields'] as $field) {
 			if ($field->type === GFEWAY_FIELD_RECURRING && !GFFormsModel::is_field_hidden($form, $field, GFForms::post('gform_field_values'))) {
 				$recurring = self::getPost($field->id);
@@ -228,10 +211,8 @@ class GFEwayRecurringField {
 
 	/**
 	 * formulate a single string representing the recurring payment
-	 * @param array $recurring
-	 * @return string
 	 */
-	protected function getRecurringDescription($recurring) {
+	private function getRecurringDescription(array $recurring) : string {
 		$interval = _x($recurring['intervalTypeDesc'], 'recurring interval label', 'gravityforms-eway');
 
 		// format payment amount as currency
@@ -263,13 +244,9 @@ class GFEwayRecurringField {
 
 	/**
 	 * validate inputs
-	 * @param array $validation_result an array with elements is_valid (boolean) and form (array of form elements)
 	 * @param string $value
-	 * @param array $form
-	 * @param GF_Field $field
-	 * @return array
 	 */
-	public function gformFieldValidation($validation_result, $value, $form, $field) {
+	public function gformFieldValidation(array $validation_result, $value, array $form, GF_Field $field) : array {
 		if ($field->type === GFEWAY_FIELD_RECURRING) {
 			if (!GFFormsModel::is_field_hidden($form, $field, GFForms::post('gform_field_values'))) {
 				// get the real values
@@ -318,14 +295,10 @@ class GFEwayRecurringField {
 		return $validation_result;
 	}
 
-
 	/**
 	 * add custom classes to field container
-	 * @param string $classes
-	 * @param GF_Field $field
-	 * @return string
 	 */
-	public function gformFieldClasses($classes, $field) {
+	public function gformFieldClasses(string $classes, GF_Field $field) : string {
 		if ($field->type === GFEWAY_FIELD_RECURRING) {
 			$classes .= ' gfeway-contains-recurring';
 		}
@@ -335,11 +308,8 @@ class GFEwayRecurringField {
 
 	/**
 	 * watch the field type so that we can use hooks that don't pass enough information
-	 * @param string $classes
-	 * @param GF_Field $field
-	 * @return string
 	 */
-	public function watchFieldType($classes, $field) {
+	public function watchFieldType(string $classes, GF_Field $field) : string {
 		// if field type matches, add filters that don't allow testing for field type
 		if ($field->type === GFEWAY_FIELD_RECURRING) {
 			add_filter('gform_duplicate_field_link', [$this, 'gformDuplicateFieldLink']);
@@ -351,9 +321,8 @@ class GFEwayRecurringField {
 	/**
 	 * filter the field duplication link, we don't want one for this field type
 	 * @param string $duplicate_field_link
-	 * @return $duplicate_field_link
 	 */
-	public function gformDuplicateFieldLink($duplicate_field_link) {
+	public function gformDuplicateFieldLink($duplicate_field_link) : string {
 		// remove filter once called, only process current field
 		remove_filter('gform_duplicate_field_link', [$this, __FUNCTION__]);
 
@@ -505,7 +474,7 @@ class GFEwayRecurringField {
 	 * @param integer $form_id
 	 * @return string
 	 */
-	protected function fieldDate($field, $value = '', $lead_id = 0, $form_id = 0) {
+	private function fieldDate($field, $value = '', $lead_id = 0, $form_id = 0) {
 		$current_view	= GFForms::get('view');
 
 		$id				= $field['id'];
@@ -565,7 +534,7 @@ class GFEwayRecurringField {
 	 * @param integer $form_id
 	 * @return string
 	 */
-	protected function fieldDonation($field, $value = '', $lead_id = 0, $form_id = 0) {
+	private function fieldDonation($field, $value = '', $lead_id = 0, $form_id = 0) {
 		$current_view	= GFForms::get('view');
 
 		$id				= $field['id'];
@@ -606,7 +575,7 @@ class GFEwayRecurringField {
 	 * @param integer $form_id
 	 * @return string
 	 */
-	protected function fieldIntervalType($field, $value = '', $lead_id = 0, $form_id = 0) {
+	private function fieldIntervalType($field, $value = '', $lead_id = 0, $form_id = 0) {
 		$current_view	= GFForms::get('view');
 
 		$id				= $field['id'];
@@ -663,7 +632,7 @@ class GFEwayRecurringField {
 	 * @param integer $form_id
 	 * @return string
 	 */
-	protected function fieldConcatenated($field, $value = '', $lead_id = 0, $form_id = 0) {
+	private function fieldConcatenated($field, $value = '', $lead_id = 0, $form_id = 0) {
 		$id				= $field['id'];
 		$field_id		= IS_ADMIN || $form_id === 0 ? "input_{$id}" : "input_{$form_id}_{$id}";
 		$form_id		= IS_ADMIN && empty($form_id) ? rgget('id') : $form_id;
@@ -680,7 +649,7 @@ class GFEwayRecurringField {
 	 * @param string $year
 	 * @return boolean
 	 */
-	protected static function checkdate($month, $day, $year) {
+	private static function checkdate($month, $day, $year) {
 		if (empty($month) || !is_numeric($month) || empty($day) || !is_numeric($day) || empty($year) || !is_numeric($year) || strlen($year) != 4)
 			return false;
 
@@ -752,7 +721,7 @@ class GFEwayRecurringField {
 	 * @param string $value date value in dd/mm/yyyy format
 	 * @return DateTime
 	 */
-	protected static function parseDate($value) {
+	private static function parseDate($value) {
 		if (preg_match('#([0-9]{1,2})/([0-9]{1,2})/([0-9]{4})#', $value, $matches)) {
 			$date = date_create();
 			$date->setDate($matches[3], $matches[2], $matches[1]);

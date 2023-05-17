@@ -7,7 +7,7 @@ Donate link: https://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+
 Tags: gravity forms, eway, donations, payment, payment gateway, ecommerce
 Requires at least: 4.2
 Tested up to: 6.2
-Requires PHP: 7.0
+Requires PHP: 7.3
 Stable tag: 2.4.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html

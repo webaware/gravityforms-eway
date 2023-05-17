@@ -5,6 +5,7 @@
 ### 2.5.0, soon...
 
 * fixed: handle invalid start/end dates getting recurring payment description
+* changed: requires PHP version 7.3+
 * changed: updated build system, production CSS is now minified
 
 ### 2.4.1, 2021-11-25

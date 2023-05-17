@@ -27,7 +27,7 @@ class GFEwayCurlException extends Exception {}
 /**
  * kick start the plugin
  */
-add_action('plugins_loaded', function() {
+add_action('plugins_loaded', function() : void {
 	require GFEWAY_PLUGIN_ROOT . 'includes/functions.php';
 	require GFEWAY_PLUGIN_ROOT . 'includes/class.GFEwayPlugin.php';
 	GFEwayPlugin::getInstance()->addHooks();
@@ -35,9 +35,8 @@ add_action('plugins_loaded', function() {
 
 /**
  * autoload classes as/when needed
- * @param string $class_name name of class to attempt to load
  */
-spl_autoload_register(function($class_name) {
+spl_autoload_register(function(string $class_name) : void {
 	static $classMap = [
 		'GFEwayPayment'						=> 'includes/class.GFEwayPayment.php',
 		'GFEwayRapidAPI'					=> 'includes/class.GFEwayRapidAPI.php',

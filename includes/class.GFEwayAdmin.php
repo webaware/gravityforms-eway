@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
 /**
  * class for admin screens
  */
-class GFEwayAdmin {
+final class GFEwayAdmin {
 
 	private $plugin;
 	private $slug;
@@ -53,7 +53,7 @@ class GFEwayAdmin {
 	/**
 	 * handle admin init action
 	 */
-	public function adminInit() {
+	public function adminInit() : void {
 		global $plugin_page;
 
 		if ($plugin_page === 'gf_settings') {
@@ -81,7 +81,7 @@ class GFEwayAdmin {
 	/**
 	 * only output our stylesheet if this is our admin page
 	 */
-	public function enqueueScripts() {
+	public function enqueueScripts() : void {
 		global $plugin_page;
 		$subview = isset($_GET['subview']) ? $_GET['subview'] : '';
 
@@ -95,7 +95,7 @@ class GFEwayAdmin {
 	/**
 	 * check for required PHP extensions, tell admin if any are missing
 	 */
-	public function checkPrerequisites() {
+	public function checkPrerequisites() : void {
 		$requires = new Requires();
 
 		// need these PHP extensions
@@ -156,7 +156,7 @@ class GFEwayAdmin {
 	/**
 	 * display 1.x upgrade notice
 	 */
-	public function showUpgradeNotice1() {
+	public function showUpgradeNotice1() : void {
 		$options = $this->plugin->options;
 		$gfSettingsURL = admin_url('admin.php?page=gf_settings');
 		$ewaySettingsURL = admin_url('admin.php?page=gf_settings&subview=' . urlencode($this->slug));
@@ -166,7 +166,7 @@ class GFEwayAdmin {
 	/**
 	 * record dismiss for a dismissable notice
 	 */
-	public function dismissNotice() {
+	public function dismissNotice() : void {
 		if (isset($_GET['gfeway_dismiss'])) {
 			$notice = wp_unslash($_GET['gfeway_dismiss']);
 			$notices = $this->getNoticeFlags();
@@ -188,9 +188,8 @@ class GFEwayAdmin {
 
 	/**
 	 * get flags for notices
-	 * @return array
 	 */
-	protected function getNoticeFlags() {
+	private function getNoticeFlags() : array {
 		$options = get_option(GFEWAY_PLUGIN_OPTIONS);
 		$flags   = get_option('gfeway_notices', []);
 
@@ -204,23 +203,22 @@ class GFEwayAdmin {
 
 	/**
 	 * save flags for notices
-	 * @param array $flags
 	 */
-	protected function saveNoticeFlags($flags) {
+	private function saveNoticeFlags(array $flags) : void {
 		update_option('gfeway_notices', $flags);
 	}
 
 	/**
 	 * add footer script for dismissable notices
 	 */
-	public function footerDismissableNotices() {
+	public function footerDismissableNotices() : void {
 		require GFEWAY_PLUGIN_ROOT . 'views/script-dismissable.php';
 	}
 
 	/**
 	 * add plugin action links
 	 */
-	public function addPluginActionLinks($links) {
+	public function addPluginActionLinks(array $links) : array {
 		$url = esc_url(admin_url('admin.php?page=gf_settings&subview=' . $this->slug));
 		$settings_link = sprintf('<a href="%s">%s</a>', $url, _x('Settings', 'plugin details links', 'gravityforms-eway'));
 		array_unshift($links, $settings_link);
@@ -231,7 +229,7 @@ class GFEwayAdmin {
 	/**
 	 * add plugin details links
 	 */
-	public static function addPluginDetailsLinks($links, $file) {
+	public static function addPluginDetailsLinks(array $links, string $file) : array {
 		if ($file === GFEWAY_PLUGIN_NAME) {
 			$links[] = sprintf('<a href="https://wordpress.org/support/plugin/gravityforms-eway" rel="noopener" target="_blank">%s</a>', _x('Get help', 'plugin details links', 'gravityforms-eway'));
 			$links[] = sprintf('<a href="https://wordpress.org/plugins/gravityforms-eway/" rel="noopener" target="_blank">%s</a>', _x('Rating', 'plugin details links', 'gravityforms-eway'));
@@ -244,10 +242,8 @@ class GFEwayAdmin {
 
 	/**
 	 * let Gravity Forms determine who can save settings
-	 * @param string $capability
-	 * @return string
 	 */
-	public function optionPageCapability($capability) {
+	public function optionPageCapability(string $capability) : string {
 		if (current_user_can('gform_full_access')) {
 			return 'gform_full_access';
 		}
@@ -262,7 +258,7 @@ class GFEwayAdmin {
 	 * @param int $form_id
 	 * @param array $lead
 	 */
-	public function gformPaymentDetails($form_id, $lead) {
+	public function gformPaymentDetails($form_id, $lead) : void {
 		$payment_gateway = gform_get_meta($lead['id'], 'payment_gateway');
 		if ($payment_gateway === 'gfeway') {
 			$authcode = gform_get_meta($lead['id'], 'authcode');
@@ -282,17 +278,15 @@ class GFEwayAdmin {
 	/**
 	 * settings admin
 	 */
-	public function settingsPage() {
+	public function settingsPage() : void {
 		$options = $this->plugin->options;
 		require GFEWAY_PLUGIN_ROOT . 'views/admin-settings.php';
 	}
 
 	/**
 	 * validate settings on save
-	 * @param array $input
-	 * @return array
 	 */
-	public function settingsValidate($input) {
+	public function settingsValidate(array $input) : array {
 		$output = [];
 
 		$output['customerID']			= trim(sanitize_text_field($input['customerID']));
@@ -363,7 +357,7 @@ class GFEwayAdmin {
 	 * @param array $form
 	 * @param int $lead_id
 	 */
-	public function gformAfterUpdateEntry($form, $lead_id) {
+	public function gformAfterUpdateEntry($form, $lead_id) : void {
 		// make sure we have permission
 		check_admin_referer('gforms_save_entry', 'gforms_save_entry');
 

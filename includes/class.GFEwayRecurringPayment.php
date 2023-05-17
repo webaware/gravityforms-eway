@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  *
  * @link https://www.eway.com.au/eway-partner-portal/resources/eway-api/recurring-payments
  */
-class GFEwayRecurringPayment {
+final class GFEwayRecurringPayment {
 
 	#region members
 
@@ -405,7 +405,7 @@ class GFEwayRecurringPayment {
 	 * @param string $phone
 	 * @return string
 	 */
-	protected static function cleanPhone($phone) {
+	private static function cleanPhone($phone) {
 		return preg_replace('#[^0-9 +-]#', '', $phone);
 	}
 
@@ -436,7 +436,7 @@ class GFEwayRecurringPayment {
 /**
 * Class for dealing with an Eway recurring payment response
 */
-class GFEwayRecurringResponse {
+final class GFEwayRecurringResponse {
 
 	#region members
 

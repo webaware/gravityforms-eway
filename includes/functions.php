@@ -11,11 +11,8 @@ if (!defined('ABSPATH')) {
 
 /**
  * compare Gravity Forms version against target
- * @param string $target
- * @param string $operator
- * @return bool
  */
-function gform_version_compare($target, $operator) {
+function gform_version_compare(string $target, string $operator) : bool {
 	if (class_exists('GFCommon', false)) {
 		return version_compare(GFCommon::$version, $target, $operator);
 	}
@@ -25,18 +22,15 @@ function gform_version_compare($target, $operator) {
 
 /**
  * test whether the minimum required Gravity Forms is installed / activated
- * @return bool
  */
-function has_required_gravityforms() {
+function has_required_gravityforms() : bool {
 	return gform_version_compare(GFEWAY_MIN_VERSION_GF, '>=');
 }
 
 /**
  * get the customer's IP address dynamically from server variables
- * @param bool $is_test_site
- * @return string
  */
-function get_customer_IP($is_test_site) {
+function get_customer_IP(bool $is_test_site) : string {
 	$ip = '';
 
 	if (!empty($_SERVER['HTTP_X_REAL_IP'])) {
@@ -66,10 +60,8 @@ function get_customer_IP($is_test_site) {
 
 /**
  * check whether a given string is an IP address
- * @param string $maybeIP
- * @return bool
  */
-function is_IP_address($maybeIP) {
+function is_IP_address(string $maybeIP) : bool {
 	// check for IPv4 and IPv6 addresses
 	return !!inet_pton($maybeIP);
 }
@@ -77,13 +69,9 @@ function is_IP_address($maybeIP) {
 /**
  * send data via HTTP and return response
  * @deprecated only used now for legacy Direct API and its friends
- * @param string $url
- * @param string $data
- * @param bool $sslVerifyPeer whether to validate the SSL certificate
- * @return string $response
  * @throws GFEwayCurlException
  */
-function send_xml_request($url, $data, $sslVerifyPeer = true) {
+function send_xml_request(string $url, string $data, bool $sslVerifyPeer = true) : string {
 	// send data via HTTPS and receive response
 	$response = wp_remote_post($url, [
 		'user-agent'	=> 'Gravity Forms Eway ' . GFEWAY_PLUGIN_VERSION,
