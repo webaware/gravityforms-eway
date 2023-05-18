@@ -5,6 +5,7 @@
 ### 2.5.0, soon...
 
 * fixed: handle invalid start/end dates getting recurring payment description
+* fixed: compatible with Gravity Forms 2.7 honeypot enhancements
 * changed: requires PHP version 7.3+
 * changed: additional logging to help troubleshoot problems
 * changed: updated build system, production CSS is now minified

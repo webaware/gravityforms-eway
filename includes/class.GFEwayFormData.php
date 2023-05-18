@@ -1,5 +1,7 @@
 <?php
 
+use function webaware\gfeway\has_failed_honeypot;
+
 if (!defined('ABSPATH')) {
 	exit;
 }
@@ -43,8 +45,7 @@ final class GFEwayFormData {
 
 		// check whether the form has failed a honeypot test
 		if ($this->isLastPageFlag && rgar($form, 'enableHoneypot')) {
-			$honeypot_id = GFFormDisplay::get_max_field_id($form) + 1;
-			$this->failedHoneypot = !rgempty("input_{$honeypot_id}");
+			$this->failedHoneypot = has_failed_honeypot($form);
 		}
 
 		// load the form data

@@ -1,9 +1,11 @@
 <?php
 namespace webaware\gfeway;
 
+use GFForms;
 use GFCommon;
 use GFEwayException;
 use GFEwayCurlException;
+use Gravity_Forms\Gravity_Forms\Honeypot\GF_Honeypot_Service_Provider;
 
 if (!defined('ABSPATH')) {
 	exit;
@@ -168,4 +170,19 @@ function send_xml_request(string $url, string $data, bool $sslVerifyPeer = true)
 	}
 
 	return wp_remote_retrieve_body($response);
+}
+
+/**
+ * check whether the form has failed a honeypot test
+ */
+function has_failed_honeypot(array $form) : bool {
+	// look for honeypot service, added in GF 2.7
+	if (gform_version_compare('2.7', '>=')) {
+		$honeypot_handler = GFForms::get_service_container()->get(GF_Honeypot_Service_Provider::GF_HONEYPOT_HANDLER);
+		return !$honeypot_handler->validate_honeypot($form);
+	}
+
+	// pre GF 2.7 check for classic honeypot with a value
+	$honeypot_id = GFFormDisplay::get_max_field_id($form) + 1;
+	return !rgempty("input_{$honeypot_id}");
 }
