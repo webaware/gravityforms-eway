@@ -950,8 +950,7 @@ final class GFEwayPlugin {
 	 * write an error log via the Gravity Forms Logging Add-On
 	 */
 	public static function log_error(string $message) : void {
-		if (class_exists('GFLogging')) {
-			GFLogging::include_logger();
+		if (class_exists('GFLogging', false)) {
 			GFLogging::log_message('gfeway', self::sanitiseLog($message), KLogger::ERROR);
 		}
 	}
@@ -960,8 +959,7 @@ final class GFEwayPlugin {
 	 * write an debug message log via the Gravity Forms Logging Add-On
 	 */
 	public static function log_debug(string $message) : void {
-		if (class_exists('GFLogging')) {
-			GFLogging::include_logger();
+		if (class_exists('GFLogging', false)) {
 			GFLogging::log_message('gfeway', self::sanitiseLog($message), KLogger::DEBUG);
 		}
 	}
