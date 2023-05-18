@@ -2,20 +2,19 @@
 	"name": "gravityforms-eway",
 	"version": "2.5.0",
 	"description": "Gravity Forms Eway",
-	"main": "Gruntfile.js",
 	"browserslist": [
 		"> 0.5%",
 		"not dead"
 	],
 	"devDependencies": {
 		"@babel/cli": "^7.21.5",
-		"@babel/core": "^7.21.5",
+		"@babel/core": "^7.21.8",
 		"@babel/preset-env": "^7.21.5",
 		"autoprefixer": "^10.4.14",
 		"clean-css-cli": "^5.6.2",
-		"eslint": "^8.39.0",
+		"eslint": "^8.40.0",
 		"postcss-cli": "^10.1.0",
-		"stylelint": "^15.6.0",
+		"stylelint": "^15.6.2",
 		"stylelint-config-standard-scss": "^9.0.0",
 		"uglify-js": "^3.17.4"
 	},
