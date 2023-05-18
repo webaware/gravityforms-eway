@@ -316,7 +316,6 @@ final class GFEwayPlugin {
 
 		// make sure all other validations passed
 		if ($data['is_valid'] && self::isEwayForm($data['form']['id'], $data['form']['fields'])) {
-			require GFEWAY_PLUGIN_ROOT . 'includes/class.GFEwayFormData.php';
 			$formData = new GFEwayFormData($data['form']);
 
 			// make sure form hasn't already been submitted / processed

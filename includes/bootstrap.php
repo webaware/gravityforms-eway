@@ -38,6 +38,7 @@ add_action('plugins_loaded', function() : void {
  */
 spl_autoload_register(function(string $class_name) : void {
 	static $classMap = [
+		'GFEwayFormData'					=> 'includes/class.GFEwayFormData.php',
 		'GFEwayPayment'						=> 'includes/class.GFEwayPayment.php',
 		'GFEwayRapidAPI'					=> 'includes/class.GFEwayRapidAPI.php',
 		'GFEwayRapidAPIResponse'			=> 'includes/class.GFEwayRapidAPIResponse.php',
