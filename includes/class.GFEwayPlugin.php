@@ -507,6 +507,7 @@ final class GFEwayPlugin {
 			self::log_debug(sprintf('%s: %s gateway, invoice ref: %s, transaction: %s, amount: %s, currency: %s, cc: %s',
 				__FUNCTION__, $this->options['useTest'] ? 'test' : 'live', $eway->invoiceReference, $eway->transactionNumber,
 				$eway->amount, $eway->currencyCode, $eway->cardNumber));
+			self::log_debug(sprintf('%s: customer IP = %s', __FUNCTION__, $eway->customerIP));
 
 			// record basic transaction data, for updating the entry with later
 			$this->txResult = [
@@ -517,6 +518,8 @@ final class GFEwayPlugin {
 			$response = $eway->processPayment();
 			if ($response->TransactionStatus) {
 				// transaction was successful, so record details and continue
+				self::log_debug(sprintf('%s: success, building details for id = %s', __FUNCTION__, $response->TransactionID));
+
 				$this->txResult['payment_status']	= $this->options['useStored'] ? 'Pending' : 'Approved';
 				$this->txResult['payment_date']		= date('Y-m-d H:i:s');
 				$this->txResult['payment_amount']	= $response->Payment->TotalAmount;
@@ -533,6 +536,8 @@ final class GFEwayPlugin {
 				}
 			}
 			else {
+				self::log_debug(sprintf('%s: failed, building failure / cancellation details', __FUNCTION__));
+
 				$data['is_valid'] = false;
 				$formData->ccField->failed_validation		= true;
 				$formData->ccField->validation_message		= $this->getErrMsg(GFEWAY_ERROR_EWAY_FAIL);
@@ -615,6 +620,7 @@ final class GFEwayPlugin {
 				__FUNCTION__, $eway->isLiveSite ? 'live' : 'test', $eway->invoiceReference, $eway->customerReference,
 				$eway->amountInit, $eway->amountRecur, $eway->dateStart->format('Y-m-d'), $eway->dateEnd->format('Y-m-d'),
 				$eway->intervalSize, $eway->intervalType, $eway->cardNumber));
+			self::log_debug(sprintf('%s: customer IP = %s', __FUNCTION__, get_customer_IP($this->options['useTest'])));
 
 			// record basic transaction data, for updating the entry with later
 			$this->txResult = [
@@ -625,6 +631,8 @@ final class GFEwayPlugin {
 			$response = $eway->processPayment();
 			if ($response->status) {
 				// transaction was successful, so record transaction number and continue
+				self::log_debug(sprintf('%s: success, building details', __FUNCTION__));
+
 				$this->txResult['payment_status']	= 'Approved';
 				$this->txResult['payment_date']		= date('Y-m-d H:i:s');
 				$this->txResult['transaction_type']	= 1;
@@ -633,6 +641,8 @@ final class GFEwayPlugin {
 					__FUNCTION__, $this->txResult['payment_date'], $this->txResult['payment_status']));
 			}
 			else {
+				self::log_debug(sprintf('%s: failed, building details', __FUNCTION__));
+
 				$data['is_valid'] = false;
 				$formData->ccField->failed_validation		= true;
 				$formData->ccField->validation_message		= $this->getErrMsg(GFEWAY_ERROR_EWAY_FAIL);
