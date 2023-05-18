@@ -8,7 +8,7 @@ Tags: gravity forms, eway, donations, payment, payment gateway, ecommerce
 Requires at least: 4.2
 Tested up to: 6.2
 Requires PHP: 7.3
-Stable tag: 2.4.1
+Stable tag: 2.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -52,19 +52,15 @@ If you'd like to help out by translating this plugin, please [sign up for an acc
 * you need to install the [Gravity Forms](https://webaware.com.au/get-gravity-forms) plugin
 * you need an SSL/TLS certificate for your hosting account
 * you need an account with Eway
-* this plugin uses Eway's [Rapid API Direct Payments](https://eway.io/features/api-rapid-api) and [Recurring Payments XML API](https://www.eway.com.au/features/payments-recurring-payments), and does not support Eway's Responsive Shared Page (available with [Pro](https://gfeway.webaware.net.au/))
-
-### Contributions
-
-* [Fork me on GitHub](https://github.com/webaware/gravityforms-eway/)
+* this plugin uses Eway's [Rapid API Direct Payments](https://go.eway.io/s/article/Direct-Payments-API-Snippets) and [Recurring Payments XML API](https://go.eway.io/s/article/How-do-I-setup-a-Recurring-Payment), and does not support Eway's Responsive Shared Page (available with [Pro](https://gfeway.webaware.net.au/))
 
 ### Privacy
 
-Information gathered for processing a credit card transaction is transmitted to Eway for processing, and in turn, Eway passes that information on to your bank. Please review [Eway's Privacy Policy](https://www.eway.com.au/legal#privacy) for information about how that affects your website's privacy policy. By using this plugin, you are agreeing to the terms of use for Eway.
+Information gathered for processing a credit card transaction is transmitted to Eway for processing, and in turn, Eway passes that information on to your bank. Please review [Eway's Privacy Policy](https://www.eway.com.au/privacy-policy/) for information about how that affects your website's privacy policy. By using this plugin, you are agreeing to the terms of use for Eway.
 
 ## Installation
 
-1. Either install automatically through the WordPress admin, or download the .zip file, unzip to a folder, and upload the folder to your /wp-content/plugins/ directory. Read [Installing Plugins](https://codex.wordpress.org/Managing_Plugins#Installing_Plugins) in the WordPress Codex for details.
+1. Either install automatically through the WordPress admin, or download the .zip file, unzip to a folder, and upload the folder to your /wp-content/plugins/ directory. Read [Installing Plugins](https://wordpress.org/documentation/article/manage-plugins/) in the WordPress documentation for details.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 3. Install and activate the [Gravity Forms](https://webaware.com.au/get-gravity-forms) plugin.
 4. Edit the Eway Payments settings to set your Eway API key, API password, Customer ID, Client-Side Encryption Key, and options.
@@ -107,7 +103,7 @@ Yes. This plugin uses the Direction Connection method to process transactions, s
 
 Capture charges the customer's credit card immediately. This is the default payment method, and is the method most websites will use for credit card payments.
 
-Authorize checks to see that the transaction would be approved, but does not process it. Eway calls this method [PreAuth](https://eway.io/features/payments-pre-auth) (or Stored Payments in the old XML API). Once the transaction has been authorized, you can complete it manually in your MyEway console. You cannot complete PreAuth transactions from WordPress/Gravity Forms.
+Authorize checks to see that the transaction would be approved, but does not process it. Eway calls this method PreAuth (or Stored Payments in the old XML API). Once the transaction has been authorized, you can complete it manually in your MyEway console. You cannot complete PreAuth transactions from WordPress/Gravity Forms.
 
 You need to add your Eway API key and password to see PreAuth transactions in the sandbox, so that the Rapid API is used. The old Stored Payments XML API does not have a sandbox.
 
@@ -157,7 +153,7 @@ Recurring payments don't get a transaction number when the payment is establishe
 
 ### How do I add a confirmed payment amount and transaction number to my Gravity Forms notification emails?
 
-Browse to your Gravity Form, select [Notifications](https://www.gravityhelp.com/documentation/article/configuring-notifications-in-gravity-forms/) and use the Insert Merge Tag dropdown (Payment Amount, Transaction Number and AuthCode will appear under Custom at the very bottom of the dropdown list).
+Browse to your Gravity Form, select [Notifications](https://docs.gravityforms.com/configuring-notifications-in-gravity-forms/) and use the Insert Merge Tag dropdown (Payment Amount, Transaction Number and AuthCode will appear under Custom at the very bottom of the dropdown list).
 
 ### Why is the amount paid bigger than the form total when sandbox is enabled?
 
@@ -165,27 +161,19 @@ When the sandbox is enabled, the payment amount is rounded up by default, becaus
 
 ### Why do I get a "This page is unsecured" error?
 
-When your form has a Credit Card field, it accepts very sensitive details from your customers and these must be encrypted. You must have an SSL/TLS certificate installed on your website, and your page must be accessed via HTTPS (i.e. the page address must start with "https:"). You can force a page with a credit card form to be accessed via HTTPS by ticking Force SSL on the [Credit Card field advanced settings page](https://www.gravityhelp.com/documentation/article/credit-card-field/#advanced); see [screenshots](https://wordpress.org/plugins/gravityforms-eway/screenshots/).
+When your form has a Credit Card field, it accepts very sensitive details from your customers and these must be encrypted. You must have an SSL/TLS certificate installed on your website, and your page must be accessed via HTTPS (i.e. the page address must start with "https:"). You can force a page with a credit card form to be accessed via HTTPS by ticking Force SSL on the [Credit Card field advanced settings page](https://docs.gravityforms.com/credit-card-field/); see [screenshots](https://wordpress.org/plugins/gravityforms-eway/screenshots/).
 
 ### Can I do recurring payments?
 
 Recurring Payments is only available for Australian merchants. This feature is available thanks to the generous sponsorship of [Castle Design](http://castledesign.com.au/).
 
-If you use [conditional logic](https://www.gravityhelp.com/documentation/article/enable-conditional-logic/) to hide/show a Product field and a Recurring Payment field, you can even let customers choose between a one-off payment and a recurring payment. Payments can be scheduled for weekly, fortnightly, monthly, quarterly, or yearly billing.
+If you use [conditional logic](https://docs.gravityforms.com/enable-conditional-logic/) to hide/show a Product field and a Recurring Payment field, you can even let customers choose between a one-off payment and a recurring payment. Payments can be scheduled for weekly, fortnightly, monthly, quarterly, or yearly billing.
 
 **NB**: some banks do not accept recurring payments via the Eway Recurring Payments API. I've heard that Bendigo Bank is one that does not. Please check with Eway and your bank for more information.
 
 ### I get an SSL error when my form attempts to connect with Eway
 
 This is a common problem in local testing environments. Read how to [fix your website SSL configuration](https://snippets.webaware.com.au/howto/stop-turning-off-curlopt_ssl_verifypeer-and-fix-your-php-config/).
-
-### Can I use this plugin on any shared-hosting environment?
-
-The plugin will run in shared hosting environments, but requires PHP 5 with the following modules enabled (talk to your host). All are typically available because they are enabled by default in PHP 5, but may be disabled on some shared hosts.
-
-* libxml
-* XMLWriter
-* SimpleXML
 
 ### Are there any filter hooks?
 
@@ -204,9 +192,9 @@ Developers can use these [filter hooks to modify some Eway invoice properties](h
 
 ## Upgrade Notice
 
-### 2.4.1
+### 2.5.0
 
-hide subfields of Recurring field for new forms without Gravity Forms legacy markup
+requires PHP 7.3+; fix fatal error on Recurring field invalid dates; compatible with GF 2.7 honeypot enhancements; additional logging for troubleshooting
 
 ## Changelog
 
@@ -214,14 +202,10 @@ hide subfields of Recurring field for new forms without Gravity Forms legacy mar
 
 The full changelog for Gravity Forms Eway can be found [on GitHub](https://github.com/webaware/gravityforms-eway/blob/master/changelog.md). Recent entries:
 
-### 2.4.1
+### 2.5.0, 2023-05-18
 
-Released 2021-11-25
-
-* fixed: hide subfields of Recurring field for new forms without Gravity Forms legacy markup
-
-### 2.4.0
-
-Released 2021-11-17
-
-* changed: update with new Eway branding
+* fixed: handle invalid start/end dates getting recurring payment description
+* fixed: compatible with Gravity Forms 2.7 honeypot enhancements
+* changed: requires PHP version 7.3+
+* changed: additional logging to help troubleshoot problems
+* changed: updated build system, production CSS is now minified
