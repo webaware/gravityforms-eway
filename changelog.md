@@ -2,7 +2,7 @@
 
 ## Changelog
 
-### 2.5.1, soon...
+### 2.5.1, 2023-05-30
 
 * fixed: fatal error when used with Coupons add-on
 
