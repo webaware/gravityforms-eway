@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 2.5.1, soon...
+
+* fixed: fatal error when used with Coupons add-on
+
 ### 2.5.0, 2023-05-18
 
 * fixed: handle invalid start/end dates getting recurring payment description

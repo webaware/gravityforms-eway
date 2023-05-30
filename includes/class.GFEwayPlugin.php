@@ -143,7 +143,9 @@ final class GFEwayPlugin {
 	 */
 	public function gformPreRenderSniff($form) {
 		// test whether form has a credit card field
-		self::isEwayForm($form['id'], $form['fields']);
+		if (!empty($form['id'])) {
+			self::isEwayForm(rgar($form, 'id', 0), rgar($form, 'fields', []));
+		}
 
 		return $form;
 	}
