@@ -92,7 +92,7 @@ function get_customer_IP(bool $is_test_site) : string {
  */
 function is_IP_address(string $maybeIP) : bool {
 	// check for IPv4 and IPv6 addresses
-	return !!inet_pton($maybeIP);
+	return (bool) inet_pton($maybeIP);
 }
 
 /**

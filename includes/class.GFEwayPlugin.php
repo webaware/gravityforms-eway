@@ -496,7 +496,7 @@ final class GFEwayPlugin {
 			// if live, pass through amount exactly, but if using test site, round up to whole dollars or Eway will fail
 			if ($this->options['useTest'] && $this->options['roundTestAmounts']) {
 				$eway->amount = ceil($formData->total);
-				if ($eway->amount != $formData->total) {
+				if ($eway->amount !== $formData->total) {
 					self::log_debug(sprintf('%s: amount rounded up from %s to %s to pass sandbox gateway',
 						__FUNCTION__, number_format($formData->total, 2), number_format($eway->amount, 2)));
 				}

@@ -329,13 +329,13 @@ final class GFEwayAdmin {
 	 */
 	public function gformPaymentStatus($payment_status, $form, $lead) {
 		// make sure payment is not Approved, and that we're editing the lead
-		if ($payment_status === 'Approved' || strtolower(rgpost('save')) <> 'edit') {
+		if ($payment_status === 'Approved' || strtolower(rgpost('save')) !== 'edit') {
 			return $payment_status;
 		}
 
 		// make sure payment is one of ours (probably)
 		$payment_gateway = gform_get_meta($lead['id'], 'payment_gateway');
-		if ((empty($payment_gateway) && GFEwayPlugin::isEwayForm($form['id'], $form['fields'])) || $payment_gateway != 'gfeway') {
+		if ((empty($payment_gateway) && GFEwayPlugin::isEwayForm($form['id'], $form['fields'])) || $payment_gateway !== 'gfeway') {
 			return $payment_status;
 		}
 
@@ -362,12 +362,12 @@ final class GFEwayAdmin {
 		check_admin_referer('gforms_save_entry', 'gforms_save_entry');
 
 		// check that save action is for update
-		if (strtolower(rgpost('save')) <> 'update')
+		if (strtolower(rgpost('save')) !== 'update')
 			return;
 
 		// make sure payment is one of ours (probably)
 		$payment_gateway = gform_get_meta($lead_id, 'payment_gateway');
-		if ((empty($payment_gateway) && GFEwayPlugin::isEwayForm($form['id'], $form['fields'])) || $payment_gateway != 'gfeway') {
+		if ((empty($payment_gateway) && GFEwayPlugin::isEwayForm($form['id'], $form['fields'])) || $payment_gateway !== 'gfeway') {
 			return;
 		}
 

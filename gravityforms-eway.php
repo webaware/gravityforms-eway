@@ -31,6 +31,7 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
+// phpcs:disable Modernize.FunctionCalls.Dirname.FileConstant
 define('GFEWAY_PLUGIN_FILE', __FILE__);
 define('GFEWAY_PLUGIN_ROOT', dirname(__FILE__) . '/');
 define('GFEWAY_PLUGIN_NAME', basename(dirname(__FILE__)) . '/' . basename(__FILE__));

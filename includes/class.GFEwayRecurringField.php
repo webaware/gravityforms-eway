@@ -136,7 +136,7 @@ final class GFEwayRecurringField {
 	 */
 	public function gformFieldStandardSettings(int $position) : void {
 		// add inputs for labels right after the field label input
-		if ($position == 25) {
+		if ($position === 25) {
 			require GFEWAY_PLUGIN_ROOT . 'views/admin-recurring-field-settings.php';
 		}
 	}
@@ -648,7 +648,7 @@ final class GFEwayRecurringField {
 	 * @return boolean
 	 */
 	private static function checkdate($month, $day, $year) {
-		if (empty($month) || !is_numeric($month) || empty($day) || !is_numeric($day) || empty($year) || !is_numeric($year) || strlen($year) != 4)
+		if (empty($month) || !is_numeric($month) || empty($day) || !is_numeric($day) || empty($year) || !is_numeric($year) || strlen($year) !== 4)
 			return false;
 
 		return checkdate($month, $day, $year);
