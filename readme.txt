@@ -6,9 +6,9 @@ Author URI: https://shop.webaware.com.au/
 Donate link: https://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+Eway
 Tags: gravity forms, eway, donations, payment, payment gateway, ecommerce
 Requires at least: 4.2
-Tested up to: 6.2
-Requires PHP: 7.3
-Stable tag: 2.5.1
+Tested up to: 6.6
+Requires PHP: 7.4
+Stable tag: 2.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -192,9 +192,9 @@ Developers can use these [filter hooks to modify some Eway invoice properties](h
 
 ## Upgrade Notice
 
-### 2.5.1
+### 2.6.0
 
-requires PHP 7.3+; fix fatal error when used with Coupons add-on
+requires PHP 7.4+; fix PHP notice on deprecated creation of dynamic properties in PHP 8.1+
 
 ## Changelog
 
@@ -202,14 +202,9 @@ requires PHP 7.3+; fix fatal error when used with Coupons add-on
 
 The full changelog for Gravity Forms Eway can be found [on GitHub](https://github.com/webaware/gravityforms-eway/blob/master/changelog.md). Recent entries:
 
-### 2.5.1, 2023-05-30
+### 2.6.0
 
-* fixed: fatal error when used with Coupons add-on
+Released 2024-07-14
 
-### 2.5.0, 2023-05-18
-
-* fixed: handle invalid start/end dates getting recurring payment description
-* fixed: compatible with Gravity Forms 2.7 honeypot enhancements
-* changed: requires PHP version 7.3+
-* changed: additional logging to help troubleshoot problems
-* changed: updated build system, production CSS is now minified
+* fixes: PHP notice on deprecated creation of dynamic properties in PHP 8.1+
+* changed: requires minimum PHP version 7.4 (recommend version 8.2 or higher)
