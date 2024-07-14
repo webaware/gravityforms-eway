@@ -7,4 +7,3 @@ rules:
   rule-empty-line-before: ~
   selector-class-pattern: ~
   selector-id-pattern: ~
-  selector-list-comma-newline-after: ~

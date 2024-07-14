@@ -63,8 +63,6 @@ final class GFEwayRecurringField {
 		$ver = SCRIPT_DEBUG ? time() : GFEWAY_PLUGIN_VERSION;
 
 		wp_register_script('gfeway_recurring', plugins_url("static/js/recurring$min.js", GFEWAY_PLUGIN_FILE), ['gform_datepicker_init'], $ver, true);
-
-		$min = SCRIPT_DEBUG ? '.dev' : '.min';
 		wp_register_style('gfeway', plugins_url("static/css/style$min.css", GFEWAY_PLUGIN_FILE), [], $ver);
 	}
 
