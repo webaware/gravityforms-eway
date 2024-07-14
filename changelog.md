@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 2.6.0, 2024-07-14
+
+* fixes: PHP notice on deprecated creation of dynamic properties in PHP 8.1+
+
 ### 2.5.1, 2023-05-30
 
 * fixed: fatal error when used with Coupons add-on

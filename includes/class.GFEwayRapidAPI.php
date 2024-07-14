@@ -190,6 +190,12 @@ final class GFEwayRapidAPI {
 	public $country;
 
 	/**
+	 * country name, unused in Rapid API but here for calling code compatibility
+	 * @var string
+	 */
+	public $countryName;
+
+	/**
 	 * customer's email address
 	 * @var string max. 50 characters
 	 */
