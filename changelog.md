@@ -2,9 +2,13 @@
 
 ## Changelog
 
+### 2.6.1, soon…
+
+* fixed: missing a template listing any missing required PHP modules
+
 ### 2.6.0, 2024-07-14
 
-* fixes: PHP notice on deprecated creation of dynamic properties in PHP 8.1+
+* fixed: PHP notice on deprecated creation of dynamic properties in PHP 8.1+
 * changed: requires minimum PHP version 7.4 (recommend version 8.2 or higher)
 
 ### 2.5.1, 2023-05-30
