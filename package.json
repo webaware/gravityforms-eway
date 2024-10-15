@@ -14,17 +14,17 @@
 		"not dead"
 	],
 	"devDependencies": {
-		"@babel/cli": "^7.24.8",
-		"@babel/core": "^7.24.8",
-		"@babel/preset-env": "^7.24.8",
-		"autoprefixer": "^10.4.19",
+		"@babel/cli": "^7.25.7",
+		"@babel/core": "^7.25.8",
+		"@babel/preset-env": "^7.25.8",
+		"autoprefixer": "^10.4.20",
 		"clean-css-cli": "^5.6.3",
 		"confusing-browser-globals": "^1.0.11",
-		"eslint": "^9.7.0",
-		"globals": "^15.8.0",
+		"eslint": "^9.12.0",
+		"globals": "^15.11.0",
 		"postcss-cli": "^11.0.0",
-		"stylelint": "^16.7.0",
+		"stylelint": "^16.10.0",
 		"stylelint-config-standard-scss": "^13.1.0",
-		"uglify-js": "^3.18.0"
+		"uglify-js": "^3.19.3"
 	}
 }
