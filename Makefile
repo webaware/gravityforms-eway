@@ -51,7 +51,7 @@ $(JS_TGTS): $(JS_TGT_DIR)/%.js: $(JS_SRC_DIR)/%.js
 CSS_SRC_DIR		:= source/scss
 CSS_TGT_DIR		:= static/css
 CSS_SRCS		:= $(shell find source/scss -maxdepth 1 -name '[a-z]*.scss' -print)
-CSS_DEPS		:= $(shell find source/scss -maxdepth 1 -name '*.scss' -print)
+CSS_DEPS		:= $(shell find source/scss -name '*.scss' -print)
 CSS_TGTS		:= $(CSS_SRCS:$(CSS_SRC_DIR)/%.scss=$(CSS_TGT_DIR)/%.css)
 CSS_LINT		:= npx stylelint --config .stylelintrc.yml "$(CSS_SRC_DIR)/**/*.scss"
 
