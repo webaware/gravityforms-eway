@@ -2,6 +2,10 @@
 
 ## Changelog
 
+### 2.6.2, soon…
+
+* fixed: fatal error enqueuing scripts when form parameter is not a form
+
 ### 2.6.1, 2024-10-15
 
 * fixed: missing a template that lists any missing required PHP modules

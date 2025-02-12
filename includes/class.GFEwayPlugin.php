@@ -120,7 +120,7 @@ final class GFEwayPlugin {
 	 * @param boolean $ajax
 	 */
 	public function gformEnqueueScripts($form, $ajax) : void {
-		if ($this->canEncryptCardDetails($form)) {
+		if (is_array($form) && $this->canEncryptCardDetails($form)) {
 			wp_enqueue_script('gfeway-ecrypt');
 			add_action('gform_preview_footer', [$this, 'ecryptInitScript']);
 		}
