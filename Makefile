@@ -76,7 +76,7 @@ lint-js:
 lint-php:
 	@echo PHP lint...
 	@$(FIND_PHP) -exec php7.4 -l '{}' \; >/dev/null
-	@$(FIND_PHP) -exec php8.4 -l '{}' \; >/dev/null
+	@$(FIND_PHP) -exec php8.5 -l '{}' \; >/dev/null
 	@vendor/bin/phpcs -ps
 	@vendor/bin/phpcs -ps --standard=phpcs-5.2.xml
 
