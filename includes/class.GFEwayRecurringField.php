@@ -1,5 +1,7 @@
 <?php
 
+use function webaware\gfeway\date_relative_to_iso;
+
 if (!defined('ABSPATH')) {
 	exit;
 }
@@ -62,7 +64,7 @@ final class GFEwayRecurringField {
 		$min = SCRIPT_DEBUG ? '' : '.min';
 		$ver = SCRIPT_DEBUG ? time() : GFEWAY_PLUGIN_VERSION;
 
-		wp_register_script('gfeway_recurring', plugins_url("static/js/recurring$min.js", GFEWAY_PLUGIN_FILE), ['gform_datepicker_init'], $ver, true);
+		wp_register_script('gfeway_recurring', plugins_url("static/js/recurring$min.js", GFEWAY_PLUGIN_FILE), [], $ver, true);
 		wp_register_style('gfeway', plugins_url("static/css/style$min.css", GFEWAY_PLUGIN_FILE), [], $ver);
 	}
 
@@ -72,16 +74,7 @@ final class GFEwayRecurringField {
 	 */
 	public function gformEnqueueScripts($form) : void {
 		if (GFEwayPlugin::hasFieldType($form['fields'], GFEWAY_FIELD_RECURRING)) {
-			// enqueue script for field
 			wp_enqueue_script('gfeway_recurring');
-
-			// add datepicker style if Gravity Forms hasn't done so already
-			if (!wp_style_is('gforms_datepicker_css', 'done')) {
-				wp_enqueue_style('gforms_datepicker_css', GFCommon::get_base_url() . '/css/datepicker.css', null, GFCommon::$version);
-				wp_print_styles(['gforms_datepicker_css']);
-			}
-
-			// enqueue default styling
 			wp_enqueue_style('gfeway');
 		}
 	}
@@ -347,9 +340,9 @@ final class GFEwayRecurringField {
 
 			$today				= date_create('now', timezone_open('Australia/Sydney'));
 			$initial_amount		= empty($value[1]) ? '0.00' : $value[1];
-			$initial_date		= empty($value[2]) ? $today->format('d-m-Y') : $value[2];
+			$initial_date		= empty($value[2]) ? $today->format('Y-m-d') : $value[2];
 			$recurring_amount	= empty($value[3]) ? '0.00' : $value[3];
-			$start_date			= empty($value[4]) ? $today->format('d-m-Y') : $value[4];
+			$start_date			= empty($value[4]) ? $today->format('Y-m-d') : $value[4];
 			$end_date			= empty($value[5]) ? '31-12-2099' : $value[5];
 			$interval_type		= empty($value[6]) ? 'monthly' : $value[6];
 
@@ -374,11 +367,8 @@ final class GFEwayRecurringField {
 				'id'			=> $field->id,
 				'sub_id'		=> '2',
 				'label'			=> empty($field->gfeway_initial_date_label) ? self::$defaults['gfeway_initial_date_label'] : $field->gfeway_initial_date_label,
-				'dateFormat'	=> 'dmy',
-				'dateType'		=> 'datepicker',
-				'dateMin'		=> '+0',
-				'dateMax'		=> '+2Y',
-				'calendarIconType' => 'calendar',
+				'dateMin'		=> date_relative_to_iso('now'),
+				'dateMax'		=> date_relative_to_iso('+2 years'),
 				'isRequired'	=> false,
 				'size'			=> 'medium',
 				'label_class'	=> 'gfeway_initial_date_label',
@@ -406,11 +396,8 @@ final class GFEwayRecurringField {
 				'id'			=> $field->id,
 				'sub_id'		=> '4',
 				'label'			=> empty($field->gfeway_start_date_label) ? self::$defaults['gfeway_start_date_label'] : $field->gfeway_start_date_label,
-				'dateFormat'	=> 'dmy',
-				'dateType'		=> 'datepicker',
-				'dateMin'		=> '+0',
-				'dateMax'		=> '+2Y',
-				'calendarIconType' => 'calendar',
+				'dateMin'		=> date_relative_to_iso('now'),
+				'dateMax'		=> date_relative_to_iso('+2 years'),
 				'isRequired'	=> true,
 				'size'			=> 'medium',
 				'label_class'	=> 'gfeway_start_date_label',
@@ -424,11 +411,8 @@ final class GFEwayRecurringField {
 				'id'			=> $field->id,
 				'sub_id'		=> '5',
 				'label'			=> empty($field->gfeway_end_date_label) ? self::$defaults['gfeway_end_date_label'] : $field->gfeway_end_date_label,
-				'dateFormat'	=> 'dmy',
-				'dateType'		=> 'datepicker',
-				'dateMin'		=> '+0',
+				'dateMin'		=> date_relative_to_iso('now'),
 				'dateMax'		=> '2099-12-31',
-				'calendarIconType' => 'calendar',
 				'isRequired'	=> true,
 				'size'			=> 'medium',
 				'label_class'	=> 'gfeway_end_date_label',
@@ -480,17 +464,13 @@ final class GFEwayRecurringField {
 		$field_id		= IS_ADMIN || $form_id === 0 ? "gfeway_{$id}_{$sub_id}" : "gfeway_{$form_id}_{$id}_{$sub_id}";
 		$form_id		= IS_ADMIN && empty($form_id) ? rgget('id') : $form_id;
 
-		$format			= empty($field['dateFormat']) ? 'dmy' : esc_attr($field['dateFormat']);
 		$size			= rgar($field, 'size');
 		$disabled_text	= (IS_ADMIN && $current_view !== 'entry') ? 'disabled="disabled"' : '';
 		$class_suffix	= $current_view === 'entry' ? '_admin' : '';
 
-		$value			= GFCommon::date_display($value, $format);
-		$icon_class		= $field['calendarIconType'] === 'none' ? 'datepicker_no_icon' : 'datepicker_with_icon';
-		$icon_url		= empty($field['calendarIconUrl']) ? GFCommon::get_base_url() . '/images/calendar.png' : $field['calendarIconUrl'];
 		$tabindex		= GFCommon::get_tabindex();
 
-		$inputClass		= [$size . $class_suffix, $format, $icon_class];
+		$inputClass		= [$size . $class_suffix];
 		$spanClass		= ['gfeway_recurring_left', 'gfeway_recurring_date'];
 
 		if (empty($field['hidden'])) {
@@ -500,15 +480,8 @@ final class GFEwayRecurringField {
 			$spanClass[] = 'gf_hidden';
 		}
 
-		$dataMin = '';
-		if (!empty($field['dateMin'])) {
-			$dataMin = sprintf('data-gfeway-minDate="%s"', esc_attr($field['dateMin']));
-		}
-
-		$dataMax = '';
-		if (!empty($field['dateMax'])) {
-			$dataMax = sprintf('data-gfeway-maxDate="%s"', esc_attr($field['dateMax']));
-		}
+		$dateMin = $field['dateMin'] ? sprintf('min="%s"', esc_attr($field['dateMin'])) : '';
+		$dateMax = $field['dateMax'] ? sprintf('min="%s"', esc_attr($field['dateMax'])) : '';
 
 		$value			= esc_attr($value);
 		$spanClass		= esc_attr(implode(' ', $spanClass));
@@ -641,20 +614,6 @@ final class GFEwayRecurringField {
 	}
 
 	/**
-	 * safe checkdate function that verifies each component as numeric and not empty, before calling PHP's function
-	 * @param string $month
-	 * @param string $day
-	 * @param string $year
-	 * @return boolean
-	 */
-	private static function checkdate($month, $day, $year) {
-		if (empty($month) || !is_numeric($month) || empty($day) || !is_numeric($day) || empty($year) || !is_numeric($year) || strlen($year) !== 4)
-			return false;
-
-		return checkdate($month, $day, $year);
-	}
-
-	/**
 	 * get input values for recurring payments field
 	 * @param integer $field_id
 	 * @return array
@@ -701,7 +660,7 @@ final class GFEwayRecurringField {
 				'dateInit'				=> empty($recurring[2]) ? $today : self::parseDate($recurring[2]),
 				'amountRecur'			=> GFCommon::to_number($recurring[3]),
 				'dateStart'				=> empty($recurring[4]) ? $today : self::parseDate($recurring[4]),
-				'dateEnd'				=> self::parseDate(empty($recurring[5]) ? '31/12/2099' : $recurring[5]),
+				'dateEnd'				=> self::parseDate(empty($recurring[5]) ? '2099-12-31' : $recurring[5]),
 				'intervalSize'			=> $intervalSize,
 				'intervalType'			=> $intervalType,
 				'intervalTypeDesc'		=> $recurring[6],
@@ -715,18 +674,15 @@ final class GFEwayRecurringField {
 	}
 
 	/**
-	 * no date_create_from_format before PHP 5.3, so roll-your-own
-	 * @param string $value date value in dd/mm/yyyy format
-	 * @return DateTime
+	 * convert string date in yyyy-mm-dd format, into DateTime object
 	 */
-	private static function parseDate($value) {
-		if (preg_match('#([0-9]{1,2})/([0-9]{1,2})/([0-9]{4})#', $value, $matches)) {
-			$date = date_create();
-			$date->setDate($matches[3], $matches[2], $matches[1]);
-			return $date;
+	private static function parseDate(string $value) : ?DateTime {
+		try {
+			return DateTime::createFromFormat('Y-m-d', $value);
 		}
-
-		return false;
+		catch (Exception $e) {
+			return null;
+		}
 	}
 
 }

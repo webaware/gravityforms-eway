@@ -11,17 +11,16 @@
 				width:24%;
 			}
 
-			input,
+			input[type="text"],
 			select {
 				width: 100px !important;
 				margin-left:0 !important;
 			}
-		}
-	}
 
-	.gfeway_recurring_complex {
-		img.ui-datepicker-trigger {
-			vertical-align: middle;
+			input[type="date"] {
+				width: 10em !important;
+				margin-left:0 !important;
+			}
 		}
 	}
 }
@@ -39,8 +38,4 @@
 			overflow: hidden;
 		}
 	}
-}
-
-.ui-datepicker-next label, .ui-datepicker-prev label {
-	display: none;
 }

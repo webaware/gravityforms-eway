@@ -2,8 +2,9 @@
 
 ## Changelog
 
-### 2.6.2, soon…
+### 2.7.0 2026-09-06
 
+* fixed: recurring payments broken in Gravity Forms 3.0+
 * fixed: fatal error enqueuing scripts when form parameter is not a form
 
 ### 2.6.1, 2024-10-15

@@ -1,6 +1,8 @@
 <?php
 namespace webaware\gfeway;
 
+use DateTime;
+use Exception;
 use GFForms;
 use GFCommon;
 use GFEwayException;
@@ -27,6 +29,19 @@ function gform_version_compare(string $target, string $operator) : bool {
  */
 function has_required_gravityforms() : bool {
 	return gform_version_compare(GFEWAY_MIN_VERSION_GF, '>=');
+}
+
+/**
+ * convert a relative date into ISO date format
+ */
+function date_relative_to_iso(string $relative) : string {
+	try {
+		$date = new DateTime($relative);
+		return $date->format('Y-m-d');
+	}
+	catch (Exception $e) {
+		return '';
+	}
 }
 
 /**
