@@ -4,11 +4,11 @@ Plugin Name: Gravity Forms Eway
 Plugin URI: https://shop.webaware.com.au/downloads/gravity-forms-eway/
 Author URI: https://shop.webaware.com.au/
 Donate link: https://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+Eway
-Tags: gravity forms, eway, donations, payment gateway, ecommerce
+Tags: gravity forms, eway, donations, payment gateway
 Requires at least: 4.6
-Tested up to: 6.7
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.6.1
+Stable tag: 2.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,12 +36,6 @@ Gravity Forms Eway integrates the [Eway credit card payment gateway](https://ewa
 * use sophisticated conditional logic
 * mix multiple currencies on one website
 * mix multiple Eway accounts on one website
-
-### Sponsorships
-
-* recurring payments generously sponsored by [Castle Design](https://www.castledesign.com.au/)
-
-Thanks for sponsoring new features on Gravity Forms Eway!
 
 ### Translations
 
@@ -192,9 +186,9 @@ Developers can use these [filter hooks to modify some Eway invoice properties](h
 
 ## Upgrade Notice
 
-### 2.6.1
+### 2.7.0
 
-fixed a missing template that lists any missing required PHP modules
+fixed recurring payments broken in Gravity Forms 3.0+; fixed fatal error enqueuing scripts when form parameter is not a form
 
 ## Changelog
 
@@ -202,13 +196,9 @@ fixed a missing template that lists any missing required PHP modules
 
 The full changelog for Gravity Forms Eway can be found [on GitHub](https://github.com/webaware/gravityforms-eway/blob/master/changelog.md). Recent entries:
 
-### 2.6.0
+### 2.7.0
 
-Released 2024-07-14
+Released 2026-09-06
 
-* fixes: PHP notice on deprecated creation of dynamic properties in PHP 8.1+
-* changed: requires minimum PHP version 7.4 (recommend version 8.2 or higher)
-
-### 2.6.1, 2024-10-15
-
-* fixed: missing a template that lists any missing required PHP modules
+* fixed: recurring payments broken in Gravity Forms 3.0+
+* fixed: fatal error enqueuing scripts when form parameter is not a form
