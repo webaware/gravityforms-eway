@@ -43,7 +43,6 @@ final class GFEwayPlugin {
 	 */
 	public function addHooks() : void {
 		add_action('plugins_loaded', [$this, 'load']);
-		add_action('init', 'gfeway_load_text_domain');
 	}
 
 	/**

@@ -5,7 +5,7 @@ Plugin URI: https://shop.webaware.com.au/downloads/gravity-forms-eway/
 Author URI: https://shop.webaware.com.au/
 Donate link: https://shop.webaware.com.au/donations/?donation_for=Gravity+Forms+Eway
 Tags: gravity forms, eway, donations, payment gateway, ecommerce
-Requires at least: 4.2
+Requires at least: 4.6
 Tested up to: 6.7
 Requires PHP: 7.4
 Stable tag: 2.6.1

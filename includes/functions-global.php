@@ -8,8 +8,6 @@ if (!defined('ABSPATH')) {
  * maybe show notice of minimum PHP version failure
  */
 function gfeway_fail_php_version() {
-	gfeway_load_text_domain();
-
 	$requires = new GfEwayRequires();
 
 	$requires->addNotice(
@@ -24,13 +22,6 @@ function gfeway_fail_php_version() {
 		/* translators: %s: minimum recommended version number */
 		sprintf(esc_html__('Please upgrade your website hosting. At least PHP %s is recommended.', 'gravityforms-eway'), '7.4')
 	);
-}
-
-/**
- * load text translations
- */
-function gfeway_load_text_domain() {
-	load_plugin_textdomain('gravityforms-eway');
 }
 
 /**

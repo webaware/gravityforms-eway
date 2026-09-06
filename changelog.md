@@ -9,6 +9,7 @@
 ### 2.6.1, 2024-10-15
 
 * fixed: missing a template that lists any missing required PHP modules
+* requires: WordPress 4.6+
 
 ### 2.6.0, 2024-07-14
 
